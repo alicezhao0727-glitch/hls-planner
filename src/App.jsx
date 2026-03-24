@@ -47,198 +47,21 @@ function NoteField({ courseKey }) {
   );
 }
 
-// ── EVAL DATA (direct quotes from peer spreadsheet) ───────────────────────────
-const E = {
-  ev_m:  { avg:null, n:0, comments:[], tips:[], bid:[], note:"Visiting prof from Northeastern. Students note strong recaps and accessible teaching style." },
-  ev_s:  { avg:4.5, n:3,
-    comments:[
-      "Important course for litigation, nicely organized and the professor is clear in articulating the black letter rules. We sometimes watched short films demonstrating the rules.",
-      "Highly recommend if you love all the hypos in 1L Civ Pro! Prof. Schulman is super clear and organized. Lots of film clips and trial recordings to lift your spirit at 8 am. Exam is hard but you'll be fine if you follow her lecture.",
-      "Schulman is great, well-organized, clear, and accessible… I do not think this needed to be a 4-credit course though — sometimes she goes too much into details about facts of cases — but I would still recommend if you want to do litigation and learn evidence well!",
-    ],
-    tips:["Exam was around 18 short questions, pretty much going over all the important rules. I thought it was pretty difficult.","Remember & understand all the hearsay rules (to the extent that you don't need to look at the outline) + do sample exam = H is possible though not guaranteed.","A little like a typing contest but if you learn the rules well, start early to make a great outline, and do some practice exams you will be fine."],
-    bid:["High. Popular class very full","I bid it first."] },
-  ev_w:  { avg:null, n:0, comments:["Crim-focused, organized, clear."], tips:[], bid:[] },
-  co_sp: { avg:5.0, n:3,
-    comments:[
-      "Spamann is genius (just search how many degrees he has) and one of the most effective, thought-provoking, hilarious professors I have ever met. There are few, if any, old-fashioned court cases; instead, professor explains economic/political rationale behind corporate law and assigns HBS-like case studies — you will act as the Unocal board and come up with anti-takeover strategies yourself, which is a lot of fun.",
-      "Spamann is extremely smart. He expects everybody to be prepared and not being able to answer his cold calls can be a little embarrassing. Attendance is expected. But his class is fascinating and if you really want to learn stuff, take his corporation!",
-      "Main topic is corporate fiduciary duty. Have a good outline and you'll be fine. Light reading but heavy exercise/case studies.",
-    ],
-    tips:["Multiple choice and 2 short essays (not policy heavy, more like issue spotter but not quite).","Short doctrinal questions, issue spotter-like questions that are open-ended and focus on legal/business questions the board faces."],
-    bid:["Extremely popular. Perhaps now it's easier to bid because his popularity has convinced him to teach two corporations classes each year."] },
-  co_fr: { avg:5.0, n:1,
-    comments:[
-      "No cold calls and very entertaining in class. Fried is a very funny lecturer, especially the way he interacts with LLM students with preconceived notions about corporate law in other countries. He also covers the doctrine in a clear way, and makes his own (short) readings, so the 'textbook' is free!",
-      "Fried is without a doubt one of the most laid-back professors at HLS. He has great subject matter knowledge, yet he does not take himself too seriously. He has a healthy amount of cynicism regarding the topic he teaches. He never cold calls. Some may complain that his pace is too slow, but if you are engaged with the material and actively participate, you can get a lot out of the course.",
-      "My friend asked about the rule of the duty of loyalty and Fried said something like: 'This is not a rule-based class. You don't need to know the rule. I want you to understand the boardroom dynamics.' If you don't want to bog down with a rule chart and are remotely interested in corporations, do it with Fried.",
-    ],
-    tips:["MCs, issue spotters and a policy question. The MCs require a good grasp of how the basic concepts work. Paying attention to Fried's own views on the subject area might be a way to differentiate. He tends to be free market/pro-flexibility. I also made a joke or two, echoing his cynicism about corporate law — that worked.","Short essay questions. He will ask in the final exam if you disagree with any of his claims made in class. It helps to note his claims in your class notes."],
-    bid:["Very popular","I don't recall anyone complaining about not being able to take his class."] },
-  taw:   { avg:5.0, n:2,
-    comments:[
-      "Great J-term class! Many amazing practitioners will come in to advise you on your trial work, and often they give very on-point feedback. The class is definitely intensive, but because it's not graded, the only pressure comes from you not wanting to look unprepared in front of your peers. I certainly felt like I learned a lot of trial skills. This course also made me really excited about doing trial work in the future.",
-      "Echo everything Lucy said. I thought it was indeed somewhat intense/stressful, and the 2–9 schedule made it feel exhausting at times, but the feedback was just invaluable. Learned so much from all the trial lawyers/judges. Despite the intense schedule, I still think it's one of the best classes I took at HLS.",
-    ],
-    tips:["No exam. Only two mock trials, but the class is credit/fail."],
-    bid:["I bid it 4th and got in directly."] },
-  sp_bk: { avg:5.0, n:10,
-    comments:[
-      "Great professor! Worth taking it even if you have zero interest in practicing as a Bankruptcy lawyer. You will generally be cold called 1–4 times during the entire semester. Plenty of good outlines online so you won't miss much even if you decide not to take notes. But BE AWARE that attendance is expected.",
-      "Roe is extremely organized, clear, and concise — a very rare quality at HLS, especially for transactional law professors. There's not a lot of readings. For those who do not like to read long-winded judicial opinions but enjoy extracting rules from each case, this class is for you.",
-      "Lectures can be really entertaining sometimes. Very solid coverage of bankruptcy code and economic rationale behind each doctrine. If you like corporate finance and corporate governance from Corporations you should really like this class. Along with Taxation, Bankruptcy will really help your understanding of corporate transactions.",
-      "Cold call policy is quite random and doesn't matter much to the final grade. The course material is extremely useful as long as your future work touches upon debt. Highly recommended for people who want to do corporate even if you don't want to do bankruptcy specifically.",
-    ],
-    tips:["Rumors say that he gives LPs, but you will have to really try to screw up to get one. The exam is fairly standard. If you have a good understanding of the code, you can get a good grade.","Multiple choice questions + issue spotter. Easy H in my opinion because no policy question — if you take the time to really understand the rules and cases it's easy to stand out.","Past exams are super helpful since his exams follow pretty similar format. There are some really comprehensive outlines out there as well."],
-    bid:["popular, need to bid in the top 3 positions.","No need to rank very high — there were empty seats after the drop-add period."] },
-  sp_cp: { avg:4.5, n:3,
-    comments:[
-      "Best course I've taken at HLS. Fisher is an amazing lecturer, and really cares about covering the emerging doctrines and theories behind recent cases. Instead of assigning us to read a casebook, he re-publishes all the recent decisions online. A lot of his examples relate to artworks, music (e.g., Katy Perry, Dua Lipa), design, architecture, media trend. If you are into soft IP, this class is a cannot-miss.",
-      "This is a 4 credit class that only meets twice a week. For the other class, you watch Fisher's prerecorded videos on your own time. The videos are very clear on the doctrinal law, and the classes discuss the readings, more like case studies. Fisher is super nice and the classes usually offer insightful comments.",
-      "One of my favorite classes at HLS. Fisher is an engaging lecturer who dives deeply not only into the doctrines but also into their rationales and the philosophical debates underlying IP law. You learn the core doctrines and rules by watching a 90-minute lecture video each week, and the classes focus on thorough discussions of case studies involving artwork, architecture, music, film, AI, etc.",
-    ],
-    tips:["In-class exam is an issue spotter — quite straightforward — so the paper might be the tie-breaker for most people.","8-hour take-home exam that includes an issue spotter and a policy essay."],
-    bid:["There were empty seats."] },
-  sp_adm_v:{ avg:4.0, n:1,
-    comments:["Administrative law is obviously a really important subject, but I think the value-add on top of LegReg will depend a lot on which professor you had for LegReg. Even if you've read most of the cases before, Prof. Vermeule offers a really interesting theory of administrative law which he imbues throughout the course. He really shines at making sense of mysterious/conflicting doctrine. No cold calls my year, which admittedly made it a bit difficult to stay on top of the class."],
-    tips:["3 hour exam with unpredictable format. Past exams may be representative, but he's changed the format a bit over the years."],
-    bid:["Rank it 1 or 2; it's a big class but you will not get in if you rank it below 3."] },
-  sp_adm_b:{ avg:null, n:0, comments:[], tips:[], bid:[], note:"Block teaches from a regulatory policy + executive power lens. Take-home exam." },
-  sp_col: { avg:4.5, n:1,
-    comments:["Sachs is a new hire from Duke. This class is very different from Singer's COL — doctrine-heavy. We re-learned a lot of CivPro cases, but from the perspective of COL. He covers a lot of content in one session, so speed-typing would be helpful. He grades cold calls, but it's more of a hit-or-miss situation."],
-    tips:["Grade based on papers and moot court oral exercises. No exam."], bid:[] },
-  sp_1a:  { avg:null, n:0,
-    comments:["Be the judge for yourself. My year, the exam question was: 'In class, at least twice, I've asked how to fit together the developments in First Amendment law and argument studied in the first part of the semester and those studied in the second part. That is what I'm asking now. Please describe, with reference to specific cases, the developments you are addressing and why my question is, at least initially, a puzzling one.'"],
-    tips:[], bid:[], note:"Parker comes from the critical legal studies tradition; analysis is more structural than technical. No cold calls." },
-  f1a_fe: { avg:5.0, n:1,
-    comments:["Feldman is a brilliant lecturer in my opinion (and less controversial in the classroom than he is as a person). Not super focused on doctrines (to be fair 1A is also a doctrinal mess) but there are a lot of interesting discussions about philosophy, legal history, ethics, and SCOTUS gossips. Would recommend if you're interested in 1A and/or con law in general."],
-    tips:["8 hour exam with a 1,450 word limit so it's a bit of a wild card."],
-    bid:["Have to rank first."] },
-  f1a_we: { avg:null, n:0,
-    comments:["This class was okay. Weinrib is a decent lecturer but she tends to squeeze too much material into each class — but also 1A doctrine is just confusing in the first place. You're on panel every other week and have to write a comment each time you're on panel."],
-    tips:[], bid:[] },
-  f_sex:  { avg:4.5, n:1,
-    comments:["I found the class to be quite interesting since MacKinnon is such an icon on this topic; the class is basically her universe of sex equality, and students are not really welcomed to challenge that. There's limited space for discussions and interactions in class, but she seems to be accessible during office hours. Workload is definitely on the heavy end given it's a 3-credit course taking half of a semester."],
-    tips:["A two-day take home or 3 × 1,000-word papers."],
-    bid:["Initially might have a waitlist but it moves pretty fast."] },
-  f_fl:   { avg:null, n:0, comments:[], tips:[], bid:[], note:"Saris (federal judge): writing skills focus, accessible professor. Good candidate for professional writing requirement." },
-  f_emp:  { avg:4.5, n:2,
-    comments:[
-      "Very clear and organized. Helpful if you are interested in the topic, not that enjoyable if you are not. Prof is nice and cold calls require details. Lots of chances to volunteer and discuss policies.",
-      "I love Sachs. He's a great lecturer, engages with issues critically and from multiple perspectives (even though he certainly has his own strong opinions) and clearly cares a lot about his students. There are also plenty of outlines that basically have everything he says in class.",
-    ],
-    tips:[], bid:["Plenty of vacancies."] },
-  f_gi:   { avg:5.0, n:1,
-    comments:["I highly recommend this seminar if you're interested in the topic. Chen is extremely clear in explaining doctrine and also leads insightful discussions about activism and advocacy that apply to a wide range of social issues. You'll learn a lot more in this class than the generic 4-credit BLL classes and really engage with the material. The reading is on the high side though."],
-    tips:["You only have to do a few response papers and a slightly longer (only 1,000 word) final paper."],
-    bid:[] },
-  f_ca:   { avg:4.0, n:2,
-    comments:[
-      "A practical class to get hands-on experience of being a class action litigant. Four writing assignments throughout the semester (opening brief, opposing brief, response to opposing brief, ruling). Readings are heavy and cover most important class action cases. Class is dry but the writing process is rewarding.",
-      "The class teaches both class action doctrines and legal writing. Clary tries to assign only the relevant excerpts, so the overall amount of readings is manageable. No cold call but class participation is part of the grade. Each writing assignment is 8 or 10 pages double spaced, closed-universe. Getting comments/edits on briefs from an experienced litigator is very helpful. Also provides multiple writing samples and Clary is a very good recommender.",
-    ],
-    tips:[], bid:["Very high. Only 20 people."] },
-  f_cl:   { avg:4.5, n:1,
-    comments:["Really enjoyed the class. An overview of complex litigation, with a focus on MDLs. Clary was the litigation chair at Cravath before he retired. He tells amazing war stories and provides practical tips. Class was well organized. No cold call. Manageable amount of reading. Cases serve only as examples, the statutes matter more. Downside is Clary could be a little dry — he tends to speak softly and slowly."],
-    tips:["8 hr final, 5,000 words limit. Typical issue spotters with one short policy question. Pay attention to circuit splits and the jurisdictions mentioned in the questions, you may get bonus points there."],
-    bid:[] },
-  f_ctml: { avg:3.0, n:1,
-    comments:["It is very clear, interesting and comprehensive, covering three topics: copyright, trademark, and trial. Good choice if you want to know all three (or soft IP) quickly in a 2-credit course. Downside is that lectures can be packed with information, since each topic is worth a separate course."],
-    tips:["Focus on the key cases — no need to look at the small cases she mentioned in one sentence or two. Kind of a typing competition."],
-    bid:["No need to rank high, still vacancies after add/drop."] },
-  f_cci:  { avg:null, n:0,
-    comments:["Super chill but insightful seminar on white collar crime. Professors are practitioners with lots of experience. They also bring in a lot of guest speakers to talk about their experience with various aspects of corporate crime. No exam, only a 10-page paper at the end. Highly recommend."],
-    tips:["No exam. 10-page paper."], bid:[] },
-  f_taxB: { avg:3.5, n:1,
-    comments:["One of the nicest persons in the world. If you do not like answering policy questions, Brennan's taxation is your go-to course. Very detailed and well structured outlines online. Some people don't like his teaching because he speaks very quietly so sometimes it's hard to hear/understand. But with the help of the outlines you will have no trouble mastering the subject matter."],
-    tips:["You will get a good grade if you take the time to study the rules and examples in the slides."],
-    bid:["Waitlist cleared out my year."] },
-  f_taxD: { avg:4.0, n:1,
-    comments:["Quite econ and finance focused. Prof is really nice and very willing to slow down to help students process, although generally he speaks fast. Whichever professor you choose, I strongly recommend taking taxation some time at law school. It is one of the most useful courses, no matter which area of law you are interested in."],
-    tips:["Class mirrors Warren's structure so consider his outlines as well. Policy heavy so no time pressure. Past exam questions sometimes recur."],
-    bid:["Lots of vacancies."] },
-  f_bsl:  { avg:3.25, n:2,
-    comments:["A pretty easy-to-follow class that covers a wide range of basic economic topics that relate to business management. I'd actually recommend anyone who's studied economics in college NOT to take this class — you've probably learned most of the stuff this class covers.","This class is pretty straightforward for people with an econ background. We read business school case studies for reading materials, which may provide a refreshing perspective compared to traditional black letter law classes."],
-    tips:[], bid:[] },
-  f_bke:  { avg:5.0, n:1,
-    comments:["One of the best classes I've taken at HLS. Ellias's lecture has great cadence and was never boring. The course covers the basics of the bankruptcy process with focus on Chapters 3, 5, and 11 (mostly relevant to corporate restructuring). The case law demonstrates what Ellias calls 'beautiful lawyering' among various parties fighting over assets of a distressed company in a zero-sum game."],
-    tips:["Pretty standard issue spotters and policy questions."], bid:["Not difficult to get in — I got in from the waitlist."] },
-  sp_mus: { avg:4.0, n:4,
-    comments:[
-      "One of my fav courses at HLS! Super engaging and caring prof, lots of amazing guest speakers. I loved discussions of Andrew Lloyd Webber and Taylor Swift, especially.",
-      "Agree with everything April said. Fun, useful and easy H.",
-      "Bavitz's teaching really does not work well for me — his teaching presumes a basic understanding of the American music industry and copyright law. Also, the class is heavily student discussion based, which can be confusing.",
-      "Even coming from a copyright background, I found the discussion somewhat disorganized and difficult to follow. Some background on the American music industry would have helped.",
-    ],
-    tips:["Paper + canvas post."], bid:["High. I ranked it #1 or #2."] },
-  sp_aml: { avg:4.0, n:2,
-    comments:["Professor is very helpful. Recommend for anyone w/o finance/econ background.","Helpful for anyone without an econ background, and quite easy if you have one. The format is similar to an undergrad econ class (weekly assignments + 2 exams)."],
-    tips:["Lots of practice materials, do a few of them and you'll be fine."], bid:["I ranked it third."] },
-  sp_a2j: { avg:null, n:0, comments:[], tips:["Blog posts instead of a long final paper. Students contribute three substantive posts to the Access to Justice Lab's blog."], bid:[], note:"Easy H. Great for those interested in access to civil justice." },
-  sp_crl: { avg:null, n:0, comments:[], tips:[], bid:[], note:"Michelman — civil rights litigation. Directly relevant to litigation track." },
-  clinicConsumer: { avg:4.0, n:1,
-    comments:["The seminar is informal and conversational. Clinical work is fun but occasionally intense. A lot of opportunities to interact with clients. Fair amount of chances to do oral argument in court (most likely in the small claims session). Chances to write complaint, dispositive motions, and sometimes do discovery related work. Depositions are rare. The two supervisors are knowledgeable and very nice, but often hands-off, so you really have to be in charge of all your cases. Great opportunity for people interested in litigation."],
-    tips:["The seminar has no exam. One final paper and presentation, could be on anything consumer-protection related."],
-    bid:["Didn't place it as #1."] },
-  clinicCyber: { avg:4.0, n:2,
-    comments:[
-      "I didn't like the cyberlaw clinic much because I didn't work well with my supervisor. However, my peers generally had a good time and Chris Bavitz is an incredible professor. The seminar is not uninteresting.",
-      "Your project and supervisor can make or break the experience. Make sure to fill out the survey as specifically as possible to get a project that you like. Relatively low stress and great learning experience.",
-    ],
-    tips:["Mid-semester reflection, end-of-semester reflection, 2 blog posts and a short presentation. No exam."],
-    bid:["I ranked it first."] },
-  clinicFedCourts: { avg:5.0, n:1,
-    comments:["Highly recommend! Students apply for and complete an externship at a federal court anywhere in the country (in person during J term and remote in the spring), with HLS covering housing and travel expenses. Great way to escape Cambridge in January — I externed at SDNY and had an amazing experience drafting opinions and going to hearings/trials for many very, very interesting cases."],
-    tips:["The clinic includes a seminar in the spring, which requires two reflection papers (2 pages) and a final paper (10 pages). The professor was busy and flexible with the deadline."],
-    bid:["Very competitive. Even ranking it #1 does not guarantee a spot."] },
-  clinicJudicial: { avg:5.0, n:1,
-    comments:["Clinical placement is a judicial internship at a trial court in Boston. You can choose federal or state. I was at MA superior court with Judge Sarah Ellis. Very rewarding experience. Wrote a couple memos/draft opinions for the judge. Observed lots of cool trials/hearings. Learned a ton. Definitely one of my favorite classes at HLS. The clinical seminar invites lots of guest speakers such as judges from different courts."],
-    tips:["3 very short (1–2 page) reflection papers + final reflection or final paper. Very easy H."],
-    bid:["Bid high."] },
-  clinicCrimPros: { avg:5.0, n:1,
-    comments:["Clinical placement is in one of the DA's offices around Massachusetts. Students would usually have the chance to perform arraignments, pleas, jury trials, and other tasks associated with standing for cases. They would also observe prosecutors and second-chair trials. Corrigan's seminar is super chill and he makes a lot of allowances if you're busy in court. Highly recommend if you're looking for lots of hands-on trial experience."],
-    tips:[], bid:["I bid #1, but it's probably not too competitive."] },
-  sugg_patentTrial: { avg:5.0, n:1,
-    comments:["Highly recommend. It's like a relaxed version of TAW. The course is organized as a mock trial. You will go through the whole process of deposition, hearing, motion, cross/direct examination, oral argument etc. You will be arguing in front of real Fed Cir judges and there will be a jury. I learned tons of practical stuff."],
-    tips:["No exam. The grade is based on your writing and mock trial performance."],
-    bid:["I ranked it #5, then waited a while to get off the wl."] },
-  sugg_fedCourts: { avg:5.0, n:2,
-    comments:[
-      "Highly recommend. Goldsmith teaches very clearly and effectively. Very thorough analysis of SCOTUS cases. It's like a combination of Con law and advanced Civ Pro. He assigns a lot of readings and expects everybody to work on it. He calls everyone 1–2 times per semester with 1 free pass.",
-      "Tough class but very well-taught. I probably learned more there than I did anywhere else at HLS, and it made me revisit some cases with a more critical eye. The limits of what Art. III courts can/cannot do are articulated in the Constitution, conferred by statute, and interrogated in courts. 'Do not confuse the necessary with the familiar.'",
-    ],
-    tips:["4hr in-class exam with issue-spotters. Not easy to get an H.","3.5 hour exam, very tough — borderline demoralizing."],
-    bid:["Bid high.","I ranked it first and was initially #40 on the waitlist. Others who ranked it first were #70, for context."] },
-  sugg_compCon: { avg:5.0, n:1,
-    comments:["Great class! Professor doesn't cold call so there's no real need to do the readings. I learned a lot about the constitutional law in various countries. The breadth was also wide, covering topics that's not as ostensibly important in American law, but may be consequential (like how democracies die)."],
-    tips:["All MC, take good notes in class and compare notes with friends."], bid:[] },
-  sugg_massMedia: { avg:3.5, n:1,
-    comments:["Professor is VP and deputy GC at NYT. Great war stories, fascinating guest speakers (Pulitzer winners etc), nice introduction to the freedom of expression with many real life examples. However, readings are long and not well excerpted. Doctrines are organized in a weird way. Sometimes a little too many sidetracks, which makes the class hard to follow if you are not familiar with politics or news in general."],
-    tips:["3 hr issue spotter + short answers + 1 policy essay, no word limit. He discloses the topic of the policy question in advance, so think it through and be prepared. Sort of an easy H."],
-    bid:["Bid high."] },
-  sugg_fashionLaw: { avg:4.5, n:2,
-    comments:[
-      "Recommended even if you are not interested in the fashion industry (like me). A good introduction course with concentrated topics, including sustainability, IP rights, and ethics.",
-      "非常推荐，尤其如果对fashion industry或者cultural industry感兴趣。很多课有很多有趣的speaker，包括celebrities，他们会带来很多关于这个行业的独特体验和思考。考核内容也很轻松，两篇blog加一篇15页左右paper。拿H概率较高。",
-    ],
-    tips:["Two blogs + ~15 page paper. High chance of H."], bid:[] },
-  sugg_antitrust: { avg:5.0, n:1,
-    comments:["Excellent professor. Very clear about course material, interesting and engaging in class, and makes a confusing field of law easy to understand for beginners in antitrust with no economics background. No cold calls. He calls on volunteers. Also only 3 credits."],
-    tips:["Three hour closed book exam. Competitive but manageable."], bid:["I ranked it pretty high."] },
-  sugg_employDisc: { avg:3.0, n:2,
-    comments:[
-      "Pretty doctrinal — teacher lectures by going through a few cases each class. Teacher is a plaintiff's side litigator, very nice. Primarily about Title VII.",
-      "I would recommend: each class's structure and connections aren't always super clear, so it's helpful to find another professor's outline or supplement to organize the structure. Be conscious of keeping the statutory language in front of you.",
-    ],
-    tips:["8-hour take-home. Follows a somewhat consistent pattern (issue spotter + short answers + essay + book review). Not an 'easy H.'"], bid:[] },
-  sugg_stateAG: { avg:4.0, n:1,
-    comments:["You will be working in Mass AG and will be assigned to a department of your interests. I was in the trial department and liked it a lot: mostly defending the state government in tort and civil rights cases. Others have been assigned to constitutional litigation / criminal law / antitrust, etc. Workload is light but you need to commute to the office."],
-    tips:[], bid:[] },
-};
-
+// ── EVAL DATA (lazy-loaded on first Evals/Suggest tab open) ─────────────────────
+function useEvalData() {
+  const [E, setE] = React.useState(null);
+  React.useEffect(() => {
+    import('./evalData.json').then(m => setE(m.default));
+  }, []);
+  return E;
+}
+// Placeholder empty object until data loads — prevents null crashes
+const E_EMPTY = {};
+const EvalContext = React.createContext(E_EMPTY);
 const starColor = avg => !avg ? "#8a7e6e" : avg >= 4.5 ? "#3d6b4f" : avg >= 3.5 ? "#9a7820" : "#6b1e2e";
 
 function EvalCard({ evalId, label }) {
+  const E = React.useContext(EvalContext);
   const [open, setOpen] = useState(false);
   const ev = E[evalId];
   if (!ev) return null;
@@ -500,6 +323,7 @@ function Calendar({courses,tawActive}){
 const Dot=({c,sz=8})=><span style={{display:"inline-block",width:sz,height:sz,borderRadius:"50%",background:c.bd,flexShrink:0,marginRight:4}}/>;
 
 function StarBadge({evalId}) {
+  const E = React.useContext(EvalContext);
   const ev = E[evalId]; if(!ev) return null;
   const col = starColor(ev.avg);
   return <span style={{fontSize:13,fontWeight:700,color:col,marginLeft:4}}>{ev.avg?`★${ev.avg}`:"★?"}{ev.n>0?` (${ev.n})`:""}</span>;
@@ -655,6 +479,7 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
 export default function App(){
   const { notes, setNote } = useNotes();
+  const E = useEvalData() || E_EMPTY;
   window.__hlsNotes   = notes;
   window.__hlsSetNote = setNote;
 
@@ -795,6 +620,7 @@ export default function App(){
   const rrCrCol=(cr,min,max)=>cr>max?RR.maroon:cr<min?RR.gold:RR.navy;
 
   return(
+    <EvalContext.Provider value={E}>
     <div style={{fontFamily:"Georgia,'Times New Roman',serif",background:RR.bg,minHeight:"100vh",boxSizing:"border-box",color:RR.ink}}>
       {/* Banner — mirrors The Reading Room nav bar */}
       <div style={{background:RR.bg,borderBottom:`1px solid ${RR.border}`,padding:"18px 24px 14px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
@@ -1104,5 +930,6 @@ export default function App(){
       )}
       </div>
     </div>
+    </EvalContext.Provider>
   );
 }
