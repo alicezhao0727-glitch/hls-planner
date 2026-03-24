@@ -247,7 +247,7 @@ function EvalCard({ evalId, label }) {
   return (
     <div style={{marginTop:4, marginLeft:8}}>
       <button onClick={() => setOpen(o=>!o)} style={{
-        fontSize:11, border:"none", cursor:"pointer", padding:"3px 8px", borderRadius:3,
+        fontSize:13, border:"none", cursor:"pointer", padding:"3px 8px", borderRadius:3,
         background: open ? "#1e2d4a" : "#ede6d8", color: open ? "#f3ede3" : "#1e2d4a", fontWeight:600,
         display:"inline-flex", alignItems:"center", gap:4, fontFamily:"system-ui,sans-serif",
       }}>
@@ -256,7 +256,7 @@ function EvalCard({ evalId, label }) {
         <span>{open ? "▲ hide" : `▼ ${label||"eval & tips"}`}</span>
       </button>
       {open && (
-        <div style={{background:"#f3ede3", border:"1px solid #d9ccba", borderRadius:4, padding:"9px 11px", marginTop:3, fontSize:12, lineHeight:1.6, fontFamily:"system-ui,sans-serif"}}>
+        <div style={{background:"#f3ede3", border:"1px solid #d9ccba", borderRadius:4, padding:"9px 11px", marginTop:3, fontSize:13, lineHeight:1.6, fontFamily:"system-ui,sans-serif"}}>
           {ev.note && <div style={{color:"#5c4e3a", marginBottom:6, fontStyle:"italic"}}>{ev.note}</div>}
           {ev.comments.map((c,i) => (
             <div key={i} style={{marginBottom:6, borderLeft:"2px solid #b0bdd4", paddingLeft:7, color:"#1e2d4a"}}>
@@ -502,7 +502,7 @@ const Dot=({c,sz=8})=><span style={{display:"inline-block",width:sz,height:sz,bo
 function StarBadge({evalId}) {
   const ev = E[evalId]; if(!ev) return null;
   const col = starColor(ev.avg);
-  return <span style={{fontSize:11,fontWeight:700,color:col,marginLeft:4}}>{ev.avg?`★${ev.avg}`:"★?"}{ev.n>0?` (${ev.n})`:""}</span>;
+  return <span style={{fontSize:13,fontWeight:700,color:col,marginLeft:4}}>{ev.avg?`★${ev.avg}`:"★?"}{ev.n>0?` (${ev.n})`:""}</span>;
 }
 
 function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
@@ -519,10 +519,10 @@ function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
           ? <input type="radio" checked={sel} onChange={()=>!locked&&set(value)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>
           : <input type="checkbox" checked={sel} onChange={e=>!locked&&set(e.target.checked)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>}
         {c&&<Dot c={c}/>}
-        <span style={{fontSize:13,fontFamily:"system-ui,sans-serif"}}>
+        <span style={{fontSize:17,fontFamily:"system-ui,sans-serif"}}>
           <span style={{fontWeight:600,color:"#2c2418"}}>{label}</span>
           {evalId && <StarBadge evalId={evalId}/>}
-          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:11.5}}>{sub}</span></>}
+          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:14}}>{sub}</span></>}
         </span>
       </label>
       {evalId && <EvalCard evalId={evalId}/>}
@@ -535,8 +535,8 @@ function Sect({title,must,children}){
   return(
     <div style={{marginBottom:13,borderLeft:`2px solid ${must?"#6b1e2e":"#d9ccba"}`,paddingLeft:9}}>
       <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:5}}>
-        <span style={{fontSize:11,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
-        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:10,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
+        <span style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
+        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
       </div>
       {children}
     </div>
@@ -549,7 +549,7 @@ function CrBar({cr,min,max,label}){
   const barCol=over?"#7c1d2e":under?"#a0622a":"#2c4a7c";
   return(
     <div style={{marginBottom:8}}>
-      <div style={{display:"flex",justifyContent:"space-between",fontSize:12,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
         <span style={{color:col}}>{label}: <strong>{cr}cr</strong> {over?"· over max":under?"· under min":""}</span>
         <span style={{color:"#8a7e6e",fontWeight:400}}>{min}–{max}cr</span>
       </div>
@@ -575,19 +575,19 @@ function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
 function TBDGrid({opts,sel,toggle}){
   return(
     <div>
-      <div style={{fontSize:11,color:"#8a7e6e",marginBottom:5,fontStyle:"italic",fontFamily:"system-ui,sans-serif"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
+      <div style={{fontSize:13,color:"#8a7e6e",marginBottom:5,fontStyle:"italic",fontFamily:"system-ui,sans-serif"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
         {opts.map(c=>{
           const on=sel.has(c.key);
           return(
             <div key={c.key} style={{borderRadius:3,background:on?"#edf0f5":"#f3ede3",border:on?"1px solid #b0bdd4":"1px solid #d9ccba",overflow:"hidden"}}>
-              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 6px",fontSize:12,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
+              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 6px",fontSize:14,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
                 <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,accentColor:"#1e2d4a"}}/>
                 <Dot c={c.c} sz={6}/>
                 <span style={{flex:1,lineHeight:1.3}}>
                   <span style={{fontWeight:600,color:"#2c2418"}}>{c.name}</span>
                   {c.evalId&&<StarBadge evalId={c.evalId}/>}
-                  <br/><span style={{color:"#8a7e6e",fontSize:11}}>{c.prof} · </span><span style={{color:"#1e2d4a",fontSize:11}}>{c.cr}cr</span>
+                  <br/><span style={{color:"#8a7e6e",fontSize:13}}>{c.prof} · </span><span style={{color:"#1e2d4a",fontSize:13}}>{c.cr}cr</span>
                 </span>
               </label>
               {c.evalId&&<EvalCard evalId={c.evalId}/>}
@@ -735,7 +735,7 @@ export default function App(){
   const crCol=(cr,min,max)=>cr>max?"#6b1e2e":cr<min?"#9a7820":"#1e2d4a";
   const TABS=["fall","winter","spring","summary","evals","suggest"];
   const TL={fall:"🍂 Fall",winter:"❄️ Winter",spring:"🌸 Spring",summary:"📋 Summary",evals:"★ Evals",suggest:"💡 Suggest"};
-  const side={width:340,flexShrink:0,borderRight:`1px solid #d9ccba`,paddingRight:16,overflowY:"auto",maxHeight:"84vh"};
+  const side={flex:1,minWidth:0,borderRight:`1px solid #d9ccba`,paddingRight:16,overflowY:"auto",maxHeight:"84vh"};
 
   const toggleF=k=>setFTBD(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
   const toggleSp=k=>setSpTBD(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
@@ -812,7 +812,7 @@ export default function App(){
       {/* Tabs */}
       <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:12,flexWrap:"wrap"}}>
         {TABS.map(t=>(
-          <button key={t} onClick={()=>setTab(t)} style={{padding:"6px 13px",fontSize:12.5,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
+          <button key={t} onClick={()=>setTab(t)} style={{padding:"6px 13px",fontSize:15,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
             {TL[t]}
             {t==="fall"  &&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(fallCr,10,16)}}>{fallCr}</span>}
             {t==="winter"&&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
