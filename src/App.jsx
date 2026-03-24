@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback, createContext, useContext } from "react";
 
 // ── PERSISTENT NOTES ──────────────────────────────────────────────────────────
 function useNotes() {
@@ -49,19 +49,19 @@ function NoteField({ courseKey }) {
 
 // ── EVAL DATA (lazy-loaded on first Evals/Suggest tab open) ─────────────────────
 function useEvalData() {
-  const [E, setE] = React.useState(null);
-  React.useEffect(() => {
+  const [E, setE] = useState(null);
+  useEffect(() => {
     import('./evalData.json').then(m => setE(m.default));
   }, []);
   return E;
 }
 // Placeholder empty object until data loads — prevents null crashes
 const E_EMPTY = {};
-const EvalContext = React.createContext(E_EMPTY);
+const EvalContext = createContext(E_EMPTY);
 const starColor = avg => !avg ? "#8a7e6e" : avg >= 4.5 ? "#3d6b4f" : avg >= 3.5 ? "#9a7820" : "#6b1e2e";
 
 function EvalCard({ evalId, label }) {
-  const E = React.useContext(EvalContext);
+  const E = useContext(EvalContext);
   const [open, setOpen] = useState(false);
   const ev = E[evalId];
   if (!ev) return null;
@@ -323,7 +323,7 @@ function Calendar({courses,tawActive}){
 const Dot=({c,sz=8})=><span style={{display:"inline-block",width:sz,height:sz,borderRadius:"50%",background:c.bd,flexShrink:0,marginRight:4}}/>;
 
 function StarBadge({evalId}) {
-  const E = React.useContext(EvalContext);
+  const E = useContext(EvalContext);
   const ev = E[evalId]; if(!ev) return null;
   const col = starColor(ev.avg);
   return <span style={{fontSize:13,fontWeight:700,color:col,marginLeft:4}}>{ev.avg?`★${ev.avg}`:"★?"}{ev.n>0?` (${ev.n})`:""}</span>;
