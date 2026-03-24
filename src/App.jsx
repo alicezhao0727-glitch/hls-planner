@@ -33,14 +33,14 @@ function NoteField({ courseKey }) {
   const hasNote = stored.trim().length > 0;
   return (
     <div style={{marginLeft:8, marginTop:2}}>
-      <button onClick={() => setOpen(o=>!o)} style={{fontSize:9.5,border:"none",cursor:"pointer",padding:"1px 5px",borderRadius:4,color:hasNote?"#7c3aed":"#9ca3af",background:hasNote?"#ede9fe":"transparent",fontWeight:hasNote?700:400}}>
+      <button onClick={() => setOpen(o=>!o)} style={{fontSize:9.5,border:"none",cursor:"pointer",padding:"1px 5px",borderRadius:3,color:hasNote?"#1e2d4a":"#8a7e6e",background:hasNote?"#d4dce8":"transparent",fontWeight:hasNote?700:400,fontFamily:"system-ui,sans-serif"}}>
         {open ? "▲ close" : hasNote ? "📝 note" : "+ note"}
       </button>
       {open && (
         <div style={{marginTop:3}}>
           <textarea value={val} onChange={handleChange} placeholder="Your notes…" rows={2}
             style={{width:"100%",boxSizing:"border-box",fontSize:11,padding:"5px 7px",borderRadius:5,border:"1px solid #c4b5fd",outline:"none",resize:"vertical",fontFamily:"system-ui,sans-serif",color:"#1e1b4b",background:"#faf5ff",lineHeight:1.4}}/>
-          {saved && <span style={{fontSize:9.5,color:"#16a34a"}}>✓ saved</span>}
+          {saved && <span style={{fontSize:9.5,color:"#3d6b4f",fontFamily:"system-ui,sans-serif"}}>✓ saved</span>}
         </div>
       )}
     </div>
@@ -236,7 +236,7 @@ const E = {
     tips:[], bid:[] },
 };
 
-const starColor = avg => !avg ? "#9ca3af" : avg >= 4.5 ? "#16a34a" : avg >= 3.5 ? "#d97706" : "#dc2626";
+const starColor = avg => !avg ? "#8a7e6e" : avg >= 4.5 ? "#3d6b4f" : avg >= 3.5 ? "#9a7820" : "#6b1e2e";
 
 function EvalCard({ evalId, label }) {
   const [open, setOpen] = useState(false);
@@ -247,29 +247,29 @@ function EvalCard({ evalId, label }) {
   return (
     <div style={{marginTop:4, marginLeft:8}}>
       <button onClick={() => setOpen(o=>!o)} style={{
-        fontSize:9.5, border:"none", cursor:"pointer", padding:"2px 6px", borderRadius:4,
-        background: open ? "#1e40af" : "#eff6ff", color: open ? "#fff" : "#1e40af", fontWeight:600,
-        display:"inline-flex", alignItems:"center", gap:4,
+        fontSize:9.5, border:"none", cursor:"pointer", padding:"2px 7px", borderRadius:3,
+        background: open ? "#1e2d4a" : "#ede6d8", color: open ? "#f3ede3" : "#1e2d4a", fontWeight:600,
+        display:"inline-flex", alignItems:"center", gap:4, fontFamily:"system-ui,sans-serif",
       }}>
-        <span style={{color: open ? "#fde68a" : starColor(ev.avg)}}>{starStr}</span>
-        {ev.n > 0 && <span style={{opacity:.8}}>({ev.n})</span>}
+        <span style={{color: open ? "#d4b896" : starColor(ev.avg)}}>{starStr}</span>
+        {ev.n > 0 && <span style={{opacity:.75}}>({ev.n})</span>}
         <span>{open ? "▲ hide" : `▼ ${label||"eval & tips"}`}</span>
       </button>
       {open && (
-        <div style={{background:"#f8fafc", border:"1px solid #bfdbfe", borderRadius:6, padding:"8px 10px", marginTop:3, fontSize:11, lineHeight:1.55}}>
-          {ev.note && <div style={{color:"#374151", marginBottom:6, fontStyle:"italic"}}>{ev.note}</div>}
+        <div style={{background:"#f3ede3", border:"1px solid #d9ccba", borderRadius:4, padding:"8px 10px", marginTop:3, fontSize:11, lineHeight:1.6, fontFamily:"system-ui,sans-serif"}}>
+          {ev.note && <div style={{color:"#5c4e3a", marginBottom:6, fontStyle:"italic"}}>{ev.note}</div>}
           {ev.comments.map((c,i) => (
-            <div key={i} style={{marginBottom:6, borderLeft:"2px solid #93c5fd", paddingLeft:7, color:"#1e3a8a"}}>
+            <div key={i} style={{marginBottom:6, borderLeft:"2px solid #b0bdd4", paddingLeft:7, color:"#1e2d4a"}}>
               "{c}"
             </div>
           ))}
           {ev.tips.length > 0 && <div style={{marginTop:4}}>
-            <div style={{fontWeight:700, color:"#374151", marginBottom:3}}>📋 Exam / class tips:</div>
-            {ev.tips.map((t,i) => <div key={i} style={{color:"#374151", marginBottom:3, paddingLeft:6, borderLeft:"2px solid #fbbf24"}}>"{t}"</div>)}
+            <div style={{fontWeight:700, color:"#5c4e3a", marginBottom:3}}>📋 Exam / class tips:</div>
+            {ev.tips.map((t,i) => <div key={i} style={{color:"#4a3828", marginBottom:3, paddingLeft:6, borderLeft:"2px solid #c4a870"}}>"{t}"</div>)}
           </div>}
           {ev.bid.length > 0 && <div style={{marginTop:4}}>
-            <div style={{fontWeight:700, color:"#374151", marginBottom:2}}>🎯 Bidding:</div>
-            {ev.bid.map((b,i) => <div key={i} style={{color:"#6b7280", fontSize:10.5}}>{b}</div>)}
+            <div style={{fontWeight:700, color:"#5c4e3a", marginBottom:2}}>🎯 Bidding:</div>
+            {ev.bid.map((b,i) => <div key={i} style={{color:"#8a7e6e", fontSize:10.5}}>{b}</div>)}
           </div>}
         </div>
       )}
@@ -281,7 +281,7 @@ function EvalCard({ evalId, label }) {
 const SUGGESTIONS = [
   {
     key:"sug_fedcourts", name:"Federal Courts", prof:"Goldsmith", cr:5, term:"Fall 27",
-    evalId:"sugg_fedCourts", c:{bg:"#e0f2fe",bd:"#0284c7",tx:"#0c4a6e"},
+    evalId:"sugg_fedCourts", c:{bg:"#e4eef5",bd:"#2a6080",tx:"#12344a"},
     why:"Litigation + Rule of Law",
     pitch:"Essential for any litigator. Goldsmith is one of the best teachers at HLS: 'I probably learned more there than I did anywhere else at HLS.' Covers the constitutional and statutory limits of Article III courts — the foundation of federal litigation strategy. Hard but worth it.",
   },
@@ -293,19 +293,19 @@ const SUGGESTIONS = [
   },
   {
     key:"sug_judicial_clinic", name:"Judicial Process in Trial Courts Clinic", prof:"Cratsley/Berenson", cr:4, term:"Fall or Spring",
-    evalId:"clinicJudicial", c:{bg:"#ecfccb",bd:"#65a30d",tx:"#365314"},
+    evalId:"clinicJudicial", c:{bg:"#e6ede2",bd:"#4a7238",tx:"#263d1a"},
     why:"Trial Work (hands-on)",
     pitch:"Judicial externship at a trial court in Boston (federal or state). 'Definitely one of my favorite classes at HLS.' You draft opinions and attend hearings/trials daily. Very easy H. Counts for pro bono. Directly on your trial track.",
   },
   {
     key:"sug_mass_media", name:"Mass Media Law", prof:"McCraw (NYT GC)", cr:3, term:"Fall",
-    evalId:"sugg_massMedia", c:{bg:"#fef3c7",bd:"#d97706",tx:"#713f12"},
+    evalId:"sugg_massMedia", c:{bg:"#f5ede0",bd:"#9a7820",tx:"#5c3810"},
     why:"Entertainment + 1A",
     pitch:"Taught by the deputy GC of the New York Times with Pulitzer-winning guest speakers. Covers freedom of expression through real cases — prior restraint, national security, defamation, press access. 'War stories' + 1A doctrine. Sort of an easy H if you prepare the disclosed policy question.",
   },
   {
     key:"sug_comp_con", name:"Comparative Constitutional Law", prof:"Lessig", cr:3, term:"Spring",
-    evalId:"sugg_compCon", c:{bg:"#fee2e2",bd:"#dc2626",tx:"#7f1d1d"},
+    evalId:"sugg_compCon", c:{bg:"#f5e8e8",bd:"#7c1d2e",tx:"#4a0f1a"},
     why:"Rule of Law + Democracy",
     pitch:"Covers how democracies die, constitutional design, rule of law comparatively. '★5 — I learned a lot about constitutional law in various countries. The breadth was wide, covering topics like how democracies die.' No cold calls. All MC exam.",
   },
@@ -370,23 +370,23 @@ const fmtHr = n => n===0?"0":(n%1===0?String(n):n.toFixed(1));
 
 // ── COLOURS ───────────────────────────────────────────────────────────────────
 const K={
-  blue:   {bg:"#dbeafe",bd:"#2563eb",tx:"#1e3a8a"},
-  green:  {bg:"#dcfce7",bd:"#16a34a",tx:"#14532d"},
-  violet: {bg:"#ede9fe",bd:"#7c3aed",tx:"#4c1d95"},
-  red:    {bg:"#fee2e2",bd:"#dc2626",tx:"#7f1d1d"},
-  amber:  {bg:"#fef3c7",bd:"#d97706",tx:"#713f12"},
-  orange: {bg:"#ffedd5",bd:"#ea580c",tx:"#7c2d12"},
-  sky:    {bg:"#e0f2fe",bd:"#0284c7",tx:"#0c4a6e"},
-  indigo: {bg:"#e0e7ff",bd:"#4338ca",tx:"#312e81"},
-  gray:   {bg:"#f3f4f6",bd:"#6b7280",tx:"#1f2937"},
-  pink:   {bg:"#fce7f3",bd:"#db2777",tx:"#831843"},
-  lime:   {bg:"#ecfccb",bd:"#65a30d",tx:"#365314"},
-  teal:   {bg:"#ccfbf1",bd:"#0d9488",tx:"#134e4a"},
-  emerald:{bg:"#d1fae5",bd:"#059669",tx:"#064e3b"},
-  rose:   {bg:"#ffe4e6",bd:"#e11d48",tx:"#881337"},
-  cyan:   {bg:"#cffafe",bd:"#0891b2",tx:"#164e63"},
-  yellow: {bg:"#fefce8",bd:"#ca8a04",tx:"#713f12"},
-  fuchsia:{bg:"#fdf4ff",bd:"#a21caf",tx:"#4a044e"},
+  blue:   {bg:"#e8ecf4",bd:"#2c4a7c",tx:"#1a2f52"},
+  green:  {bg:"#e8ede6",bd:"#3d6b4f",tx:"#1f3d2a"},
+  violet: {bg:"#ede8f0",bd:"#5c3d7a",tx:"#2d1f40"},
+  red:    {bg:"#f0e8e8",bd:"#7c1d2e",tx:"#4a0f1a"},
+  amber:  {bg:"#f5ede0",bd:"#a0622a",tx:"#5c3210"},
+  orange: {bg:"#f5ece0",bd:"#b05c20",tx:"#663010"},
+  sky:    {bg:"#e4eef5",bd:"#2a6080",tx:"#12344a"},
+  indigo: {bg:"#e8ecf2",bd:"#3a4f80",tx:"#1e2a50"},
+  gray:   {bg:"#edeae4",bd:"#7a6e64",tx:"#3d342e"},
+  pink:   {bg:"#f0e6ec",bd:"#8b3a5c",tx:"#4d1a2e"},
+  lime:   {bg:"#e6ede2",bd:"#4a7238",tx:"#263d1a"},
+  teal:   {bg:"#e2ecec",bd:"#2d7070",tx:"#143838"},
+  emerald:{bg:"#e2ede6",bd:"#2d6e4a",tx:"#123820"},
+  rose:   {bg:"#f0e4e8",bd:"#8b2d44",tx:"#4a1020"},
+  cyan:   {bg:"#e2ecf0",bd:"#2a6878",tx:"#10343c"},
+  yellow: {bg:"#f5ede0",bd:"#9a7820",tx:"#4a3808"},
+  fuchsia:{bg:"#eee4f0",bd:"#7c2a8a",tx:"#3c1044"},
 };
 
 const DAYS=["Mon","Tue","Wed","Thu","Fri"];
@@ -472,22 +472,22 @@ function Calendar({courses,tawActive}){
   courses.forEach(c=>{c?.days?.forEach(d=>byDay[d]?.push(c))});
   const hrs=Array.from({length:14},(_,i)=>i+7);
   return(
-    <div style={{display:"flex",height:CAL_H+22,fontSize:10.5,userSelect:"none",flexShrink:0}}>
-      <div style={{width:24,position:"relative",flexShrink:0,paddingTop:20}}>
-        {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:30`)+20,right:2,color:"#9ca3af",fontSize:8.5}}>{h===12?"12p":h<12?h+"a":(h-12)+"p"}</div>)}
+    <div style={{display:"flex",height:CAL_H+22,fontSize:10.5,userSelect:"none",flexShrink:0,borderRadius:5,overflow:"hidden",border:"1px solid #d9ccba"}}>
+      <div style={{width:24,position:"relative",flexShrink:0,paddingTop:20,background:"#f3ede3"}}>
+        {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:30`)+20,right:2,color:"#8a7e6e",fontSize:8.5,fontFamily:"system-ui,sans-serif"}}>{h===12?"12p":h<12?h+"a":(h-12)+"p"}</div>)}
       </div>
       {DAYS.map(day=>(
-        <div key={day} style={{flex:1,borderLeft:"1px solid #e5e7eb",position:"relative",minWidth:0,overflow:"hidden"}}>
-          <div style={{textAlign:"center",fontWeight:700,color:"#374151",height:20,lineHeight:"20px",background:"#f9fafb",borderBottom:"1px solid #e5e7eb",fontSize:9.5}}>{day}</div>
-          {tawActive&&<div style={{position:"absolute",top:yOf("14:00"),height:hOf("14:00","21:00"),left:0,right:0,background:"rgba(107,114,128,.05)",borderTop:"1px dashed #d1d5db",pointerEvents:"none"}}/>}
-          {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:00`),left:0,right:0,borderTop:h%2===0?"1px solid #f0f0f0":"1px dashed #fafafa"}}/>)}
+        <div key={day} style={{flex:1,borderLeft:"1px solid #d9ccba",position:"relative",minWidth:0,overflow:"hidden"}}>
+          <div style={{textAlign:"center",fontWeight:700,color:"#1e2d4a",height:20,lineHeight:"20px",background:"#ede6d8",borderBottom:"1px solid #d9ccba",fontSize:9.5,fontFamily:"system-ui,sans-serif",letterSpacing:"0.04em"}}>{day}</div>
+          {tawActive&&<div style={{position:"absolute",top:yOf("14:00"),height:hOf("14:00","21:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
+          {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:00`),left:0,right:0,borderTop:h%2===0?"1px solid #e8e0d4":"1px solid #f0ebe2"}}/>)}
           {byDay[day].map((c,i)=>(
             <div key={c.key+day+i} title={`${c.name} (${c.prof})\n${c.s}–${c.e}`}
               style={{position:"absolute",top:yOf(c.s),height:hOf(c.s,c.e),left:1,right:1,
-                background:c.c.bg,borderLeft:`3px solid ${c.c.bd}`,borderRadius:3,
-                padding:"2px 3px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 2px rgba(0,0,0,.07)",cursor:"default"}}>
-              <div style={{fontWeight:700,fontSize:8.5,lineHeight:1.2}}>{c.name}</div>
-              <div style={{opacity:.7,fontSize:8}}>{c.prof}</div>
+                background:c.c.bg,borderLeft:`3px solid ${c.c.bd}`,borderRadius:2,
+                padding:"2px 3px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 3px rgba(0,0,0,.1)",cursor:"default"}}>
+              <div style={{fontWeight:700,fontSize:8.5,lineHeight:1.2,fontFamily:"system-ui,sans-serif"}}>{c.name}</div>
+              <div style={{opacity:.65,fontSize:8,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>
             </div>
           ))}
         </div>
@@ -511,18 +511,18 @@ function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
   return(
     <div style={{marginBottom:4}}>
       <label style={{display:"flex",alignItems:"flex-start",gap:5,cursor:locked?"default":"pointer",
-        padding:"4px 6px",borderRadius:5,
-        background:sel?(warn?"#fff7ed":"#eff6ff"):"transparent",
-        border:sel?(warn?"1px solid #fed7aa":"1px solid #bae6fd"):"1px solid transparent",
+        padding:"4px 7px",borderRadius:4,
+        background:sel?(warn?"#f5ede0":"#edf0f5"):"transparent",
+        border:sel?(warn?"1px solid #c4924a":"1px solid #b0bdd4"):"1px solid transparent",
         opacity:locked?.45:1}}>
         {type==="radio"
-          ? <input type="radio" checked={sel} onChange={()=>!locked&&set(value)} disabled={locked} style={{marginTop:2,flexShrink:0}}/>
-          : <input type="checkbox" checked={sel} onChange={e=>!locked&&set(e.target.checked)} disabled={locked} style={{marginTop:2,flexShrink:0}}/>}
+          ? <input type="radio" checked={sel} onChange={()=>!locked&&set(value)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>
+          : <input type="checkbox" checked={sel} onChange={e=>!locked&&set(e.target.checked)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>}
         {c&&<Dot c={c}/>}
-        <span style={{fontSize:11.5}}>
-          <span style={{fontWeight:600}}>{label}</span>
+        <span style={{fontSize:11.5,fontFamily:"system-ui,sans-serif"}}>
+          <span style={{fontWeight:600,color:"#2c2418"}}>{label}</span>
           {evalId && <StarBadge evalId={evalId}/>}
-          {sub&&<><br/><span style={{color:warn?"#92400e":"#6b7280",fontSize:10.5}}>{sub}</span></>}
+          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:10.5}}>{sub}</span></>}
         </span>
       </label>
       {evalId && <EvalCard evalId={evalId}/>}
@@ -533,10 +533,10 @@ function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
 
 function Sect({title,must,children}){
   return(
-    <div style={{marginBottom:12,borderLeft:`3px solid ${must?"#f87171":"#e5e7eb"}`,paddingLeft:9}}>
+    <div style={{marginBottom:13,borderLeft:`2px solid ${must?"#6b1e2e":"#d9ccba"}`,paddingLeft:9}}>
       <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:5}}>
-        <span style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".06em"}}>{title}</span>
-        {must&&<span style={{background:"#fca5a5",color:"#7f1d1d",borderRadius:10,padding:"1px 6px",fontSize:9,fontWeight:700}}>MUST</span>}
+        <span style={{fontSize:9.5,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
+        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:8.5,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
       </div>
       {children}
     </div>
@@ -544,15 +544,17 @@ function Sect({title,must,children}){
 }
 
 function CrBar({cr,min,max,label}){
-  const over=cr>max,under=cr<min,col=over?"#dc2626":under?"#d97706":"#16a34a";
+  const over=cr>max,under=cr<min;
+  const col=over?"#6b1e2e":under?"#9a7820":"#1e2d4a";
+  const barCol=over?"#7c1d2e":under?"#a0622a":"#2c4a7c";
   return(
-    <div style={{marginBottom:7}}>
-      <div style={{display:"flex",justifyContent:"space-between",fontSize:11,fontWeight:600,marginBottom:2}}>
-        <span style={{color:col}}>{label}: <strong>{cr}cr</strong> {over?"⚠ OVER MAX":under?"⚠ under min":""}</span>
-        <span style={{color:"#9ca3af"}}>req {min}–{max}cr</span>
+    <div style={{marginBottom:8}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:11,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
+        <span style={{color:col}}>{label}: <strong>{cr}cr</strong> {over?"· over max":under?"· under min":""}</span>
+        <span style={{color:"#8a7e6e",fontWeight:400}}>{min}–{max}cr</span>
       </div>
-      <div style={{height:5,background:"#e5e7eb",borderRadius:3,overflow:"hidden"}}>
-        <div style={{height:"100%",width:`${Math.min(cr/max,1)*100}%`,background:col,transition:"width .3s"}}/>
+      <div style={{height:4,background:"#d9ccba",borderRadius:2,overflow:"hidden"}}>
+        <div style={{height:"100%",width:`${Math.min(cr/max,1)*100}%`,background:barCol,transition:"width .3s",borderRadius:2}}/>
       </div>
     </div>
   );
@@ -561,11 +563,11 @@ function CrBar({cr,min,max,label}){
 function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
   const msgs=[...conflicts.map(([a,b])=>`${a.name} (${a.prof}) ↔ ${b.name} (${b.prof})`),
     ...(tawActive&&!tawOk?[`TAW overlap ${fmtHr(tawHrs)}hr/wk — exceeds 4hr limit`]:[])];
-  if(!msgs.length) return <div style={{background:"#dcfce7",border:"1px solid #86efac",borderRadius:5,padding:"4px 9px",marginBottom:7,fontSize:11,color:"#166534"}}>✓ No schedule conflicts{tawActive?` · TAW overlap: ${fmtHr(tawHrs)}hr/wk`:""}</div>;
+  if(!msgs.length) return <div style={{background:"#eaf0e8",border:"1px solid #b0c4a8",borderRadius:4,padding:"4px 10px",marginBottom:8,fontSize:11,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>✓ No schedule conflicts{tawActive?` · TAW overlap: ${fmtHr(tawHrs)}hr/wk`:""}</div>;
   return(
-    <div style={{background:"#fee2e2",border:"1px solid #fca5a5",borderRadius:5,padding:"6px 9px",marginBottom:7}}>
-      <div style={{fontWeight:700,color:"#b91c1c",fontSize:11,marginBottom:2}}>⚠ {msgs.length} issue{msgs.length>1?"s":""}</div>
-      {msgs.map((m,i)=><div key={i} style={{fontSize:10,color:"#b91c1c"}}>{m}</div>)}
+    <div style={{background:"#f5e8e8",border:"1px solid #c4a4a4",borderRadius:4,padding:"6px 10px",marginBottom:8,fontFamily:"system-ui,sans-serif"}}>
+      <div style={{fontWeight:700,color:"#6b1e2e",fontSize:11,marginBottom:2}}>⚠ {msgs.length} conflict{msgs.length>1?"s":""}</div>
+      {msgs.map((m,i)=><div key={i} style={{fontSize:10,color:"#7c1d2e"}}>{m}</div>)}
     </div>
   );
 }
@@ -573,19 +575,19 @@ function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
 function TBDGrid({opts,sel,toggle}){
   return(
     <div>
-      <div style={{fontSize:9.5,color:"#6b7280",marginBottom:5,fontStyle:"italic"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
+      <div style={{fontSize:9.5,color:"#8a7e6e",marginBottom:5,fontStyle:"italic",fontFamily:"system-ui,sans-serif"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:3}}>
         {opts.map(c=>{
           const on=sel.has(c.key);
           return(
-            <div key={c.key} style={{borderRadius:4,background:on?"#eff6ff":"#f9fafb",border:on?"1px solid #bae6fd":"1px solid #e5e7eb",overflow:"hidden"}}>
-              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"3px 5px",fontSize:10.5,width:"100%",boxSizing:"border-box"}}>
-                <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0}}/>
+            <div key={c.key} style={{borderRadius:3,background:on?"#edf0f5":"#f3ede3",border:on?"1px solid #b0bdd4":"1px solid #d9ccba",overflow:"hidden"}}>
+              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"3px 5px",fontSize:10.5,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
+                <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,accentColor:"#1e2d4a"}}/>
                 <Dot c={c.c} sz={6}/>
                 <span style={{flex:1,lineHeight:1.3}}>
-                  <span style={{fontWeight:600}}>{c.name}</span>
+                  <span style={{fontWeight:600,color:"#2c2418"}}>{c.name}</span>
                   {c.evalId&&<StarBadge evalId={c.evalId}/>}
-                  <br/><span style={{color:"#6b7280"}}>{c.prof} · </span><span style={{color:"#2563eb"}}>{c.cr}cr</span>
+                  <br/><span style={{color:"#8a7e6e"}}>{c.prof} · </span><span style={{color:"#1e2d4a"}}>{c.cr}cr</span>
                 </span>
               </label>
               {c.evalId&&<EvalCard evalId={c.evalId}/>}
@@ -608,10 +610,10 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
   return(
     <div>
       <div style={{display:"flex",flexWrap:"wrap",gap:3,marginBottom:6}}>
-        <button onClick={()=>setClinicId(null)} style={{padding:"2px 8px",borderRadius:10,fontSize:10.5,fontWeight:700,cursor:"pointer",background:!clinicId?"#374151":"#f3f4f6",color:!clinicId?"#fff":"#374151",border:"none"}}>None</button>
+        <button onClick={()=>setClinicId(null)} style={{padding:"2px 8px",borderRadius:10,fontSize:10.5,fontWeight:700,cursor:"pointer",background:!clinicId?"#1e2d4a":"#ede6d8",color:!clinicId?"#f3ede3":"#2c2418",border:"none",fontFamily:"system-ui,sans-serif"}}>None</button>
         {opts.map(cl=>(
           <button key={cl.id} onClick={()=>{setClinicId(cl.id);setFieldCr(cl.fMin);}}
-            style={{padding:"2px 8px",borderRadius:10,fontSize:10.5,fontWeight:700,cursor:"pointer",background:clinicId===cl.id?cl.c.bd:"#f3f4f6",color:clinicId===cl.id?"#fff":"#374151",border:"none"}}>
+            style={{padding:"2px 8px",borderRadius:10,fontSize:10.5,fontWeight:700,cursor:"pointer",background:clinicId===cl.id?cl.c.bd:"#ede6d8",color:clinicId===cl.id?"#f3ede3":"#2c2418",border:"none",fontFamily:"system-ui,sans-serif"}}>
             {cl.name}
           </button>
         ))}
@@ -730,10 +732,10 @@ export default function App(){
   const springCr=sumCr(spTimed)+spTBDCr+spClinicCr;
   const annualCr=fallCr+winterCrCalc+springCr;
 
-  const crCol=(cr,min,max)=>cr>max?"#dc2626":cr<min?"#d97706":"#16a34a";
+  const crCol=(cr,min,max)=>cr>max?"#6b1e2e":cr<min?"#9a7820":"#1e2d4a";
   const TABS=["fall","winter","spring","summary","evals","suggest"];
   const TL={fall:"🍂 Fall",winter:"❄️ Winter",spring:"🌸 Spring",summary:"📋 Summary",evals:"★ Evals",suggest:"💡 Suggest"};
-  const side={width:250,flexShrink:0,borderRight:"1px solid #e5e7eb",paddingRight:12,overflowY:"auto",maxHeight:"84vh"};
+  const side={width:255,flexShrink:0,borderRight:`1px solid #d9ccba`,paddingRight:13,overflowY:"auto",maxHeight:"84vh"};
 
   const toggleF=k=>setFTBD(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
   const toggleSp=k=>setSpTBD(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
@@ -789,30 +791,31 @@ export default function App(){
         it.prof.toLowerCase().includes(evalSearch.toLowerCase()))
     : ALL_EVAL_ITEMS;
 
+  const RR={bg:"#f9f5ef",paper:"#f3ede3",border:"#d9ccba",navy:"#1e2d4a",maroon:"#6b1e2e",ink:"#2c2418",muted:"#8a7e6e",faint:"#ede6d8",accent:"#7c1d2e",accentLight:"#f5e8e8",gold:"#9a7820"};
+  const rrCrCol=(cr,min,max)=>cr>max?RR.maroon:cr<min?RR.gold:RR.navy;
+
   return(
-    <div style={{fontFamily:"system-ui,-apple-system,sans-serif",background:"#fff",minHeight:"100vh",padding:"10px 13px",boxSizing:"border-box"}}>
+    <div style={{fontFamily:"Georgia,'Times New Roman',serif",background:RR.bg,minHeight:"100vh",padding:"14px 16px",boxSizing:"border-box",color:RR.ink}}>
       {/* Header */}
-      <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:8}}>
+      <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${RR.border}`}}>
         <div>
-          <h2 style={{margin:0,fontSize:15,fontWeight:800,color:"#111"}}>HLS 2L Schedule Planner</h2>
-          <div style={{fontSize:9,color:"#9ca3af"}}>Evidence · Corporations · Admin Law · TAW = must-take · ★ = peer rating · 📝 = your notes</div>
+          <h2 style={{margin:0,fontSize:16,fontWeight:700,color:RR.navy,letterSpacing:"0.01em"}}>The Reading Room</h2>
+          <div style={{fontSize:9.5,color:RR.muted,fontFamily:"system-ui,sans-serif",marginTop:1,letterSpacing:"0.05em",textTransform:"uppercase"}}>2L Schedule Planner · must-takes marked · ★ peer rating · 📝 notes</div>
         </div>
         <div style={{marginLeft:"auto",textAlign:"right"}}>
-          <span style={{fontSize:13,fontWeight:800,color:crCol(annualCr,24,35)}}>{annualCr}cr</span>
-          <span style={{fontSize:9.5,color:"#9ca3af"}}> annual (24–35)</span>
+          <span style={{fontSize:14,fontWeight:700,color:rrCrCol(annualCr,24,35)}}>{annualCr}cr</span>
+          <span style={{fontSize:9.5,color:RR.muted,fontFamily:"system-ui,sans-serif"}}> annual (24–35)</span>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{display:"flex",borderBottom:"2px solid #e5e7eb",marginBottom:10,flexWrap:"wrap"}}>
+      <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:12,flexWrap:"wrap"}}>
         {TABS.map(t=>(
-          <button key={t} onClick={()=>setTab(t)} style={{padding:"5px 10px",fontSize:11,fontWeight:700,border:"none",background:"none",cursor:"pointer",
-            borderBottom:tab===t?"2px solid #2563eb":"2px solid transparent",
-            color:tab===t?"#2563eb":"#6b7280",marginBottom:-2,display:"flex",alignItems:"center",gap:3}}>
+          <button key={t} onClick={()=>setTab(t)} style={{padding:"5px 11px",fontSize:11,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
             {TL[t]}
-            {t==="fall"  &&<span style={{fontSize:9.5,fontWeight:900,color:crCol(fallCr,10,16)}}>{fallCr}</span>}
-            {t==="winter"&&<span style={{fontSize:9.5,fontWeight:900,color:crCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
-            {t==="spring"&&<span style={{fontSize:9.5,fontWeight:900,color:crCol(springCr,10,16)}}>{springCr}</span>}
+            {t==="fall"  &&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(fallCr,10,16)}}>{fallCr}</span>}
+            {t==="winter"&&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
+            {t==="spring"&&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(springCr,10,16)}}>{springCr}</span>}
           </button>
         ))}
       </div>
@@ -844,16 +847,16 @@ export default function App(){
             <Sect title="Optional — Timed">
               <Option type="checkbox" cur={fBk} set={setFBk} c={K.violet} label="Bankruptcy (Elias) · 4cr · MT 10:15" evalId="f_bke" noteKey="f_bke"
                 sub={(fEv==="ev_s"||fEv==="ev_w")?"⚠ conflicts with Evidence":"MT 10:15"} warn={fEv==="ev_s"||fEv==="ev_w"}/>
-              <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",margin:"5px 0 3px 0"}}>First Amendment</div>
+              <div style={{fontSize:10,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>First Amendment</div>
               <Option type="radio" value="none" cur={f1A} set={setF1A} label="Skip (take Spring/Parker)" evalId={null} noteKey={null}/>
               <Option type="radio" value="feld" cur={f1A} set={setF1A} c={K.indigo} label="Feldman · 4cr · TF 10:15" evalId="f1a_fe" noteKey="f1a_fe"/>
               <Option type="radio" value="wein" cur={f1A} set={setF1A} c={K.indigo} label="Weinrib · 4cr · MT 1:30" evalId="f1a_we" noteKey="f1a_we"/>
-              <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",margin:"5px 0 3px 0"}}>MacKinnon</div>
+              <div style={{fontSize:10,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>MacKinnon</div>
               <Option type="checkbox" cur={fSex} set={setFSex} c={K.pink} label="Sex Equality · 3cr · condensed Sept–Oct" evalId="f_sex" noteKey="f_sex"
                 sub={fSexA?"⚠ don't take both MacKinnon courses":""} warn={fSex&&fSexA}/>
               <Option type="checkbox" cur={fSexA} set={setFSexA} c={K.pink} label="Adv. Problems in Sex Equality · 2cr · MT 1:30" evalId={null} noteKey="f_sexA"
                 sub={fSex?"⚠ don't take both MacKinnon courses":""} warn={fSex&&fSexA}/>
-              <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",margin:"5px 0 3px 0"}}>Seminars</div>
+              <div style={{fontSize:10,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>Seminars</div>
               <Option type="checkbox" cur={fFl} set={setFFl} c={K.orange} label="Facts & Lies (Saris) · 2cr · W 3:45" evalId="f_fl" noteKey="f_fl" sub="Prof writing req candidate"/>
               <Option type="checkbox" cur={fEc} set={setFEc} c={K.red}    label="Engaging China (Alford) · 2cr · MT 6pm" evalId={null} noteKey="f_ec"/>
               <Option type="checkbox" cur={fAa} set={setFAa} c={K.amber}  label="Asian Am & Law (Lee) · 2cr · T 3:45" evalId={null} noteKey="f_aa"/>
@@ -867,14 +870,14 @@ export default function App(){
           </div>
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={fallCr} min={10} max={16} label="Fall"/>
-            {fTAW&&<div style={{fontSize:11,background:fallTAWOk?"#eff6ff":"#fee2e2",border:`1px solid ${fallTAWOk?"#bae6fd":"#fca5a5"}`,borderRadius:5,padding:"3px 9px",marginBottom:6,color:fallTAWOk?"#1e40af":"#b91c1c"}}>
+            {fTAW&&<div style={{fontSize:11,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
               TAW overlap: <strong>{fmtHr(fallTAWHrs)}hr/wk</strong> / 4hr max {fallTAWOk?"✓":"⚠ exceeded"}
             </div>}
             <ConflictBanner conflicts={fallConflicts} tawOk={fallTAWOk} tawHrs={fallTAWHrs} tawActive={fTAW}/>
-            {fClinic&&<div style={{fontSize:10.5,background:"#ecfccb",border:"1px solid #a3e635",borderRadius:5,padding:"3px 8px",marginBottom:6,color:"#365314"}}>
+            {fClinic&&<div style={{fontSize:10.5,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
               🏥 {CLINIC_OPTS.find(c=>c.id===fClinic)?.name} Clinic · {fClinicCr}cr · seminar time TBD
             </div>}
-            {fTBD.size>0&&<div style={{fontSize:10.5,background:"#f0f9ff",border:"1px solid #bae6fd",borderRadius:5,padding:"3px 8px",marginBottom:6,color:"#0c4a6e"}}>
+            {fTBD.size>0&&<div style={{fontSize:10.5,background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#1e2d4a",fontFamily:"system-ui,sans-serif"}}>
               📋 {fTBD.size} TBD course{fTBD.size>1?"s":""} · {fTBDCr}cr
             </div>}
             <Calendar courses={fallTimed} tawActive={fTAW}/>
@@ -887,14 +890,14 @@ export default function App(){
         <div style={{maxWidth:500}}>
           <CrBar cr={winterCrCalc} min={2} max={3} label="Winter"/>
           {useFedWinter
-            ? <div style={{background:"#ccfbf1",border:"1px solid #5eead4",borderRadius:7,padding:"10px 12px",fontSize:11}}>
-                <div style={{fontWeight:700,color:"#0d9488",marginBottom:3}}>⚖️ Federal Courts Clinic — winter component</div>
-                <div style={{color:"#134e4a"}}>2cr winter classroom · reserved for Fed Courts · no other winter courses</div>
+            ? <div style={{background:"#e8f0ee",border:"1px solid #9abfb8",borderRadius:5,padding:"10px 12px",fontSize:11,fontFamily:"system-ui,sans-serif"}}>
+                <div style={{fontWeight:700,color:"#2d7070",marginBottom:3}}>⚖️ Federal Courts Clinic — winter component</div>
+                <div style={{color:"#1a3a38"}}>2cr winter classroom · reserved for Fed Courts · no other winter courses</div>
                 <EvalCard evalId="clinicFedCourts" label="clinic eval"/>
               </div>
             : <>
                 {!fTAW&&<Sect title="Trial Advocacy Workshop" must>
-                  <div style={{fontSize:11,padding:"5px 8px",background:"#f3f4f6",borderRadius:5,color:"#374151",fontWeight:600}}>TAW (Harden) · 3cr · fills winter slot</div>
+                  <div style={{fontSize:11,padding:"5px 8px",background:"#ede6d8",borderRadius:4,color:"#2c2418",fontWeight:600,fontFamily:"system-ui,sans-serif"}}>TAW (Harden) · 3cr · fills winter slot</div>
                   <EvalCard evalId="taw"/>
                 </Sect>}
                 {fTAW&&<Sect title="Winter courses">
@@ -902,11 +905,11 @@ export default function App(){
                 </Sect>}
               </>
           }
-          <div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:7,padding:"9px 11px",marginTop:8,fontSize:11}}>
+          <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:"9px 11px",marginTop:8,fontSize:11,fontFamily:"system-ui,sans-serif"}}>
             <strong>Winter rules:</strong> min 2cr · max 3cr · Fed Courts locks out other courses
-            {winterCrCalc<2&&<span style={{color:"#dc2626"}}> ⚠ under minimum</span>}
-            {winterCrCalc>3&&<span style={{color:"#dc2626"}}> ⚠ over maximum</span>}
-            {winterCrCalc>=2&&winterCrCalc<=3&&<span style={{color:"#16a34a"}}> ✓</span>}
+            {winterCrCalc<2&&<span style={{color:"#6b1e2e"}}> ⚠ under minimum</span>}
+            {winterCrCalc>3&&<span style={{color:"#6b1e2e"}}> ⚠ over maximum</span>}
+            {winterCrCalc>=2&&winterCrCalc<=3&&<span style={{color:"#3d6b4f"}}> ✓</span>}
           </div>
         </div>
       )}
@@ -920,7 +923,7 @@ export default function App(){
               <Option type="radio" value="sp_adm_b" cur={spAdm} set={setSpAdm} c={K.red} label="Block · 3cr · TW 3:45–5:15" evalId="sp_adm_b" sub="Take-home exam · 2026-27 confirmed" noteKey="sp_adm_b"/>
             </Sect>
             <Sect title="MTW 10:30 — pick one">
-              <div style={{fontSize:10,color:"#dc2626",background:"#fee2e2",borderRadius:4,padding:"2px 6px",marginBottom:4}}>Roe and Fisher share the same timeslot</div>
+              <div style={{fontSize:10,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe and Fisher share the same timeslot</div>
               <Option type="radio" value="none"  cur={spMTC} set={setSpMTC} label="Skip both" evalId={null} noteKey={null}/>
               <Option type="radio" value="sp_bk" cur={spMTC} set={setSpMTC} c={K.violet} label="Bankruptcy (Roe) · 4cr" evalId="sp_bk" noteKey="sp_bk"/>
               <Option type="radio" value="sp_cp" cur={spMTC} set={setSpMTC} c={K.sky}    label="Copyright (Fisher) · 4cr" evalId="sp_cp" noteKey="sp_cp"/>
@@ -933,7 +936,7 @@ export default function App(){
                 warn={spAdm==="sp_adm_b"}/>
             </Sect>
             <Sect title="Clinic (Spring)">
-              {fClinic&&<div style={{fontSize:10.5,color:"#b91c1c",marginBottom:5}}>⚠ Already have fall clinic — max 1/term</div>}
+              {fClinic&&<div style={{fontSize:10.5,color:"#6b1e2e",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>⚠ Already have fall clinic — max 1/term</div>}
               <ClinicSelector clinicId={spClinic} setClinicId={setSpClinic} fieldCr={spField} setFieldCr={setSpField} allowedTerms="spring"/>
             </Sect>
             <Sect title="TBD-Timed Courses">
@@ -943,10 +946,10 @@ export default function App(){
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={springCr} min={10} max={16} label="Spring"/>
             <ConflictBanner conflicts={spConflicts} tawOk={true} tawHrs={0} tawActive={false}/>
-            {spClinic&&<div style={{fontSize:10.5,background:"#ecfccb",border:"1px solid #a3e635",borderRadius:5,padding:"3px 8px",marginBottom:6,color:"#365314"}}>
+            {spClinic&&<div style={{fontSize:10.5,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
               🏥 {CLINIC_OPTS.find(c=>c.id===spClinic)?.name} Clinic · {spClinicCr}cr · seminar time TBD
             </div>}
-            {spTBD.size>0&&<div style={{fontSize:10.5,background:"#f0f9ff",border:"1px solid #bae6fd",borderRadius:5,padding:"3px 8px",marginBottom:6,color:"#0c4a6e"}}>
+            {spTBD.size>0&&<div style={{fontSize:10.5,background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#1e2d4a",fontFamily:"system-ui,sans-serif"}}>
               📋 {spTBD.size} TBD course{spTBD.size>1?"s":""} · {spTBDCr}cr
             </div>}
             <Calendar courses={spTimed} tawActive={false}/>
@@ -992,36 +995,36 @@ export default function App(){
               {[{l:"🍂 Fall",cr:fallCr,min:10,max:16},{l:"❄️ Winter",cr:winterCrCalc,min:2,max:3},{l:"🌸 Spring",cr:springCr,min:10,max:16},{l:"📅 Annual",cr:annualCr,min:24,max:35}].map(({l,cr,min,max})=>{
                 const ok2=cr>=min&&cr<=max;
                 return(
-                  <div key={l} style={{background:ok2?"#f0fdf4":"#fff7ed",border:`1px solid ${ok2?"#86efac":"#fed7aa"}`,borderRadius:7,padding:"9px",textAlign:"center"}}>
-                    <div style={{fontSize:11,fontWeight:700,color:"#374151",marginBottom:2}}>{l}</div>
-                    <div style={{fontSize:22,fontWeight:900,color:ok2?"#16a34a":"#ea580c"}}>{cr}</div>
-                    <div style={{fontSize:9,color:"#9ca3af"}}>req {min}–{max}cr</div>
+                  <div key={l} style={{background:ok2?"#eaf0e8":"#f5ede0",border:`1px solid ${ok2?"#b0c4a8":"#c4924a"}`,borderRadius:5,padding:"9px",textAlign:"center",fontFamily:"system-ui,sans-serif"}}>
+                    <div style={{fontSize:11,fontWeight:700,color:"#1e2d4a",marginBottom:2}}>{l}</div>
+                    <div style={{fontSize:22,fontWeight:900,color:ok2?"#3d6b4f":"#9a4a1a"}}>{cr}</div>
+                    <div style={{fontSize:9,color:"#8a7e6e"}}>req {min}–{max}cr</div>
                   </div>
                 );
               })}
             </div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:11}}>
               {[{l:"🍂 Fall",items:fallItems},{l:"❄️ Winter",items:winterItems},{l:"🌸 Spring",items:spItems}].map(term=>(
-                <div key={term.l} style={{background:"#f9fafb",border:"1px solid #e5e7eb",borderRadius:7,padding:"9px"}}>
-                  <div style={{fontWeight:800,fontSize:12,marginBottom:6}}>{term.l}</div>
-                  {term.items.length===0?<div style={{color:"#9ca3af",fontSize:11}}>Nothing selected</div>
+                <div key={term.l} style={{background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:"9px",fontFamily:"system-ui,sans-serif"}}>
+                  <div style={{fontWeight:700,fontSize:12,marginBottom:6,color:"#1e2d4a"}}>{term.l}</div>
+                  {term.items.length===0?<div style={{color:"#8a7e6e",fontSize:11}}>Nothing selected</div>
                    :term.items.map((c,i)=>(
                      <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:3,fontSize:11}}>
                        <span style={{display:"flex",alignItems:"center",gap:3}}>
                          {c.c&&<span style={{width:6,height:6,borderRadius:"50%",background:c.c.bd,display:"inline-block",flexShrink:0}}/>}
                          {c.name}{c.prof?` · ${c.prof}`:""}
                        </span>
-                       <span style={{color:"#6b7280",fontSize:10.5,flexShrink:0,marginLeft:3}}>{c.cr||c.credits}cr</span>
+                       <span style={{color:"#8a7e6e",fontSize:10.5,flexShrink:0,marginLeft:3}}>{c.cr||c.credits}cr</span>
                      </div>
                    ))}
                 </div>
               ))}
             </div>
-            <div style={{background:ok?"#dcfce7":"#fee2e2",border:`1px solid ${ok?"#86efac":"#fca5a5"}`,borderRadius:7,padding:"9px 11px",marginBottom:11}}>
-              <div style={{fontWeight:700,fontSize:13,marginBottom:ok?0:5,color:ok?"#166534":"#b91c1c"}}>
+            <div style={{background:ok?"#eaf0e8":"#f5e8e8",border:`1px solid ${ok?"#b0c4a8":"#c4a4a4"}`,borderRadius:5,padding:"9px 11px",marginBottom:11,fontFamily:"system-ui,sans-serif"}}>
+              <div style={{fontWeight:700,fontSize:13,marginBottom:ok?0:5,color:ok?"#2a4a22":"#6b1e2e"}}>
                 {ok?"✓ Valid schedule":`⚠ ${issues.length} issue${issues.length>1?"s":""}`}
               </div>
-              {issues.map((m,i)=><div key={i} style={{fontSize:11,color:"#b91c1c"}}>{m}</div>)}
+              {issues.map((m,i)=><div key={i} style={{fontSize:11,color:"#6b1e2e"}}>{m}</div>)}
             </div>
           </div>
         );
@@ -1033,8 +1036,8 @@ export default function App(){
           <div style={{marginBottom:10,display:"flex",alignItems:"center",gap:8}}>
             <input value={evalSearch} onChange={e=>setEvalSearch(e.target.value)}
               placeholder="Search courses or professors…"
-              style={{flex:1,maxWidth:320,padding:"6px 10px",borderRadius:6,border:"1px solid #d1d5db",fontSize:12,outline:"none"}}/>
-            <span style={{fontSize:11,color:"#6b7280"}}>{filteredEvals.length} courses</span>
+              style={{flex:1,maxWidth:320,padding:"6px 10px",borderRadius:4,border:"1px solid #d9ccba",fontSize:12,outline:"none",background:"#f3ede3",color:"#2c2418",fontFamily:"system-ui,sans-serif"}}/>
+            <span style={{fontSize:11,color:"#8a7e6e",fontFamily:"system-ui,sans-serif"}}>{filteredEvals.length} courses</span>
           </div>
           <div style={{columns:2,columnGap:14}}>
             {filteredEvals.map(item=>{
@@ -1043,27 +1046,27 @@ export default function App(){
               const avg=ev.avg;
               const col=starColor(avg);
               return(
-                <div key={item.id} style={{breakInside:"avoid",marginBottom:12,background:"#f8fafc",border:"1px solid #e2e8f0",borderRadius:8,padding:"10px 12px"}}>
-                  <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4}}>
-                    <span style={{fontWeight:700,fontSize:12,color:"#111"}}>{item.name}</span>
-                    <span style={{fontSize:11,color:"#6b7280"}}>{item.prof}</span>
+                <div key={item.id} style={{breakInside:"avoid",marginBottom:12,background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:"10px 12px"}}>
+                  <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>
+                    <span style={{fontWeight:700,fontSize:12,color:"#1e2d4a"}}>{item.name}</span>
+                    <span style={{fontSize:11,color:"#8a7e6e"}}>{item.prof}</span>
                     <span style={{marginLeft:"auto",fontWeight:700,fontSize:12,color:col}}>{avg?`★${avg}`:"★?"}</span>
-                    {ev.n>0&&<span style={{fontSize:10,color:"#9ca3af"}}>n={ev.n}</span>}
+                    {ev.n>0&&<span style={{fontSize:10,color:"#8a7e6e"}}>n={ev.n}</span>}
                   </div>
-                  {ev.note&&<div style={{fontSize:10.5,color:"#374151",fontStyle:"italic",marginBottom:5}}>{ev.note}</div>}
+                  {ev.note&&<div style={{fontSize:10.5,color:"#5c4e3a",fontStyle:"italic",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{ev.note}</div>}
                   {ev.comments.map((c,i)=>(
-                    <div key={i} style={{fontSize:10.5,color:"#1e3a8a",borderLeft:"2px solid #93c5fd",paddingLeft:7,marginBottom:5,lineHeight:1.5}}>
+                    <div key={i} style={{fontSize:10.5,color:"#1e2d4a",borderLeft:"2px solid #b0bdd4",paddingLeft:7,marginBottom:5,lineHeight:1.5,fontFamily:"system-ui,sans-serif"}}>
                       "{c}"
                     </div>
                   ))}
                   {ev.tips.length>0&&(
-                    <div style={{marginTop:4}}>
-                      <div style={{fontSize:10,fontWeight:700,color:"#92400e",marginBottom:2}}>📋 Exam tips:</div>
-                      {ev.tips.map((t,i)=><div key={i} style={{fontSize:10.5,color:"#374151",borderLeft:"2px solid #fbbf24",paddingLeft:7,marginBottom:3,lineHeight:1.5}}>"{t}"</div>)}
+                    <div style={{marginTop:4,fontFamily:"system-ui,sans-serif"}}>
+                      <div style={{fontSize:10,fontWeight:700,color:"#7a5c2a",marginBottom:2}}>📋 Exam tips:</div>
+                      {ev.tips.map((t,i)=><div key={i} style={{fontSize:10.5,color:"#4a3828",borderLeft:"2px solid #c4a870",paddingLeft:7,marginBottom:3,lineHeight:1.5}}>"{t}"</div>)}
                     </div>
                   )}
                   {ev.bid.length>0&&(
-                    <div style={{marginTop:3,fontSize:10,color:"#6b7280"}}>
+                    <div style={{marginTop:3,fontSize:10,color:"#8a7e6e",fontFamily:"system-ui,sans-serif"}}>
                       🎯 <em>{ev.bid.join(" / ")}</em>
                     </div>
                   )}
@@ -1077,20 +1080,20 @@ export default function App(){
       {/* ── SUGGESTIONS ── */}
       {tab==="suggest"&&(
         <div>
-          <div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:8,padding:"10px 12px",marginBottom:14,fontSize:11}}>
-            <div style={{fontWeight:700,fontSize:12,marginBottom:4}}>Based on your interests: litigation · trial work · gender issues · rule of law/democracy · entertainment · IP disputes</div>
-            <div style={{color:"#374151"}}>These courses are not currently in your spreadsheet but are worth considering. Click "▼ eval & tips" to see direct peer quotes.</div>
+          <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:"10px 12px",marginBottom:14,fontSize:11,fontFamily:"system-ui,sans-serif"}}>
+            <div style={{fontWeight:700,fontSize:12,marginBottom:4,color:"#1e2d4a"}}>Based on your interests: litigation · trial work · gender issues · rule of law/democracy · entertainment · IP disputes</div>
+            <div style={{color:"#5c4e3a"}}>These courses are not in your main schedule but are worth considering. Click "▼ eval & tips" to see direct peer quotes.</div>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
             {SUGGESTIONS.map(s=>(
-              <div key={s.key} style={{background:s.c.bg,border:`1px solid ${s.c.bd}`,borderRadius:8,padding:"10px 12px"}}>
-                <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:3}}>
+              <div key={s.key} style={{background:s.c.bg,border:`1px solid ${s.c.bd}`,borderRadius:5,padding:"10px 12px"}}>
+                <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
                   <span style={{fontWeight:700,fontSize:12,color:s.c.tx}}>{s.name}</span>
                   <span style={{fontSize:11,color:s.c.tx,opacity:.8}}>{s.prof}</span>
-                  <span style={{marginLeft:"auto",fontSize:10,fontWeight:700,color:s.c.bd,background:"#fff",borderRadius:10,padding:"1px 6px"}}>{s.cr}cr · {s.term}</span>
+                  <span style={{marginLeft:"auto",fontSize:10,fontWeight:700,color:s.c.bd,background:"#f3ede3",borderRadius:8,padding:"1px 6px"}}>{s.cr}cr · {s.term}</span>
                 </div>
-                <div style={{fontSize:10,fontWeight:700,color:s.c.bd,marginBottom:4}}>🎯 Why: {s.why}</div>
-                <div style={{fontSize:11,color:s.c.tx,lineHeight:1.5,marginBottom:5}}>{s.pitch}</div>
+                <div style={{fontSize:10,fontWeight:700,color:s.c.bd,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>🎯 Why: {s.why}</div>
+                <div style={{fontSize:11,color:s.c.tx,lineHeight:1.55,marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{s.pitch}</div>
                 {s.evalId&&<EvalCard evalId={s.evalId} label="peer quotes"/>}
                 {window.__hlsSetNote&&<NoteField courseKey={s.key}/>}
               </div>
