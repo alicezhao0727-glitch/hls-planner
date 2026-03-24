@@ -221,12 +221,12 @@ const C = {
   ev_w:  {key:"ev_w",  name:"Evidence",     prof:"Whiting",   cr:4, days:["Mon","Tue"],       s:"10:15",e:"12:15", c:K.blue},
   co_sp: {key:"co_sp", name:"Corporations", prof:"Spaaman",   cr:4, days:["Wed","Thu","Fri"], s:"8:30", e:"9:50",  c:K.green},
   co_fr: {key:"co_fr", name:"Corporations", prof:"Fried",     cr:4, days:["Wed","Thu","Fri"], s:"13:30",e:"15:30", c:K.green},
-  taw:   {key:"taw",   name:"Trial Advocacy Workshop", prof:"Harden", cr:3, days:DAYS, s:"14:00",e:"21:00", c:K.gray},
+  taw:   {key:"taw",   name:"Trial Advocacy Workshop", prof:"Sullivan", cr:3, days:DAYS, s:"14:00",e:"21:00", c:K.gray},
   f_adm: {key:"f_adm", name:"Admin Law",    prof:"Freeman",   cr:4, days:["Wed","Thu"],       s:"13:30",e:"15:30", c:K.red},
   f_bke: {key:"f_bke", name:"Bankruptcy",   prof:"Elias",     cr:4, days:["Mon","Tue"],       s:"10:15",e:"12:15", c:K.violet},
-  f_1afe:{key:"f_1afe",name:"1st Amendment",prof:"Feldman",   cr:4, days:["Tue","Fri"],       s:"10:15",e:"12:15", c:K.indigo},
+  f_1afe:{key:"f_1afe",name:"1st Amendment",prof:"Feldman",   cr:4, days:["Thu","Fri"],       s:"10:15",e:"12:15", c:K.indigo},
   f_1awe:{key:"f_1awe",name:"1st Amendment",prof:"Weinrib",   cr:4, days:["Mon","Tue"],       s:"13:30",e:"15:30", c:K.indigo},
-  f_sex: {key:"f_sex", name:"Sex Equality", prof:"MacKinnon", cr:3, days:["Mon","Tue"],       s:"10:15",e:"11:45", c:K.pink},
+  f_sex: {key:"f_sex", name:"Sex Equality", prof:"MacKinnon", cr:3, days:["Mon","Tue","Wed"], s:"18:00",e:"20:00", c:K.pink},
   f_sexA:{key:"f_sexA",name:"Adv Sex Equality",prof:"MacKinnon",cr:2,days:["Mon","Tue"],      s:"13:30",e:"15:30", c:K.pink},
   f_fl:  {key:"f_fl",  name:"Facts & Lies", prof:"Saris",     cr:2, days:["Wed"],             s:"15:45",e:"17:45", c:K.orange},
   f_ec:  {key:"f_ec",  name:"Engaging China",prof:"Alford",   cr:2, days:["Mon","Tue"],       s:"18:00",e:"20:00", c:K.red},
@@ -240,34 +240,35 @@ const C = {
 };
 
 const FALL_TBD=[
-  {key:"f_cl",  name:"Complex Litigation",          prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_cl"},
+  {key:"f_cl",  name:"Complex Litigation",          prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_cl", note:"W 10:15–12:15"},
   {key:"f_ica", name:"Intl Commercial Arbitration", prof:"Banifatemi", cr:2, c:K.teal,   evalId:null},
   {key:"f_emp", name:"Employment Law",              prof:"Sachs",      cr:4, c:K.rose,   evalId:"f_emp"},
   {key:"f_cci", name:"Corporate Criminal Invest.",  prof:"Kahn/Tsao",  cr:2, c:K.fuchsia,evalId:"f_cci"},
-  {key:"f_ctml",name:"Copyright & TM Litigation",  prof:"Cendali",    cr:2, c:K.sky,    evalId:"f_ctml"},
-  {key:"f_ca",  name:"Class Actions",              prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_ca"},
-  {key:"f_cp",  name:"Criminal Procedure",         prof:"Fidler",     cr:3, c:K.amber,  evalId:null},
-  {key:"f_bn",  name:"Business Negotiations",      prof:"Coakley",    cr:3, c:K.lime,   evalId:null},
-  {key:"f_taxB",name:"Taxation",                   prof:"Brennan",    cr:4, c:K.yellow, evalId:"f_taxB"},
-  {key:"f_taxD",name:"Taxation",                   prof:"Desai",      cr:4, c:K.yellow, evalId:"f_taxD"},
-  {key:"f_gi",  name:"Gender Identity & Sex Orientation",prof:"Chen",cr:2, c:K.fuchsia, evalId:"f_gi"},
-  {key:"f_dpl", name:"Drug Product Litigation",    prof:"Grossi",     cr:3, c:K.orange, evalId:null},
-  {key:"f_bsl", name:"Business Strategy for Lawyers",prof:"Spier",   cr:3, c:K.teal,   evalId:"f_bsl"},
+  {key:"f_ctml",name:"Copyright & TM Litigation",  prof:"Cendali",    cr:2, c:K.sky,    evalId:"f_ctml", note:"M 1:30–3:30"},
+  {key:"f_ca",  name:"Class Actions",              prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_ca", note:"T 1:30–3:30"},
+  {key:"f_cp",  name:"Criminal Procedure",         prof:"Re",         cr:4, c:K.amber,  evalId:null, note:"T, W 10:15–12:15"},
+  {key:"f_bn",  name:"Business Negotiations",      prof:"Coakley",    cr:3, c:K.lime,   evalId:null, note:"W 6:00–9:15"},
+  {key:"f_taxB",name:"Taxation of Business Corps", prof:"Brennan",    cr:4, c:K.yellow, evalId:"f_taxB", note:"M, T, W 10:20–11:40"},
+  {key:"f_taxD",name:"Taxation",                   prof:"Desai",      cr:4, c:K.yellow, evalId:"f_taxD", note:"T, W 3:45–5:45"},
+  {key:"f_gi",  name:"Gender Identity & Sex Orientation",prof:"Chen",cr:2, c:K.fuchsia, evalId:"f_gi", note:"⚠ Moved to Spring 2027 (T 3:45-5:45)"},
+  {key:"f_dpl", name:"Drug Product Litigation",    prof:"Grossi",     cr:3, c:K.orange, evalId:null, note:"W 1:30–3:30"},
+  {key:"f_bsl", name:"Business Strategy for Lawyers",prof:"Spier",   cr:3, c:K.teal,   evalId:"f_bsl", note:"M, T 8:30–10:00"},
   {key:"f_sct", name:"U.S. Supreme Court",         prof:"Sunstein",   cr:2, c:K.violet, evalId:null},
 ];
 
 const SP_TBD=[
   {key:"sp_chl",name:"Comparative Law: China",    prof:"Alford",    cr:4, c:K.red,    evalId:null},
-  {key:"sp_a2j",name:"Access to Justice Lab",     prof:"Greiner",   cr:2, c:K.lime,   evalId:"sp_a2j"},
-  {key:"sp_fam",name:"Family Law",                prof:"Gersen",    cr:4, c:K.pink,   evalId:null},
-  {key:"sp_lab",name:"Labor Law",                 prof:"Sachs",     cr:4, c:K.rose,   evalId:null},
-  {key:"sp_mus",name:"Music & Digital Media",     prof:"Bavitz",    cr:2, c:K.sky,    evalId:"sp_mus"},
+  {key:"sp_a2j",name:"Access to Justice Lab",     prof:"Greiner",   cr:2, c:K.lime,   evalId:"sp_a2j", note:"Th 6:00–8:00"},
+  {key:"sp_fam",name:"Family Law",                prof:"Gersen",    cr:4, c:K.pink,   evalId:null, note:"T, W 3:45–5:45"},
+  {key:"sp_lab",name:"Labor Law",                 prof:"Sachs",     cr:4, c:K.rose,   evalId:null, note:"M, T 1:30–3:30"},
+  {key:"sp_mus",name:"Music & Digital Media",     prof:"Bavitz",    cr:2, c:K.sky,    evalId:"sp_mus", note:"M 3:45–5:45"},
   {key:"sp_awa",name:"Advanced Written Advocacy", prof:"Clary",     cr:2, c:K.cyan,   evalId:null},
   {key:"sp_imm",name:"Immigration Law",           prof:"Neuman",    cr:3, c:K.amber,  evalId:null},
-  {key:"sp_aml",name:"Analytical Methods",        prof:"Spier",     cr:2, c:K.teal,   evalId:"sp_aml"},
+  {key:"sp_aml",name:"Analytical Methods",        prof:"Spier",     cr:3, c:K.teal,   evalId:"sp_aml", note:"M, T 8:30–10:00"},
   {key:"sp_lf", name:"Litigation Funding",        prof:"Steinitz",  cr:2, c:K.fuchsia,evalId:null},
-  {key:"sp_crl",name:"Civil Rights Litigation",   prof:"Michelman", cr:3, c:K.indigo, evalId:"sp_crl"},
+  {key:"sp_crl",name:"Civil Rights Litigation",   prof:"Michelman", cr:3, c:K.indigo, evalId:"sp_crl", note:"Th 3:45–5:15, F 8:30–10:00"},
   {key:"sp_cdn",name:"Constitutional Dimensions", prof:"Jackson",   cr:1, c:K.violet, evalId:null},
+  {key:"sp_gi", name:"Gender Identity & Sex Orientation",prof:"Chen", cr:2, c:K.fuchsia,evalId:"f_gi", note:"T 3:45–5:45"},
   {key:"sp_oba",name:"The Obama Presidency",      prof:"Mack",      cr:1, c:K.teal,   evalId:null},
 ];
 
@@ -652,13 +653,13 @@ export default function App(){
         <div style={{display:"flex",gap:11}}>
           <div style={side}>
             <Sect title="Evidence" must>
-              <Option type="radio" value="ev_m" cur={fEv} set={setFEv} c={K.blue} label="Medwed · 3cr · ThF 10:30" evalId="ev_m" sub="Fun·not dry·1 cold call·recaps" noteKey="ev_m"/>
+              <Option type="radio" value="ev_m" cur={fEv} set={setFEv} c={K.blue} label="Medwed · 3cr · Th, F 10:30" evalId="ev_m" sub="Fun·not dry·1 cold call·recaps" noteKey="ev_m"/>
               <Option type="radio" value="ev_s" cur={fEv} set={setFEv} c={K.blue} label="Schulman · 4cr · MT 8am" evalId="ev_s" sub="Video clips·rules-focused·brutal exam" noteKey="ev_s"/>
               <Option type="radio" value="ev_w" cur={fEv} set={setFEv} c={K.blue} label="Whiting · 4cr · MT 10:15" evalId="ev_w" sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
             </Sect>
             <Sect title="Corporations" must>
-              <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green} label="Spaaman · 4cr · WThF 8:30" evalId="co_sp" sub="MC + essay · cold calls · not DE law" noteKey="co_sp"/>
-              <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green} label="Fried · 4cr · WThF 1:30" evalId="co_fr" sub="MC + policy · no cold calls · funny" noteKey="co_fr"/>
+              <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green} label="Spamann · 4cr · W, Th, F 8:30" evalId="co_sp" sub="MC + essay · cold calls · not DE law" noteKey="co_sp"/>
+              <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green} label="Fried · 4cr · W, Th, F 1:30" evalId="co_fr" sub="MC + policy · no cold calls · funny" noteKey="co_fr"/>
             </Sect>
             <Sect title="Trial Advocacy Workshop" must>
               <Option type="radio" value={true} cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
@@ -668,7 +669,7 @@ export default function App(){
               <Option type="radio" value={false} cur={fTAW} set={setFTAW} c={K.gray} label="Move to Winter" evalId={null} noteKey={null}/>
             </Sect>
             <Sect title="Admin Law — Freeman (fall)">
-              <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · WTh 1:30" evalId="sp_adm_v"
+              <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · W, Th 1:30" evalId="sp_adm_v"
                 sub={fCo==="co_fr"?"⚠ conflicts with Fried Corporations WThF":""} warn={fCo==="co_fr"} noteKey="f_adm"/>
             </Sect>
             <Sect title="Optional — Timed">
@@ -676,10 +677,10 @@ export default function App(){
                 sub={(fEv==="ev_s"||fEv==="ev_w")?"⚠ conflicts with Evidence":"MT 10:15"} warn={fEv==="ev_s"||fEv==="ev_w"}/>
               <div style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>First Amendment</div>
               <Option type="radio" value="none" cur={f1A} set={setF1A} label="Skip (take Spring/Parker)" evalId={null} noteKey={null}/>
-              <Option type="radio" value="feld" cur={f1A} set={setF1A} c={K.indigo} label="Feldman · 4cr · TF 10:15" evalId="f1a_fe" noteKey="f1a_fe"/>
+              <Option type="radio" value="feld" cur={f1A} set={setF1A} c={K.indigo} label="Feldman · 4cr · Th, F 10:15" evalId="f1a_fe" noteKey="f1a_fe"/>
               <Option type="radio" value="wein" cur={f1A} set={setF1A} c={K.indigo} label="Weinrib · 4cr · MT 1:30" evalId="f1a_we" noteKey="f1a_we"/>
               <div style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>MacKinnon</div>
-              <Option type="checkbox" cur={fSex} set={setFSex} c={K.pink} label="Sex Equality · 3cr · condensed Sept–Oct" evalId="f_sex" noteKey="f_sex"
+              <Option type="checkbox" cur={fSex} set={setFSex} c={K.pink} label="Sex Equality · 3cr · M, T, W 6pm" evalId="f_sex" noteKey="f_sex"
                 sub={fSexA?"⚠ don't take both MacKinnon courses":""} warn={fSex&&fSexA}/>
               <Option type="checkbox" cur={fSexA} set={setFSexA} c={K.pink} label="Adv. Problems in Sex Equality · 2cr · MT 1:30" evalId={null} noteKey="f_sexA"
                 sub={fSex?"⚠ don't take both MacKinnon courses":""} warn={fSex&&fSexA}/>
