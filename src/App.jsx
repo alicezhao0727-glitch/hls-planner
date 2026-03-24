@@ -33,14 +33,14 @@ function NoteField({ courseKey }) {
   const hasNote = stored.trim().length > 0;
   return (
     <div style={{marginLeft:8, marginTop:2}}>
-      <button onClick={() => setOpen(o=>!o)} style={{fontSize:9.5,border:"none",cursor:"pointer",padding:"1px 5px",borderRadius:3,color:hasNote?"#1e2d4a":"#8a7e6e",background:hasNote?"#d4dce8":"transparent",fontWeight:hasNote?700:400,fontFamily:"system-ui,sans-serif"}}>
+      <button onClick={() => setOpen(o=>!o)} style={{fontSize:12,border:"none",cursor:"pointer",padding:"1px 5px",borderRadius:3,color:hasNote?"#1e2d4a":"#8a7e6e",background:hasNote?"#d4dce8":"transparent",fontWeight:hasNote?700:400,fontFamily:"system-ui,sans-serif"}}>
         {open ? "▲ close" : hasNote ? "📝 note" : "+ note"}
       </button>
       {open && (
         <div style={{marginTop:3}}>
           <textarea value={val} onChange={handleChange} placeholder="Your notes…" rows={2}
-            style={{width:"100%",boxSizing:"border-box",fontSize:11,padding:"5px 7px",borderRadius:5,border:"1px solid #c4b5fd",outline:"none",resize:"vertical",fontFamily:"system-ui,sans-serif",color:"#1e1b4b",background:"#faf5ff",lineHeight:1.4}}/>
-          {saved && <span style={{fontSize:9.5,color:"#3d6b4f",fontFamily:"system-ui,sans-serif"}}>✓ saved</span>}
+            style={{width:"100%",boxSizing:"border-box",fontSize:13,padding:"5px 7px",borderRadius:5,border:"1px solid #c4b5fd",outline:"none",resize:"vertical",fontFamily:"system-ui,sans-serif",color:"#1e1b4b",background:"#faf5ff",lineHeight:1.4}}/>
+          {saved && <span style={{fontSize:12,color:"#3d6b4f",fontFamily:"system-ui,sans-serif"}}>✓ saved</span>}
         </div>
       )}
     </div>
@@ -269,7 +269,7 @@ function EvalCard({ evalId, label }) {
           </div>}
           {ev.bid.length > 0 && <div style={{marginTop:4}}>
             <div style={{fontWeight:700, color:"#5c4e3a", marginBottom:2}}>🎯 Bidding:</div>
-            {ev.bid.map((b,i) => <div key={i} style={{color:"#8a7e6e", fontSize:10.5}}>{b}</div>)}
+            {ev.bid.map((b,i) => <div key={i} style={{color:"#8a7e6e", fontSize:13}}>{b}</div>)}
           </div>}
         </div>
       )}
@@ -563,11 +563,11 @@ function CrBar({cr,min,max,label}){
 function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
   const msgs=[...conflicts.map(([a,b])=>`${a.name} (${a.prof}) ↔ ${b.name} (${b.prof})`),
     ...(tawActive&&!tawOk?[`TAW overlap ${fmtHr(tawHrs)}hr/wk — exceeds 4hr limit`]:[])];
-  if(!msgs.length) return <div style={{background:"#eaf0e8",border:"1px solid #b0c4a8",borderRadius:4,padding:"4px 10px",marginBottom:8,fontSize:11,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>✓ No schedule conflicts{tawActive?` · TAW overlap: ${fmtHr(tawHrs)}hr/wk`:""}</div>;
+  if(!msgs.length) return <div style={{background:"#eaf0e8",border:"1px solid #b0c4a8",borderRadius:4,padding:"4px 10px",marginBottom:8,fontSize:14,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>✓ No schedule conflicts{tawActive?` · TAW overlap: ${fmtHr(tawHrs)}hr/wk`:""}</div>;
   return(
     <div style={{background:"#f5e8e8",border:"1px solid #c4a4a4",borderRadius:4,padding:"6px 10px",marginBottom:8,fontFamily:"system-ui,sans-serif"}}>
-      <div style={{fontWeight:700,color:"#6b1e2e",fontSize:11,marginBottom:2}}>⚠ {msgs.length} conflict{msgs.length>1?"s":""}</div>
-      {msgs.map((m,i)=><div key={i} style={{fontSize:10,color:"#7c1d2e"}}>{m}</div>)}
+      <div style={{fontWeight:700,color:"#6b1e2e",fontSize:14,marginBottom:2}}>⚠ {msgs.length} conflict{msgs.length>1?"s":""}</div>
+      {msgs.map((m,i)=><div key={i} style={{fontSize:13,color:"#7c1d2e"}}>{m}</div>)}
     </div>
   );
 }
@@ -610,42 +610,42 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
   return(
     <div>
       <div style={{display:"flex",flexWrap:"wrap",gap:3,marginBottom:6}}>
-        <button onClick={()=>setClinicId(null)} style={{padding:"2px 8px",borderRadius:10,fontSize:10.5,fontWeight:700,cursor:"pointer",background:!clinicId?"#1e2d4a":"#ede6d8",color:!clinicId?"#f3ede3":"#2c2418",border:"none",fontFamily:"system-ui,sans-serif"}}>None</button>
+        <button onClick={()=>setClinicId(null)} style={{padding:"2px 8px",borderRadius:10,fontSize:13,fontWeight:700,cursor:"pointer",background:!clinicId?"#1e2d4a":"#ede6d8",color:!clinicId?"#f3ede3":"#2c2418",border:"none",fontFamily:"system-ui,sans-serif"}}>None</button>
         {opts.map(cl=>(
           <button key={cl.id} onClick={()=>{setClinicId(cl.id);setFieldCr(cl.fMin);}}
-            style={{padding:"2px 8px",borderRadius:10,fontSize:10.5,fontWeight:700,cursor:"pointer",background:clinicId===cl.id?cl.c.bd:"#ede6d8",color:clinicId===cl.id?"#f3ede3":"#2c2418",border:"none",fontFamily:"system-ui,sans-serif"}}>
+            style={{padding:"2px 8px",borderRadius:10,fontSize:13,fontWeight:700,cursor:"pointer",background:clinicId===cl.id?cl.c.bd:"#ede6d8",color:clinicId===cl.id?"#f3ede3":"#2c2418",border:"none",fontFamily:"system-ui,sans-serif"}}>
             {cl.name}
           </button>
         ))}
       </div>
       {sel&&(
-        <div style={{background:sel.c.bg,border:`1px solid ${sel.c.bd}`,borderRadius:6,padding:"7px 9px",fontSize:11}}>
+        <div style={{background:sel.c.bg,border:`1px solid ${sel.c.bd}`,borderRadius:6,padding:"7px 9px",fontSize:14}}>
           <div style={{fontWeight:700,color:sel.c.tx,marginBottom:3}}>{sel.name} Clinic {sel.evalId&&<StarBadge evalId={sel.evalId}/>}</div>
-          <div style={{color:sel.c.tx,fontSize:10.5,marginBottom:5}}>{sel.note}</div>
+          <div style={{color:sel.c.tx,fontSize:13,marginBottom:5}}>{sel.note}</div>
           {sel.evalId&&<EvalCard evalId={sel.evalId} label="clinic eval"/>}
           {sel.id!=="mediation"&&sel.id!=="fedcourts"&&(
             <>
-              <div style={{fontSize:10.5,fontWeight:600,color:sel.c.tx,marginBottom:3,marginTop:6}}>Fieldwork credits (+ {sel.semCr}cr seminar):</div>
+              <div style={{fontSize:13,fontWeight:600,color:sel.c.tx,marginBottom:3,marginTop:6}}>Fieldwork credits (+ {sel.semCr}cr seminar):</div>
               <div style={{display:"flex",gap:4,alignItems:"center"}}>
                 {[sel.fMin,sel.fMin+1,sel.fMin+2].filter(n=>n<=sel.fMax).map(n=>(
-                  <button key={n} onClick={()=>setFieldCr(n)} style={{padding:"2px 9px",borderRadius:10,fontSize:11,fontWeight:700,cursor:"pointer",background:fieldCr===n?sel.c.bd:"#fff",border:`2px solid ${fieldCr===n?sel.c.bd:sel.c.bd+"60"}`,color:fieldCr===n?"#fff":sel.c.tx}}>{n}cr</button>
+                  <button key={n} onClick={()=>setFieldCr(n)} style={{padding:"2px 9px",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",background:fieldCr===n?sel.c.bd:"#fff",border:`2px solid ${fieldCr===n?sel.c.bd:sel.c.bd+"60"}`,color:fieldCr===n?"#fff":sel.c.tx}}>{n}cr</button>
                 ))}
-                <span style={{fontSize:10.5,color:sel.c.tx}}>= <strong>{fieldCr+sel.semCr}cr</strong> total</span>
+                <span style={{fontSize:13,color:sel.c.tx}}>= <strong>{fieldCr+sel.semCr}cr</strong> total</span>
               </div>
             </>
           )}
           {sel.id==="fedcourts"&&(
             <>
-              <div style={{fontSize:10.5,fontWeight:600,color:sel.c.tx,marginBottom:3,marginTop:6}}>Spring fieldwork credits (+ 1cr seminar):</div>
+              <div style={{fontSize:13,fontWeight:600,color:sel.c.tx,marginBottom:3,marginTop:6}}>Spring fieldwork credits (+ 1cr seminar):</div>
               <div style={{display:"flex",gap:4,alignItems:"center"}}>
                 {[2,3].map(n=>(
-                  <button key={n} onClick={()=>setFieldCr(n)} style={{padding:"2px 9px",borderRadius:10,fontSize:11,fontWeight:700,cursor:"pointer",background:fieldCr===n?sel.c.bd:"#fff",border:`2px solid ${fieldCr===n?sel.c.bd:sel.c.bd+"60"}`,color:fieldCr===n?"#fff":sel.c.tx}}>{n}cr</button>
+                  <button key={n} onClick={()=>setFieldCr(n)} style={{padding:"2px 9px",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",background:fieldCr===n?sel.c.bd:"#fff",border:`2px solid ${fieldCr===n?sel.c.bd:sel.c.bd+"60"}`,color:fieldCr===n?"#fff":sel.c.tx}}>{n}cr</button>
                 ))}
-                <span style={{fontSize:10.5,color:sel.c.tx}}>+ 2cr winter = <strong>{fieldCr+1+2}cr</strong> total</span>
+                <span style={{fontSize:13,color:sel.c.tx}}>+ 2cr winter = <strong>{fieldCr+1+2}cr</strong> total</span>
               </div>
             </>
           )}
-          {sel.id==="mediation"&&<div style={{fontSize:10.5,color:sel.c.tx,marginTop:3}}>Total: <strong>1cr</strong></div>}
+          {sel.id==="mediation"&&<div style={{fontSize:13,color:sel.c.tx,marginTop:3}}>Total: <strong>1cr</strong></div>}
         </div>
       )}
     </div>
@@ -814,9 +814,9 @@ export default function App(){
         {TABS.map(t=>(
           <button key={t} onClick={()=>setTab(t)} style={{padding:"6px 13px",fontSize:15,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
             {TL[t]}
-            {t==="fall"  &&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(fallCr,10,16)}}>{fallCr}</span>}
-            {t==="winter"&&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
-            {t==="spring"&&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(springCr,10,16)}}>{springCr}</span>}
+            {t==="fall"  &&<span style={{fontSize:11,fontWeight:700,color:rrCrCol(fallCr,10,16)}}>{fallCr}</span>}
+            {t==="winter"&&<span style={{fontSize:11,fontWeight:700,color:rrCrCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
+            {t==="spring"&&<span style={{fontSize:11,fontWeight:700,color:rrCrCol(springCr,10,16)}}>{springCr}</span>}
           </button>
         ))}
       </div>
@@ -848,16 +848,16 @@ export default function App(){
             <Sect title="Optional — Timed">
               <Option type="checkbox" cur={fBk} set={setFBk} c={K.violet} label="Bankruptcy (Elias) · 4cr · MT 10:15" evalId="f_bke" noteKey="f_bke"
                 sub={(fEv==="ev_s"||fEv==="ev_w")?"⚠ conflicts with Evidence":"MT 10:15"} warn={fEv==="ev_s"||fEv==="ev_w"}/>
-              <div style={{fontSize:10,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>First Amendment</div>
+              <div style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>First Amendment</div>
               <Option type="radio" value="none" cur={f1A} set={setF1A} label="Skip (take Spring/Parker)" evalId={null} noteKey={null}/>
               <Option type="radio" value="feld" cur={f1A} set={setF1A} c={K.indigo} label="Feldman · 4cr · TF 10:15" evalId="f1a_fe" noteKey="f1a_fe"/>
               <Option type="radio" value="wein" cur={f1A} set={setF1A} c={K.indigo} label="Weinrib · 4cr · MT 1:30" evalId="f1a_we" noteKey="f1a_we"/>
-              <div style={{fontSize:10,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>MacKinnon</div>
+              <div style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>MacKinnon</div>
               <Option type="checkbox" cur={fSex} set={setFSex} c={K.pink} label="Sex Equality · 3cr · condensed Sept–Oct" evalId="f_sex" noteKey="f_sex"
                 sub={fSexA?"⚠ don't take both MacKinnon courses":""} warn={fSex&&fSexA}/>
               <Option type="checkbox" cur={fSexA} set={setFSexA} c={K.pink} label="Adv. Problems in Sex Equality · 2cr · MT 1:30" evalId={null} noteKey="f_sexA"
                 sub={fSex?"⚠ don't take both MacKinnon courses":""} warn={fSex&&fSexA}/>
-              <div style={{fontSize:10,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>Seminars</div>
+              <div style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",margin:"5px 0 3px 0",fontFamily:"system-ui,sans-serif"}}>Seminars</div>
               <Option type="checkbox" cur={fFl} set={setFFl} c={K.orange} label="Facts & Lies (Saris) · 2cr · W 3:45" evalId="f_fl" noteKey="f_fl" sub="Prof writing req candidate"/>
               <Option type="checkbox" cur={fEc} set={setFEc} c={K.red}    label="Engaging China (Alford) · 2cr · MT 6pm" evalId={null} noteKey="f_ec"/>
               <Option type="checkbox" cur={fAa} set={setFAa} c={K.amber}  label="Asian Am & Law (Lee) · 2cr · T 3:45" evalId={null} noteKey="f_aa"/>
@@ -871,14 +871,14 @@ export default function App(){
           </div>
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={fallCr} min={10} max={16} label="Fall"/>
-            {fTAW&&<div style={{fontSize:11,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
+            {fTAW&&<div style={{fontSize:13,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
               TAW overlap: <strong>{fmtHr(fallTAWHrs)}hr/wk</strong> / 4hr max {fallTAWOk?"✓":"⚠ exceeded"}
             </div>}
             <ConflictBanner conflicts={fallConflicts} tawOk={fallTAWOk} tawHrs={fallTAWHrs} tawActive={fTAW}/>
-            {fClinic&&<div style={{fontSize:10.5,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
+            {fClinic&&<div style={{fontSize:13,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
               🏥 {CLINIC_OPTS.find(c=>c.id===fClinic)?.name} Clinic · {fClinicCr}cr · seminar time TBD
             </div>}
-            {fTBD.size>0&&<div style={{fontSize:10.5,background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#1e2d4a",fontFamily:"system-ui,sans-serif"}}>
+            {fTBD.size>0&&<div style={{fontSize:13,background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#1e2d4a",fontFamily:"system-ui,sans-serif"}}>
               📋 {fTBD.size} TBD course{fTBD.size>1?"s":""} · {fTBDCr}cr
             </div>}
             <Calendar courses={fallTimed} tawActive={fTAW}/>
@@ -891,14 +891,14 @@ export default function App(){
         <div style={{maxWidth:500}}>
           <CrBar cr={winterCrCalc} min={2} max={3} label="Winter"/>
           {useFedWinter
-            ? <div style={{background:"#e8f0ee",border:"1px solid #9abfb8",borderRadius:5,padding:"10px 12px",fontSize:11,fontFamily:"system-ui,sans-serif"}}>
+            ? <div style={{background:"#e8f0ee",border:"1px solid #9abfb8",borderRadius:5,padding:"10px 12px",fontSize:14,fontFamily:"system-ui,sans-serif"}}>
                 <div style={{fontWeight:700,color:"#2d7070",marginBottom:3}}>⚖️ Federal Courts Clinic — winter component</div>
                 <div style={{color:"#1a3a38"}}>2cr winter classroom · reserved for Fed Courts · no other winter courses</div>
                 <EvalCard evalId="clinicFedCourts" label="clinic eval"/>
               </div>
             : <>
                 {!fTAW&&<Sect title="Trial Advocacy Workshop" must>
-                  <div style={{fontSize:11,padding:"5px 8px",background:"#ede6d8",borderRadius:4,color:"#2c2418",fontWeight:600,fontFamily:"system-ui,sans-serif"}}>TAW (Harden) · 3cr · fills winter slot</div>
+                  <div style={{fontSize:14,padding:"5px 8px",background:"#ede6d8",borderRadius:4,color:"#2c2418",fontWeight:600,fontFamily:"system-ui,sans-serif"}}>TAW (Harden) · 3cr · fills winter slot</div>
                   <EvalCard evalId="taw"/>
                 </Sect>}
                 {fTAW&&<Sect title="Winter courses">
@@ -906,7 +906,7 @@ export default function App(){
                 </Sect>}
               </>
           }
-          <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:"9px 11px",marginTop:8,fontSize:11,fontFamily:"system-ui,sans-serif"}}>
+          <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:"9px 11px",marginTop:8,fontSize:14,fontFamily:"system-ui,sans-serif"}}>
             <strong>Winter rules:</strong> min 2cr · max 3cr · Fed Courts locks out other courses
             {winterCrCalc<2&&<span style={{color:"#6b1e2e"}}> ⚠ under minimum</span>}
             {winterCrCalc>3&&<span style={{color:"#6b1e2e"}}> ⚠ over maximum</span>}
@@ -924,7 +924,7 @@ export default function App(){
               <Option type="radio" value="sp_adm_b" cur={spAdm} set={setSpAdm} c={K.red} label="Block · 3cr · TW 3:45–5:15" evalId="sp_adm_b" sub="Take-home exam · 2026-27 confirmed" noteKey="sp_adm_b"/>
             </Sect>
             <Sect title="MTW 10:30 — pick one">
-              <div style={{fontSize:10,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe and Fisher share the same timeslot</div>
+              <div style={{fontSize:13,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe and Fisher share the same timeslot</div>
               <Option type="radio" value="none"  cur={spMTC} set={setSpMTC} label="Skip both" evalId={null} noteKey={null}/>
               <Option type="radio" value="sp_bk" cur={spMTC} set={setSpMTC} c={K.violet} label="Bankruptcy (Roe) · 4cr" evalId="sp_bk" noteKey="sp_bk"/>
               <Option type="radio" value="sp_cp" cur={spMTC} set={setSpMTC} c={K.sky}    label="Copyright (Fisher) · 4cr" evalId="sp_cp" noteKey="sp_cp"/>
@@ -937,7 +937,7 @@ export default function App(){
                 warn={spAdm==="sp_adm_b"}/>
             </Sect>
             <Sect title="Clinic (Spring)">
-              {fClinic&&<div style={{fontSize:10.5,color:"#6b1e2e",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>⚠ Already have fall clinic — max 1/term</div>}
+              {fClinic&&<div style={{fontSize:13,color:"#6b1e2e",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>⚠ Already have fall clinic — max 1/term</div>}
               <ClinicSelector clinicId={spClinic} setClinicId={setSpClinic} fieldCr={spField} setFieldCr={setSpField} allowedTerms="spring"/>
             </Sect>
             <Sect title="TBD-Timed Courses">
@@ -947,10 +947,10 @@ export default function App(){
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={springCr} min={10} max={16} label="Spring"/>
             <ConflictBanner conflicts={spConflicts} tawOk={true} tawHrs={0} tawActive={false}/>
-            {spClinic&&<div style={{fontSize:10.5,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
+            {spClinic&&<div style={{fontSize:13,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
               🏥 {CLINIC_OPTS.find(c=>c.id===spClinic)?.name} Clinic · {spClinicCr}cr · seminar time TBD
             </div>}
-            {spTBD.size>0&&<div style={{fontSize:10.5,background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#1e2d4a",fontFamily:"system-ui,sans-serif"}}>
+            {spTBD.size>0&&<div style={{fontSize:13,background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#1e2d4a",fontFamily:"system-ui,sans-serif"}}>
               📋 {spTBD.size} TBD course{spTBD.size>1?"s":""} · {spTBDCr}cr
             </div>}
             <Calendar courses={spTimed} tawActive={false}/>
@@ -997,9 +997,9 @@ export default function App(){
                 const ok2=cr>=min&&cr<=max;
                 return(
                   <div key={l} style={{background:ok2?"#eaf0e8":"#f5ede0",border:`1px solid ${ok2?"#b0c4a8":"#c4924a"}`,borderRadius:5,padding:"9px",textAlign:"center",fontFamily:"system-ui,sans-serif"}}>
-                    <div style={{fontSize:11,fontWeight:700,color:"#1e2d4a",marginBottom:2}}>{l}</div>
+                    <div style={{fontSize:15,fontWeight:700,color:"#1e2d4a",marginBottom:2}}>{l}</div>
                     <div style={{fontSize:22,fontWeight:900,color:ok2?"#3d6b4f":"#9a4a1a"}}>{cr}</div>
-                    <div style={{fontSize:9,color:"#8a7e6e"}}>req {min}–{max}cr</div>
+                    <div style={{fontSize:12,color:"#8a7e6e"}}>req {min}–{max}cr</div>
                   </div>
                 );
               })}
@@ -1007,15 +1007,15 @@ export default function App(){
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:11}}>
               {[{l:"🍂 Fall",items:fallItems},{l:"❄️ Winter",items:winterItems},{l:"🌸 Spring",items:spItems}].map(term=>(
                 <div key={term.l} style={{background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:"9px",fontFamily:"system-ui,sans-serif"}}>
-                  <div style={{fontWeight:700,fontSize:12,marginBottom:6,color:"#1e2d4a"}}>{term.l}</div>
-                  {term.items.length===0?<div style={{color:"#8a7e6e",fontSize:11}}>Nothing selected</div>
+                  <div style={{fontWeight:700,fontSize:16,marginBottom:6,color:"#1e2d4a"}}>{term.l}</div>
+                  {term.items.length===0?<div style={{color:"#8a7e6e",fontSize:14}}>Nothing selected</div>
                    :term.items.map((c,i)=>(
-                     <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:3,fontSize:11}}>
+                     <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:3,fontSize:14}}>
                        <span style={{display:"flex",alignItems:"center",gap:3}}>
                          {c.c&&<span style={{width:6,height:6,borderRadius:"50%",background:c.c.bd,display:"inline-block",flexShrink:0}}/>}
                          {c.name}{c.prof?` · ${c.prof}`:""}
                        </span>
-                       <span style={{color:"#8a7e6e",fontSize:10.5,flexShrink:0,marginLeft:3}}>{c.cr||c.credits}cr</span>
+                       <span style={{color:"#8a7e6e",fontSize:13,flexShrink:0,marginLeft:3}}>{c.cr||c.credits}cr</span>
                      </div>
                    ))}
                 </div>
@@ -1025,7 +1025,7 @@ export default function App(){
               <div style={{fontWeight:700,fontSize:13,marginBottom:ok?0:5,color:ok?"#2a4a22":"#6b1e2e"}}>
                 {ok?"✓ Valid schedule":`⚠ ${issues.length} issue${issues.length>1?"s":""}`}
               </div>
-              {issues.map((m,i)=><div key={i} style={{fontSize:11,color:"#6b1e2e"}}>{m}</div>)}
+              {issues.map((m,i)=><div key={i} style={{fontSize:14,color:"#6b1e2e"}}>{m}</div>)}
             </div>
           </div>
         );
@@ -1037,8 +1037,8 @@ export default function App(){
           <div style={{marginBottom:10,display:"flex",alignItems:"center",gap:8}}>
             <input value={evalSearch} onChange={e=>setEvalSearch(e.target.value)}
               placeholder="Search courses or professors…"
-              style={{flex:1,maxWidth:320,padding:"6px 10px",borderRadius:4,border:"1px solid #d9ccba",fontSize:12,outline:"none",background:"#f3ede3",color:"#2c2418",fontFamily:"system-ui,sans-serif"}}/>
-            <span style={{fontSize:11,color:"#8a7e6e",fontFamily:"system-ui,sans-serif"}}>{filteredEvals.length} courses</span>
+              style={{flex:1,maxWidth:320,padding:"6px 10px",borderRadius:4,border:"1px solid #d9ccba",fontSize:15,outline:"none",background:"#f3ede3",color:"#2c2418",fontFamily:"system-ui,sans-serif"}}/>
+            <span style={{fontSize:14,color:"#8a7e6e",fontFamily:"system-ui,sans-serif"}}>{filteredEvals.length} courses</span>
           </div>
           <div style={{columns:2,columnGap:14}}>
             {filteredEvals.map(item=>{
@@ -1049,21 +1049,21 @@ export default function App(){
               return(
                 <div key={item.id} style={{breakInside:"avoid",marginBottom:12,background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:"10px 12px"}}>
                   <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>
-                    <span style={{fontWeight:700,fontSize:12,color:"#1e2d4a"}}>{item.name}</span>
-                    <span style={{fontSize:11,color:"#8a7e6e"}}>{item.prof}</span>
-                    <span style={{marginLeft:"auto",fontWeight:700,fontSize:12,color:col}}>{avg?`★${avg}`:"★?"}</span>
-                    {ev.n>0&&<span style={{fontSize:10,color:"#8a7e6e"}}>n={ev.n}</span>}
+                    <span style={{fontWeight:700,fontSize:16,color:"#1e2d4a"}}>{item.name}</span>
+                    <span style={{fontSize:14,color:"#8a7e6e"}}>{item.prof}</span>
+                    <span style={{marginLeft:"auto",fontWeight:700,fontSize:16,color:col}}>{avg?`★${avg}`:"★?"}</span>
+                    {ev.n>0&&<span style={{fontSize:13,color:"#8a7e6e"}}>n={ev.n}</span>}
                   </div>
-                  {ev.note&&<div style={{fontSize:10.5,color:"#5c4e3a",fontStyle:"italic",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{ev.note}</div>}
+                  {ev.note&&<div style={{fontSize:13,color:"#5c4e3a",fontStyle:"italic",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{ev.note}</div>}
                   {ev.comments.map((c,i)=>(
-                    <div key={i} style={{fontSize:10.5,color:"#1e2d4a",borderLeft:"2px solid #b0bdd4",paddingLeft:7,marginBottom:5,lineHeight:1.5,fontFamily:"system-ui,sans-serif"}}>
+                    <div key={i} style={{fontSize:13,color:"#1e2d4a",borderLeft:"2px solid #b0bdd4",paddingLeft:7,marginBottom:5,lineHeight:1.5,fontFamily:"system-ui,sans-serif"}}>
                       "{c}"
                     </div>
                   ))}
                   {ev.tips.length>0&&(
                     <div style={{marginTop:4,fontFamily:"system-ui,sans-serif"}}>
-                      <div style={{fontSize:10,fontWeight:700,color:"#7a5c2a",marginBottom:2}}>📋 Exam tips:</div>
-                      {ev.tips.map((t,i)=><div key={i} style={{fontSize:10.5,color:"#4a3828",borderLeft:"2px solid #c4a870",paddingLeft:7,marginBottom:3,lineHeight:1.5}}>"{t}"</div>)}
+                      <div style={{fontSize:13,fontWeight:700,color:"#7a5c2a",marginBottom:2}}>📋 Exam tips:</div>
+                      {ev.tips.map((t,i)=><div key={i} style={{fontSize:13,color:"#4a3828",borderLeft:"2px solid #c4a870",paddingLeft:7,marginBottom:3,lineHeight:1.5}}>"{t}"</div>)}
                     </div>
                   )}
                   {ev.bid.length>0&&(
@@ -1082,19 +1082,19 @@ export default function App(){
       {tab==="suggest"&&(
         <div>
           <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:"10px 12px",marginBottom:14,fontSize:11,fontFamily:"system-ui,sans-serif"}}>
-            <div style={{fontWeight:700,fontSize:12,marginBottom:4,color:"#1e2d4a"}}>Based on your interests: litigation · trial work · gender issues · rule of law/democracy · entertainment · IP disputes</div>
+            <div style={{fontWeight:700,fontSize:15,marginBottom:4,color:"#1e2d4a"}}>Based on your interests: litigation · trial work · gender issues · rule of law/democracy · entertainment · IP disputes</div>
             <div style={{color:"#5c4e3a"}}>These courses are not in your main schedule but are worth considering. Click "▼ eval & tips" to see direct peer quotes.</div>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
             {SUGGESTIONS.map(s=>(
               <div key={s.key} style={{background:s.c.bg,border:`1px solid ${s.c.bd}`,borderRadius:5,padding:"10px 12px"}}>
                 <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
-                  <span style={{fontWeight:700,fontSize:12,color:s.c.tx}}>{s.name}</span>
-                  <span style={{fontSize:11,color:s.c.tx,opacity:.8}}>{s.prof}</span>
-                  <span style={{marginLeft:"auto",fontSize:10,fontWeight:700,color:s.c.bd,background:"#f3ede3",borderRadius:8,padding:"1px 6px"}}>{s.cr}cr · {s.term}</span>
+                  <span style={{fontWeight:700,fontSize:16,color:s.c.tx}}>{s.name}</span>
+                  <span style={{fontSize:14,color:s.c.tx,opacity:.8}}>{s.prof}</span>
+                  <span style={{marginLeft:"auto",fontSize:13,fontWeight:700,color:s.c.bd,background:"#f3ede3",borderRadius:8,padding:"1px 6px"}}>{s.cr}cr · {s.term}</span>
                 </div>
-                <div style={{fontSize:10,fontWeight:700,color:s.c.bd,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>🎯 Why: {s.why}</div>
-                <div style={{fontSize:11,color:s.c.tx,lineHeight:1.55,marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{s.pitch}</div>
+                <div style={{fontSize:13,fontWeight:700,color:s.c.bd,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>🎯 Why: {s.why}</div>
+                <div style={{fontSize:14,color:s.c.tx,lineHeight:1.55,marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{s.pitch}</div>
                 {s.evalId&&<EvalCard evalId={s.evalId} label="peer quotes"/>}
                 {window.__hlsSetNote&&<NoteField courseKey={s.key}/>}
               </div>
