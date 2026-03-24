@@ -247,7 +247,7 @@ function EvalCard({ evalId, label }) {
   return (
     <div style={{marginTop:4, marginLeft:8}}>
       <button onClick={() => setOpen(o=>!o)} style={{
-        fontSize:9.5, border:"none", cursor:"pointer", padding:"2px 7px", borderRadius:3,
+        fontSize:11, border:"none", cursor:"pointer", padding:"3px 8px", borderRadius:3,
         background: open ? "#1e2d4a" : "#ede6d8", color: open ? "#f3ede3" : "#1e2d4a", fontWeight:600,
         display:"inline-flex", alignItems:"center", gap:4, fontFamily:"system-ui,sans-serif",
       }}>
@@ -256,7 +256,7 @@ function EvalCard({ evalId, label }) {
         <span>{open ? "▲ hide" : `▼ ${label||"eval & tips"}`}</span>
       </button>
       {open && (
-        <div style={{background:"#f3ede3", border:"1px solid #d9ccba", borderRadius:4, padding:"8px 10px", marginTop:3, fontSize:11, lineHeight:1.6, fontFamily:"system-ui,sans-serif"}}>
+        <div style={{background:"#f3ede3", border:"1px solid #d9ccba", borderRadius:4, padding:"9px 11px", marginTop:3, fontSize:12, lineHeight:1.6, fontFamily:"system-ui,sans-serif"}}>
           {ev.note && <div style={{color:"#5c4e3a", marginBottom:6, fontStyle:"italic"}}>{ev.note}</div>}
           {ev.comments.map((c,i) => (
             <div key={i} style={{marginBottom:6, borderLeft:"2px solid #b0bdd4", paddingLeft:7, color:"#1e2d4a"}}>
@@ -462,7 +462,7 @@ const CLINIC_OPTS=[
 ];
 
 // ── CALENDAR ─────────────────────────────────────────────────────────────────
-const CAL_S=7*60+30, CAL_E=21*60, CAL_H=560;
+const CAL_S=8*60, CAL_E=20*60, CAL_H=420;
 const yOf=m=>((toMin(m)-CAL_S)/(CAL_E-CAL_S))*CAL_H;
 const hOf=(s,e)=>Math.max(((toMin(e)-toMin(s))/(CAL_E-CAL_S))*CAL_H,14);
 
@@ -472,22 +472,22 @@ function Calendar({courses,tawActive}){
   courses.forEach(c=>{c?.days?.forEach(d=>byDay[d]?.push(c))});
   const hrs=Array.from({length:14},(_,i)=>i+7);
   return(
-    <div style={{display:"flex",height:CAL_H+22,fontSize:10.5,userSelect:"none",flexShrink:0,borderRadius:5,overflow:"hidden",border:"1px solid #d9ccba"}}>
-      <div style={{width:24,position:"relative",flexShrink:0,paddingTop:20,background:"#f3ede3"}}>
-        {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:30`)+20,right:2,color:"#8a7e6e",fontSize:8.5,fontFamily:"system-ui,sans-serif"}}>{h===12?"12p":h<12?h+"a":(h-12)+"p"}</div>)}
+    <div style={{display:"flex",height:CAL_H+24,fontSize:11,userSelect:"none",flexShrink:0,borderRadius:5,overflow:"hidden",border:"1px solid #d9ccba"}}>
+      <div style={{width:28,position:"relative",flexShrink:0,paddingTop:24,background:"#f3ede3"}}>
+        {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:30`)+24,right:2,color:"#8a7e6e",fontSize:9,fontFamily:"system-ui,sans-serif"}}>{h===12?"12p":h<12?h+"a":(h-12)+"p"}</div>)}
       </div>
       {DAYS.map(day=>(
         <div key={day} style={{flex:1,borderLeft:"1px solid #d9ccba",position:"relative",minWidth:0,overflow:"hidden"}}>
-          <div style={{textAlign:"center",fontWeight:700,color:"#1e2d4a",height:20,lineHeight:"20px",background:"#ede6d8",borderBottom:"1px solid #d9ccba",fontSize:9.5,fontFamily:"system-ui,sans-serif",letterSpacing:"0.04em"}}>{day}</div>
-          {tawActive&&<div style={{position:"absolute",top:yOf("14:00"),height:hOf("14:00","21:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
+          <div style={{textAlign:"center",fontWeight:700,color:"#1e2d4a",height:24,lineHeight:"24px",background:"#ede6d8",borderBottom:"1px solid #d9ccba",fontSize:11,fontFamily:"system-ui,sans-serif",letterSpacing:"0.04em"}}>{day}</div>
+          {tawActive&&<div style={{position:"absolute",top:yOf("14:00"),height:hOf("14:00","20:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
           {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:00`),left:0,right:0,borderTop:h%2===0?"1px solid #e8e0d4":"1px solid #f0ebe2"}}/>)}
           {byDay[day].map((c,i)=>(
             <div key={c.key+day+i} title={`${c.name} (${c.prof})\n${c.s}–${c.e}`}
               style={{position:"absolute",top:yOf(c.s),height:hOf(c.s,c.e),left:1,right:1,
                 background:c.c.bg,borderLeft:`3px solid ${c.c.bd}`,borderRadius:2,
-                padding:"2px 3px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 3px rgba(0,0,0,.1)",cursor:"default"}}>
-              <div style={{fontWeight:700,fontSize:8.5,lineHeight:1.2,fontFamily:"system-ui,sans-serif"}}>{c.name}</div>
-              <div style={{opacity:.65,fontSize:8,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>
+                padding:"2px 4px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 3px rgba(0,0,0,.1)",cursor:"default"}}>
+              <div style={{fontWeight:700,fontSize:10,lineHeight:1.2,fontFamily:"system-ui,sans-serif"}}>{c.name}</div>
+              <div style={{opacity:.65,fontSize:9,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>
             </div>
           ))}
         </div>
@@ -502,7 +502,7 @@ const Dot=({c,sz=8})=><span style={{display:"inline-block",width:sz,height:sz,bo
 function StarBadge({evalId}) {
   const ev = E[evalId]; if(!ev) return null;
   const col = starColor(ev.avg);
-  return <span style={{fontSize:9.5,fontWeight:700,color:col,marginLeft:4}}>{ev.avg?`★${ev.avg}`:"★?"}{ev.n>0?` (${ev.n})`:""}</span>;
+  return <span style={{fontSize:11,fontWeight:700,color:col,marginLeft:4}}>{ev.avg?`★${ev.avg}`:"★?"}{ev.n>0?` (${ev.n})`:""}</span>;
 }
 
 function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
@@ -519,10 +519,10 @@ function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
           ? <input type="radio" checked={sel} onChange={()=>!locked&&set(value)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>
           : <input type="checkbox" checked={sel} onChange={e=>!locked&&set(e.target.checked)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>}
         {c&&<Dot c={c}/>}
-        <span style={{fontSize:11.5,fontFamily:"system-ui,sans-serif"}}>
+        <span style={{fontSize:13,fontFamily:"system-ui,sans-serif"}}>
           <span style={{fontWeight:600,color:"#2c2418"}}>{label}</span>
           {evalId && <StarBadge evalId={evalId}/>}
-          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:10.5}}>{sub}</span></>}
+          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:11.5}}>{sub}</span></>}
         </span>
       </label>
       {evalId && <EvalCard evalId={evalId}/>}
@@ -535,8 +535,8 @@ function Sect({title,must,children}){
   return(
     <div style={{marginBottom:13,borderLeft:`2px solid ${must?"#6b1e2e":"#d9ccba"}`,paddingLeft:9}}>
       <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:5}}>
-        <span style={{fontSize:9.5,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
-        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:8.5,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
+        <span style={{fontSize:11,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
+        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:10,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
       </div>
       {children}
     </div>
@@ -549,7 +549,7 @@ function CrBar({cr,min,max,label}){
   const barCol=over?"#7c1d2e":under?"#a0622a":"#2c4a7c";
   return(
     <div style={{marginBottom:8}}>
-      <div style={{display:"flex",justifyContent:"space-between",fontSize:11,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:12,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
         <span style={{color:col}}>{label}: <strong>{cr}cr</strong> {over?"· over max":under?"· under min":""}</span>
         <span style={{color:"#8a7e6e",fontWeight:400}}>{min}–{max}cr</span>
       </div>
@@ -575,19 +575,19 @@ function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
 function TBDGrid({opts,sel,toggle}){
   return(
     <div>
-      <div style={{fontSize:9.5,color:"#8a7e6e",marginBottom:5,fontStyle:"italic",fontFamily:"system-ui,sans-serif"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:3}}>
+      <div style={{fontSize:11,color:"#8a7e6e",marginBottom:5,fontStyle:"italic",fontFamily:"system-ui,sans-serif"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
         {opts.map(c=>{
           const on=sel.has(c.key);
           return(
             <div key={c.key} style={{borderRadius:3,background:on?"#edf0f5":"#f3ede3",border:on?"1px solid #b0bdd4":"1px solid #d9ccba",overflow:"hidden"}}>
-              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"3px 5px",fontSize:10.5,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
+              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 6px",fontSize:12,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
                 <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,accentColor:"#1e2d4a"}}/>
                 <Dot c={c.c} sz={6}/>
                 <span style={{flex:1,lineHeight:1.3}}>
                   <span style={{fontWeight:600,color:"#2c2418"}}>{c.name}</span>
                   {c.evalId&&<StarBadge evalId={c.evalId}/>}
-                  <br/><span style={{color:"#8a7e6e"}}>{c.prof} · </span><span style={{color:"#1e2d4a"}}>{c.cr}cr</span>
+                  <br/><span style={{color:"#8a7e6e",fontSize:11}}>{c.prof} · </span><span style={{color:"#1e2d4a",fontSize:11}}>{c.cr}cr</span>
                 </span>
               </label>
               {c.evalId&&<EvalCard evalId={c.evalId}/>}
@@ -735,7 +735,7 @@ export default function App(){
   const crCol=(cr,min,max)=>cr>max?"#6b1e2e":cr<min?"#9a7820":"#1e2d4a";
   const TABS=["fall","winter","spring","summary","evals","suggest"];
   const TL={fall:"🍂 Fall",winter:"❄️ Winter",spring:"🌸 Spring",summary:"📋 Summary",evals:"★ Evals",suggest:"💡 Suggest"};
-  const side={width:255,flexShrink:0,borderRight:`1px solid #d9ccba`,paddingRight:13,overflowY:"auto",maxHeight:"84vh"};
+  const side={width:340,flexShrink:0,borderRight:`1px solid #d9ccba`,paddingRight:16,overflowY:"auto",maxHeight:"84vh"};
 
   const toggleF=k=>setFTBD(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
   const toggleSp=k=>setSpTBD(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
@@ -800,7 +800,7 @@ export default function App(){
       <div style={{background:RR.bg,borderBottom:`1px solid ${RR.border}`,padding:"18px 24px 14px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
         <div>
           <div style={{fontSize:11,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:4}}>The Reading Room</div>
-          <h1 style={{margin:0,fontSize:26,fontWeight:700,color:RR.navy,letterSpacing:"-0.01em",fontFamily:"Georgia,'Times New Roman',serif",lineHeight:1}}>Schedule Planner</h1>
+          <h1 style={{margin:0,fontSize:26,fontWeight:700,color:RR.maroon,letterSpacing:"-0.01em",fontFamily:"Georgia,'Times New Roman',serif",lineHeight:1}}>Schedule Planner</h1>
         </div>
         <div style={{textAlign:"right"}}>
           <span style={{fontSize:15,fontWeight:700,color:rrCrCol(annualCr,24,35),fontFamily:"Georgia,serif"}}>{annualCr}cr</span>
@@ -812,7 +812,7 @@ export default function App(){
       {/* Tabs */}
       <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:12,flexWrap:"wrap"}}>
         {TABS.map(t=>(
-          <button key={t} onClick={()=>setTab(t)} style={{padding:"5px 11px",fontSize:11,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
+          <button key={t} onClick={()=>setTab(t)} style={{padding:"6px 13px",fontSize:12.5,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
             {TL[t]}
             {t==="fall"  &&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(fallCr,10,16)}}>{fallCr}</span>}
             {t==="winter"&&<span style={{fontSize:9,fontWeight:700,color:rrCrCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
