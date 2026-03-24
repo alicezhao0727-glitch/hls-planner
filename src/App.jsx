@@ -240,35 +240,35 @@ const C = {
 };
 
 const FALL_TBD=[
-  {key:"f_cl",  name:"Complex Litigation",          prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_cl", note:"W 10:15–12:15"},
-  {key:"f_ica", name:"Intl Commercial Arbitration", prof:"Banifatemi", cr:2, c:K.teal,   evalId:null},
-  {key:"f_emp", name:"Employment Law",              prof:"Sachs",      cr:4, c:K.rose,   evalId:"f_emp"},
+  {key:"f_cl",  name:"Complex Litigation",          prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_cl",  note:"W 10:15–12:15",     days:["Wed"],             s:"10:15",e:"12:15"},
+  {key:"f_emp", name:"Employment Law",              prof:"Sachs",      cr:4, c:K.rose,   evalId:"f_emp", note:"M, T 1:30–3:30",    days:["Mon","Tue"],       s:"13:30",e:"15:30"},
   {key:"f_cci", name:"Corporate Criminal Invest.",  prof:"Kahn/Tsao",  cr:2, c:K.fuchsia,evalId:"f_cci"},
-  {key:"f_ctml",name:"Copyright & TM Litigation",  prof:"Cendali",    cr:2, c:K.sky,    evalId:"f_ctml", note:"M 1:30–3:30"},
-  {key:"f_ca",  name:"Class Actions",              prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_ca", note:"T 1:30–3:30"},
-  {key:"f_cp",  name:"Criminal Procedure",         prof:"Re",         cr:4, c:K.amber,  evalId:null, note:"T, W 10:15–12:15"},
-  {key:"f_bn",  name:"Business Negotiations",      prof:"Coakley",    cr:3, c:K.lime,   evalId:null, note:"W 6:00–9:15"},
-  {key:"f_taxB",name:"Taxation of Business Corps", prof:"Brennan",    cr:4, c:K.yellow, evalId:"f_taxB", note:"M, T, W 10:20–11:40"},
-  {key:"f_taxD",name:"Taxation",                   prof:"Desai",      cr:4, c:K.yellow, evalId:"f_taxD", note:"T, W 3:45–5:45"},
-  {key:"f_gi",  name:"Gender Identity & Sex Orientation",prof:"Chen",cr:2, c:K.fuchsia, evalId:"f_gi", note:"⚠ Moved to Spring 2027 (T 3:45-5:45)"},
-  {key:"f_dpl", name:"Drug Product Litigation",    prof:"Grossi",     cr:3, c:K.orange, evalId:null, note:"W 1:30–3:30"},
-  {key:"f_bsl", name:"Business Strategy for Lawyers",prof:"Spier",   cr:3, c:K.teal,   evalId:"f_bsl", note:"M, T 8:30–10:00"},
+  {key:"f_ctml",name:"Copyright & TM Litigation",  prof:"Cendali",    cr:2, c:K.sky,    evalId:"f_ctml",note:"M 1:30–3:30",        days:["Mon"],             s:"13:30",e:"15:30"},
+  {key:"f_ca",  name:"Class Actions",              prof:"Clary",      cr:2, c:K.cyan,   evalId:"f_ca",  note:"T 1:30–3:30",        days:["Tue"],             s:"13:30",e:"15:30"},
+  {key:"f_cp",  name:"Criminal Procedure",         prof:"Re",         cr:4, c:K.amber,  evalId:null,    note:"T, W 10:15–12:15",   days:["Tue","Wed"],       s:"10:15",e:"12:15"},
+  {key:"f_bn",  name:"Business Negotiations",      prof:"Coakley",    cr:3, c:K.lime,   evalId:null,    note:"W 6:00–9:15",        days:["Wed"],             s:"18:00",e:"21:15"},
+  {key:"f_taxB",name:"Taxation of Business Corps", prof:"Brennan",    cr:4, c:K.yellow, evalId:"f_taxB",note:"M, T, W 10:20–11:40",days:["Mon","Tue","Wed"], s:"10:20",e:"11:40"},
+  {key:"f_taxD",name:"Taxation",                   prof:"Desai",      cr:4, c:K.yellow, evalId:"f_taxD",note:"T, W 3:45–5:45",     days:["Tue","Wed"],       s:"15:45",e:"17:45"},
+  {key:"f_gi",  name:"Gender Identity & Sex Orientation",prof:"Chen", cr:2, c:K.fuchsia,evalId:"f_gi",  note:"⚠ Moved to Spring 2027 (T 3:45–5:45)"},
+  {key:"f_dpl", name:"Drug Product Litigation",    prof:"Grossi",     cr:3, c:K.orange, evalId:null,    note:"W 1:30–3:30",        days:["Wed"],             s:"13:30",e:"15:30"},
+  {key:"f_bsl", name:"Business Strategy for Lawyers",prof:"Spier",   cr:3, c:K.teal,   evalId:"f_bsl", note:"M, T 8:30–10:00",    days:["Mon","Tue"],       s:"8:30", e:"10:00"},
+  {key:"f_ica", name:"Intl Commercial Arbitration", prof:"Banifatemi",cr:2, c:K.teal,   evalId:null},
   {key:"f_sct", name:"U.S. Supreme Court",         prof:"Sunstein",   cr:2, c:K.violet, evalId:null},
 ];
 
 const SP_TBD=[
-  {key:"sp_chl",name:"Comparative Law: China",    prof:"Alford",    cr:4, c:K.red,    evalId:null},
-  {key:"sp_a2j",name:"Access to Justice Lab",     prof:"Greiner",   cr:2, c:K.lime,   evalId:"sp_a2j", note:"Th 6:00–8:00"},
-  {key:"sp_fam",name:"Family Law",                prof:"Gersen",    cr:4, c:K.pink,   evalId:null, note:"T, W 3:45–5:45"},
-  {key:"sp_lab",name:"Labor Law",                 prof:"Sachs",     cr:4, c:K.rose,   evalId:null, note:"M, T 1:30–3:30"},
-  {key:"sp_mus",name:"Music & Digital Media",     prof:"Bavitz",    cr:2, c:K.sky,    evalId:"sp_mus", note:"M 3:45–5:45"},
-  {key:"sp_awa",name:"Advanced Written Advocacy", prof:"Clary",     cr:2, c:K.cyan,   evalId:null},
+  {key:"sp_a2j",name:"Access to Justice Lab",     prof:"Greiner",   cr:2, c:K.lime,   evalId:"sp_a2j", note:"Th 6:00–8:00",       days:["Thu"],             s:"18:00",e:"20:00"},
+  {key:"sp_fam",name:"Family Law",                prof:"Gersen",    cr:4, c:K.pink,   evalId:null,     note:"T, W 3:45–5:45",     days:["Tue","Wed"],       s:"15:45",e:"17:45"},
+  {key:"sp_lab",name:"Labor Law",                 prof:"Sachs",     cr:4, c:K.rose,   evalId:null,     note:"M, T 1:30–3:30",     days:["Mon","Tue"],       s:"13:30",e:"15:30"},
+  {key:"sp_mus",name:"Music & Digital Media",     prof:"Bavitz",    cr:2, c:K.sky,    evalId:"sp_mus", note:"M 3:45–5:45",        days:["Mon"],             s:"15:45",e:"17:45"},
+  {key:"sp_aml",name:"Analytical Methods",        prof:"Spier",     cr:3, c:K.teal,   evalId:"sp_aml", note:"M, T 8:30–10:00",    days:["Mon","Tue"],       s:"8:30", e:"10:00"},
+  {key:"sp_crl",name:"Civil Rights Litigation",   prof:"Michelman", cr:3, c:K.indigo, evalId:"sp_crl", note:"Th 3:45–5:15",       days:["Thu","Fri"],       s:"15:45",e:"17:15"},
+  {key:"sp_gi", name:"Gender Identity & Sex Orientation",prof:"Chen", cr:2, c:K.fuchsia,evalId:"f_gi",note:"T 3:45–5:45",         days:["Tue"],             s:"15:45",e:"17:45"},
+  {key:"sp_awa",name:"Advanced Written Advocacy", prof:"Clary",     cr:2, c:K.cyan,   evalId:null,     note:"W 3:45–5:45",        days:["Wed"],             s:"15:45",e:"17:45"},
+  {key:"sp_chl",name:"Comparative Law: China",    prof:"Alford",    cr:4, c:K.red,    evalId:null,     note:"M, W 3:45–5:45",     days:["Mon","Wed"],       s:"15:45",e:"17:45"},
   {key:"sp_imm",name:"Immigration Law",           prof:"Neuman",    cr:3, c:K.amber,  evalId:null},
-  {key:"sp_aml",name:"Analytical Methods",        prof:"Spier",     cr:3, c:K.teal,   evalId:"sp_aml", note:"M, T 8:30–10:00"},
   {key:"sp_lf", name:"Litigation Funding",        prof:"Steinitz",  cr:2, c:K.fuchsia,evalId:null},
-  {key:"sp_crl",name:"Civil Rights Litigation",   prof:"Michelman", cr:3, c:K.indigo, evalId:"sp_crl", note:"Th 3:45–5:15, F 8:30–10:00"},
   {key:"sp_cdn",name:"Constitutional Dimensions", prof:"Jackson",   cr:1, c:K.violet, evalId:null},
-  {key:"sp_gi", name:"Gender Identity & Sex Orientation",prof:"Chen", cr:2, c:K.fuchsia,evalId:"f_gi", note:"T 3:45–5:45"},
   {key:"sp_oba",name:"The Obama Presidency",      prof:"Mack",      cr:1, c:K.teal,   evalId:null},
 ];
 
@@ -561,8 +561,9 @@ export default function App(){
     if(fFl) l.push(C.f_fl);
     if(fEc) l.push(C.f_ec);
     if(fAa) l.push(C.f_aa);
+    [...fTBD].forEach(k=>{const c=FALL_TBD.find(x=>x.key===k);if(c?.days)l.push(c);});
     return l;
-  },[fEv,fCo,fTAW,fAdm,fBk,f1A,fSex,fSexA,fFl,fEc,fAa]);
+  },[fEv,fCo,fTAW,fAdm,fBk,f1A,fSex,fSexA,fFl,fEc,fAa,fTBD]);
 
   const fallNoTAW=fallTimed.filter(c=>c.key!=="taw");
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
@@ -581,8 +582,9 @@ export default function App(){
     if(spMTC!=="none"&&C[spMTC]) l.push(C[spMTC]);
     if(spCoL) l.push(C.sp_col);
     if(sp1A) l.push(C.sp_1a);
+    [...spTBD].forEach(k=>{const c=SP_TBD.find(x=>x.key===k);if(c?.days)l.push(c);});
     return l;
-  },[spAdm,spMTC,spCoL,sp1A]);
+  },[spAdm,spMTC,spCoL,sp1A,spTBD]);
 
   const spConflicts=useMemo(()=>getConflicts(spTimed),[spTimed]);
   const spTBDCr=useMemo(()=>[...spTBD].reduce((s,k)=>{const c=SP_TBD.find(x=>x.key===k);return s+(c?c.cr:0);},0),[spTBD]);
