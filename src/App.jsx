@@ -795,19 +795,20 @@ export default function App(){
   const rrCrCol=(cr,min,max)=>cr>max?RR.maroon:cr<min?RR.gold:RR.navy;
 
   return(
-    <div style={{fontFamily:"Georgia,'Times New Roman',serif",background:RR.bg,minHeight:"100vh",padding:"14px 16px",boxSizing:"border-box",color:RR.ink}}>
-      {/* Header */}
-      <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:10,paddingBottom:10,borderBottom:`1px solid ${RR.border}`}}>
+    <div style={{fontFamily:"Georgia,'Times New Roman',serif",background:RR.bg,minHeight:"100vh",boxSizing:"border-box",color:RR.ink}}>
+      {/* Banner — mirrors The Reading Room nav bar */}
+      <div style={{background:RR.bg,borderBottom:`1px solid ${RR.border}`,padding:"18px 24px 14px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
         <div>
-          <h2 style={{margin:0,fontSize:16,fontWeight:700,color:RR.navy,letterSpacing:"0.01em"}}>The Reading Room</h2>
-          <div style={{fontSize:9.5,color:RR.muted,fontFamily:"system-ui,sans-serif",marginTop:1,letterSpacing:"0.05em",textTransform:"uppercase"}}>2L Schedule Planner · must-takes marked · ★ peer rating · 📝 notes</div>
+          <div style={{fontSize:11,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:4}}>The Reading Room</div>
+          <h1 style={{margin:0,fontSize:26,fontWeight:700,color:RR.navy,letterSpacing:"-0.01em",fontFamily:"Georgia,'Times New Roman',serif",lineHeight:1}}>Schedule Planner</h1>
         </div>
-        <div style={{marginLeft:"auto",textAlign:"right"}}>
-          <span style={{fontSize:14,fontWeight:700,color:rrCrCol(annualCr,24,35)}}>{annualCr}cr</span>
-          <span style={{fontSize:9.5,color:RR.muted,fontFamily:"system-ui,sans-serif"}}> annual (24–35)</span>
+        <div style={{textAlign:"right"}}>
+          <span style={{fontSize:15,fontWeight:700,color:rrCrCol(annualCr,24,35),fontFamily:"Georgia,serif"}}>{annualCr}cr</span>
+          <div style={{fontSize:9,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.05em",textTransform:"uppercase",marginTop:2}}>annual · req 24–35</div>
         </div>
       </div>
 
+      <div style={{padding:"12px 16px",boxSizing:"border-box"}}>
       {/* Tabs */}
       <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:12,flexWrap:"wrap"}}>
         {TABS.map(t=>(
@@ -1101,6 +1102,7 @@ export default function App(){
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
