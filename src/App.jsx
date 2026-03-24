@@ -640,7 +640,7 @@ export default function App(){
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
   const fallTAWHrs=useMemo(()=>fTAW?fallNoTAW.reduce((s,c)=>s+tawOverlapHrsPerWeek(c),0):0,[fTAW,fallNoTAW]);
   const fallTAWOk=fallTAWHrs<=4;
-  const fElectCr=useMemo(()=>[...fElect].reduce((s,k)=>{const c=ALL_FE.find(x=>x.key===k);return s+(c?c.cr:0);},0),[fElect]);
+  const fElectCr=useMemo(()=>[...fElect].reduce((s,k)=>{const c=ALL_FE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[fElect]);
   const fClinicCr=clinicCrTotal(fClinic,fField);
   const fallCr=sumCr(fallTimed)+fElectCr+fClinicCr;
 
@@ -660,7 +660,7 @@ export default function App(){
   },[spAdm,spCo,spFc,spEv,spCpi,spMTC,spElect]);
 
   const spConflicts=useMemo(()=>getConflicts(spTimed),[spTimed]);
-  const spElectCr=useMemo(()=>[...spElect].reduce((s,k)=>{const c=ALL_SE.find(x=>x.key===k);return s+(c?c.cr:0);},0),[spElect]);
+  const spElectCr=useMemo(()=>[...spElect].reduce((s,k)=>{const c=ALL_SE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[spElect]);
   const spClinicCr=spClinic==="fedcourts"?(spField+1):clinicCrTotal(spClinic,spField);
   const springCr=sumCr(spTimed)+spElectCr+spClinicCr;
   const annualCr=fallCr+winterCrCalc+springCr;
