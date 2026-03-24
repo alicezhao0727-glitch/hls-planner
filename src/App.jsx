@@ -477,7 +477,7 @@ function Calendar({courses,tawActive}){
         {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:30`)+20,right:2,color:"#9ca3af",fontSize:8.5}}>{h===12?"12p":h<12?h+"a":(h-12)+"p"}</div>)}
       </div>
       {DAYS.map(day=>(
-        <div key={day} style={{flex:1,borderLeft:"1px solid #e5e7eb",position:"relative",minWidth:0}}>
+        <div key={day} style={{flex:1,borderLeft:"1px solid #e5e7eb",position:"relative",minWidth:0,overflow:"hidden"}}>
           <div style={{textAlign:"center",fontWeight:700,color:"#374151",height:20,lineHeight:"20px",background:"#f9fafb",borderBottom:"1px solid #e5e7eb",fontSize:9.5}}>{day}</div>
           {tawActive&&<div style={{position:"absolute",top:yOf("14:00"),height:hOf("14:00","21:00"),left:0,right:0,background:"rgba(107,114,128,.05)",borderTop:"1px dashed #d1d5db",pointerEvents:"none"}}/>}
           {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:00`),left:0,right:0,borderTop:h%2===0?"1px solid #f0f0f0":"1px dashed #fafafa"}}/>)}
