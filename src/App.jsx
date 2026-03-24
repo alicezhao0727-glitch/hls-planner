@@ -398,29 +398,61 @@ function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
 }
 
 function TBDGrid({opts,sel,toggle}){
+  const confirmed = opts.filter(c=>c.note);
+  const tbd = opts.filter(c=>!c.note);
   return(
     <div>
-      <div style={{fontSize:13,color:"#8a7e6e",marginBottom:5,fontStyle:"italic",fontFamily:"system-ui,sans-serif"}}>Times TBD — credit count only. Check HELIOS after Apr 2026.</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
-        {opts.map(c=>{
-          const on=sel.has(c.key);
-          return(
-            <div key={c.key} style={{borderRadius:3,background:on?"#edf0f5":"#f3ede3",border:on?"1px solid #b0bdd4":"1px solid #d9ccba",overflow:"hidden"}}>
-              <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 6px",fontSize:14,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
-                <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,accentColor:"#1e2d4a"}}/>
-                <Dot c={c.c} sz={6}/>
-                <span style={{flex:1,lineHeight:1.3}}>
-                  <span style={{fontWeight:600,color:"#2c2418"}}>{c.name}</span>
-                  {c.evalId&&<StarBadge evalId={c.evalId}/>}
-                  <br/><span style={{color:"#8a7e6e",fontSize:13}}>{c.prof} · </span><span style={{color:"#1e2d4a",fontSize:13}}>{c.cr}cr</span>
-                </span>
-              </label>
-              {c.evalId&&<EvalCard evalId={c.evalId}/>}
-              {window.__hlsSetNote&&<NoteField courseKey={c.key}/>}
-            </div>
-          );
-        })}
-      </div>
+      {confirmed.length>0&&(
+        <>
+          <div style={{fontSize:12,fontWeight:700,color:"#2a4a22",marginBottom:4,fontFamily:"system-ui,sans-serif",textTransform:"uppercase",letterSpacing:".05em"}}>✓ Confirmed times</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4,marginBottom:8}}>
+            {confirmed.map(c=>{
+              const on=sel.has(c.key);
+              return(
+                <div key={c.key} style={{borderRadius:3,background:on?"#e8f0ee":"#f3ede3",border:on?"1px solid #7abfb0":"1px solid #d9ccba",overflow:"hidden"}}>
+                  <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 6px",fontSize:14,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
+                    <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,accentColor:"#1e2d4a"}}/>
+                    <Dot c={c.c} sz={6}/>
+                    <span style={{flex:1,lineHeight:1.3}}>
+                      <span style={{fontWeight:600,color:"#2c2418"}}>{c.name}</span>
+                      {c.evalId&&<StarBadge evalId={c.evalId}/>}
+                      <br/><span style={{color:"#8a7e6e",fontSize:12}}>{c.prof} · {c.cr}cr</span>
+                      <br/><span style={{color:"#2d7070",fontSize:12,fontWeight:600}}>{c.note}</span>
+                    </span>
+                  </label>
+                  {c.evalId&&<EvalCard evalId={c.evalId}/>}
+                  {window.__hlsSetNote&&<NoteField courseKey={c.key}/>}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+      {tbd.length>0&&(
+        <>
+          <div style={{fontSize:12,fontWeight:700,color:"#8a7e6e",marginBottom:4,fontFamily:"system-ui,sans-serif",textTransform:"uppercase",letterSpacing:".05em"}}>Time TBD</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4}}>
+            {tbd.map(c=>{
+              const on=sel.has(c.key);
+              return(
+                <div key={c.key} style={{borderRadius:3,background:on?"#edf0f5":"#f3ede3",border:on?"1px solid #b0bdd4":"1px solid #d9ccba",overflow:"hidden"}}>
+                  <label style={{display:"flex",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 6px",fontSize:14,width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
+                    <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,accentColor:"#1e2d4a"}}/>
+                    <Dot c={c.c} sz={6}/>
+                    <span style={{flex:1,lineHeight:1.3}}>
+                      <span style={{fontWeight:600,color:"#2c2418"}}>{c.name}</span>
+                      {c.evalId&&<StarBadge evalId={c.evalId}/>}
+                      <br/><span style={{color:"#8a7e6e",fontSize:13}}>{c.prof} · </span><span style={{color:"#1e2d4a",fontSize:13}}>{c.cr}cr</span>
+                    </span>
+                  </label>
+                  {c.evalId&&<EvalCard evalId={c.evalId}/>}
+                  {window.__hlsSetNote&&<NoteField courseKey={c.key}/>}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
