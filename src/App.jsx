@@ -372,15 +372,23 @@ const SP_ELECTIVES={
 
 const CLINIC_OPTS=[
   {id:"consumer",  name:"Consumer Protection", semCr:2, fMin:3,fMax:5, term:"spring-only", c:K.lime,   evalId:"clinicConsumer",
-   note:"Spring only · WilmerHale Legal Services Center · litigation-heavy"},
+   note:"Spring only · WilmerHale Legal Services Center · litigation-heavy · Alexa Rosenbloom",
+   semSpring:{days:["Tue"],s:"13:30",e:"15:30"}},
   {id:"cyberlaw",  name:"Cyberlaw",            semCr:2, fMin:3,fMax:5, term:"both",        c:K.sky,    evalId:"clinicCyber",
-   note:"Fall or spring · Berkman Klein · IP/privacy/tech/AI"},
+   note:"Fall or spring · Berkman Klein · IP/privacy/tech/AI · Christopher Bavitz",
+   semFall:{days:["Wed"],s:"13:30",e:"15:30"}, semSpring:{days:["Wed"],s:"13:30",e:"15:30"}},
   {id:"employment",name:"Employment",          semCr:2, fMin:3,fMax:5, term:"both",        c:K.rose,   evalId:null,
-   note:"Fall or spring · employment rights & discrimination"},
+   note:"Fall or spring · employment rights & discrimination · Steve Churchill",
+   semFall:{days:["Tue"],s:"18:00",e:"20:00"}, semSpring:{days:["Tue"],s:"18:00",e:"20:00"}},
   {id:"fedcourts", name:"Federal Courts",      semCr:1, fMin:2,fMax:3, term:"winter+spring",c:K.teal,  evalId:"clinicFedCourts",
-   note:"Winter 2cr + Spring 2–3cr fieldwork + 1cr seminar · externship at any federal court nationwide"},
-  {id:"mediation", name:"Mediation",           semCr:0, fMin:1,fMax:1, term:"both",        c:K.fuchsia,evalId:null,
-   note:"1cr total · standalone format"},
+   note:"Winter 2cr + Spring 2–3cr fieldwork + 1cr seminar · externship at any federal court nationwide · David Zimmer",
+   semSpring:{days:["Wed"],s:"8:30",e:"10:00"}},
+  {id:"mediation", name:"Mediation",           semCr:1, fMin:1,fMax:1, term:"both",        c:K.fuchsia,evalId:null,
+   note:"Fall or spring · 1cr fieldwork + 1cr seminar = 2cr total · Catherine Mondell",
+   semFall:{days:["Tue"],s:"15:45",e:"17:45"}, semSpring:{days:["Tue"],s:"15:45",e:"17:45"}},
+  {id:"judicial",  name:"Judicial Process in Trial Courts", semCr:2, fMin:2,fMax:5, term:"both",   c:K.amber,  evalId:"clinicJudicial",
+   note:"Fall or spring · observe & assist in MA trial courts · Barbara Berenson",
+   semFall:{days:["Thu"],s:"15:45",e:"17:45"}, semSpring:{days:["Wed"],s:"15:45",e:"17:45"}},
 ];
 
 // ── CALENDAR ─────────────────────────────────────────────────────────────────
@@ -555,6 +563,14 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
           {sel.id!=="mediation"&&sel.id!=="fedcourts"&&(
             <>
               <div style={{fontSize:13,fontWeight:600,color:sel.c.tx,marginBottom:3,marginTop:6}}>Fieldwork credits (+ {sel.semCr}cr seminar):</div>
+              {(()=>{
+                const sem=allowedTerms==="spring"?(sel.semSpring||sel.semFall):sel.semFall||sel.semSpring;
+                if(!sem) return null;
+                const days=sem.days.map(d=>d.slice(0,2)).join(", ");
+                return <div style={{fontSize:12,color:sel.c.tx,marginBottom:4}}>
+                  📅 Seminar: <strong>{days} {sem.s}–{sem.e}</strong> · {sel.semCr}cr
+                </div>;
+              })()}
               <div style={{display:"flex",gap:4,alignItems:"center"}}>
                 {[sel.fMin,sel.fMin+1,sel.fMin+2].filter(n=>n<=sel.fMax).map(n=>(
                   <button key={n} onClick={()=>setFieldCr(n)} style={{padding:"2px 9px",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",background:fieldCr===n?sel.c.bd:"#fff",border:`2px solid ${fieldCr===n?sel.c.bd:sel.c.bd+"60"}`,color:fieldCr===n?"#fff":sel.c.tx}}>{n}cr</button>
@@ -574,7 +590,7 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
               </div>
             </>
           )}
-          {sel.id==="mediation"&&<div style={{fontSize:13,color:sel.c.tx,marginTop:3}}>Total: <strong>1cr</strong></div>}
+          {sel.id==="mediation"&&<div style={{fontSize:13,color:sel.c.tx,marginTop:3}}>1cr fieldwork + 1cr seminar = <strong>2cr total</strong> · Seminar: T 3:45–5:45</div>}
         </div>
       )}
     </div>
@@ -633,8 +649,10 @@ export default function App(){
     if(f1A==="fi")   l.push(C.f_1afi);
     if(f1A==="wein") l.push(C.f_1awe);
     [...fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)l.push(c);});
+    // Add clinic seminar to calendar
+    if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)l.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     return l;
-  },[fEv,fCo,fTAW,fAdm,f1A,fElect]);
+  },[fEv,fCo,fTAW,fAdm,f1A,fElect,fClinic]);
 
   const fallNoTAW=fallTimed.filter(c=>c.key!=="taw");
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
@@ -656,8 +674,9 @@ export default function App(){
     if(spCpi!=="none"&&C[spCpi]) l.push(C[spCpi]);
     if(spMTC!=="none"&&C[spMTC]) l.push(C[spMTC]);
     [...spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)l.push(c);});
+    if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)l.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     return l;
-  },[spAdm,spCo,spFc,spEv,spCpi,spMTC,spElect]);
+  },[spAdm,spCo,spFc,spEv,spCpi,spMTC,spElect,spClinic]);
 
   const spConflicts=useMemo(()=>getConflicts(spTimed),[spTimed]);
   const spElectCr=useMemo(()=>[...spElect].reduce((s,k)=>{const c=ALL_SE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[spElect]);
