@@ -392,7 +392,7 @@ const CLINIC_OPTS=[
 ];
 
 // ── CALENDAR ─────────────────────────────────────────────────────────────────
-const CAL_S=8*60, CAL_E=20*60, CAL_H=420;
+const CAL_S=8*60, CAL_E=21*60, CAL_H=455;
 const yOf=m=>((toMin(m)-CAL_S)/(CAL_E-CAL_S))*CAL_H;
 const hOf=(s,e)=>Math.max(((toMin(e)-toMin(s))/(CAL_E-CAL_S))*CAL_H,14);
 
@@ -400,24 +400,33 @@ function Calendar({courses,tawActive}){
   const byDay={};
   DAYS.forEach(d=>byDay[d]=[]);
   courses.forEach(c=>{c?.days?.forEach(d=>byDay[d]?.push(c))});
-  const hrs=Array.from({length:14},(_,i)=>i+7);
+  const hrs=Array.from({length:13},(_,i)=>i+8); // 8a–8p
+  const halfHrs=Array.from({length:26},(_,i)=>8*60+i*30); // every 30min
   return(
     <div style={{display:"flex",height:CAL_H+24,fontSize:11,userSelect:"none",flexShrink:0,borderRadius:5,overflow:"hidden",border:"1px solid #d9ccba"}}>
-      <div style={{width:28,position:"relative",flexShrink:0,paddingTop:24,background:"#f3ede3"}}>
-        {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:30`)+24,right:2,color:"#8a7e6e",fontSize:9,fontFamily:"system-ui,sans-serif"}}>{h===12?"12p":h<12?h+"a":(h-12)+"p"}</div>)}
+      <div style={{width:32,position:"relative",flexShrink:0,paddingTop:24,background:"#f3ede3",borderRight:"1px solid #d9ccba"}}>
+        {hrs.map(h=>(
+          <div key={h} style={{position:"absolute",top:yOf(`${h}:00`)+24-6,right:4,color:"#8a7e6e",fontSize:9,fontFamily:"system-ui,sans-serif",lineHeight:1}}>
+            {h===12?"12p":h<12?h+"a":(h-12)+"p"}
+          </div>
+        ))}
       </div>
       {DAYS.map(day=>(
         <div key={day} style={{flex:1,borderLeft:"1px solid #d9ccba",position:"relative",minWidth:0,overflow:"hidden"}}>
           <div style={{textAlign:"center",fontWeight:700,color:"#1e2d4a",height:24,lineHeight:"24px",background:"#ede6d8",borderBottom:"1px solid #d9ccba",fontSize:11,fontFamily:"system-ui,sans-serif",letterSpacing:"0.04em"}}>{day}</div>
-          {tawActive&&<div style={{position:"absolute",top:yOf("14:00"),height:hOf("14:00","20:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
-          {hrs.map(h=><div key={h} style={{position:"absolute",top:yOf(`${h}:00`),left:0,right:0,borderTop:h%2===0?"1px solid #e8e0d4":"1px solid #f0ebe2"}}/>)}
+          {tawActive&&<div style={{position:"absolute",top:yOf("14:00")+24,height:hOf("14:00","21:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
+          {halfHrs.map(m=>{
+            const isHour=m%60===0;
+            return <div key={m} style={{position:"absolute",top:yOf(`${Math.floor(m/60)}:${m%60===0?"00":"30"}`)+24,left:0,right:0,
+              borderTop:isHour?"1px solid #ddd6cc":"1px dashed #ece6de",pointerEvents:"none"}}/>;
+          })}
           {byDay[day].map((c,i)=>(
-            <div key={c.key+day+i} title={`${c.name} (${c.prof})\n${c.s}–${c.e}`}
-              style={{position:"absolute",top:yOf(c.s),height:hOf(c.s,c.e),left:1,right:1,
+            <div key={c.key+day+i} title={`${c.name}${c.prof?" ("+c.prof+")":""}\n${c.s}–${c.e}`}
+              style={{position:"absolute",top:yOf(c.s)+24,height:hOf(c.s,c.e),left:1,right:1,
                 background:c.c.bg,borderLeft:`3px solid ${c.c.bd}`,borderRadius:2,
                 padding:"2px 4px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 3px rgba(0,0,0,.1)",cursor:"default"}}>
               <div style={{fontWeight:700,fontSize:10,lineHeight:1.2,fontFamily:"system-ui,sans-serif"}}>{c.name}</div>
-              <div style={{opacity:.65,fontSize:9,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>
+              {c.prof&&<div style={{opacity:.65,fontSize:9,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>}
             </div>
           ))}
         </div>
@@ -597,6 +606,22 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
   );
 }
 
+
+// ── PLAN VERSIONS ─────────────────────────────────────────────────────────────
+const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",f1A:"none",fTAW:true,fAdm:false,
+  fElect:[],fClinic:null,fField:3,wRepro:false,
+  spAdm:"sp_adm_v",spCo:"none",spFc:"none",spEv:"none",spCpi:"none",spMTC:"none",
+  spElect:[],spClinic:null,spField:3};
+
+function loadVersions(){
+  try{ return JSON.parse(localStorage.getItem("hls_versions")||"[null,null,null]"); }
+  catch{ return [null,null,null]; }
+}
+function saveVersions(vs){ try{ localStorage.setItem("hls_versions",JSON.stringify(vs)); }catch{} }
+
+function planToSnap(state){ return {...state, fElect:[...state.fElect], spElect:[...state.spElect]}; }
+function snapToPlan(snap){ return {...snap, fElect:new Set(snap.fElect||[]), spElect:new Set(snap.spElect||[])}; }
+
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
 export default function App(){
   const { notes, setNote } = useNotes();
@@ -629,6 +654,24 @@ export default function App(){
   const [spClinic,setSpClinic]=useState(null);
   const [spField,setSpField]=useState(3);
   const [evalSearch,setEvalSearch]=useState("");
+  const [versions,setVersions]=useState(loadVersions); // [snap|null, snap|null, snap|null]
+  const [showVersions,setShowVersions]=useState(false);
+
+  const planState=()=>planToSnap({fEv,fCo,f1A,fTAW,fAdm,fElect,fClinic,fField,
+    wRepro,spAdm,spCo,spFc,spEv,spCpi,spMTC,spElect,spClinic,spField});
+  const loadPlan=snap=>{
+    const p=snapToPlan(snap);
+    setFEv(p.fEv);setFCo(p.fCo);setF1A(p.f1A);setFTAW(p.fTAW);setFAdm(p.fAdm);
+    setFElect(p.fElect);setFClinic(p.fClinic);setFField(p.fField);
+    setWRepro(p.wRepro);
+    setSpAdm(p.spAdm);setSpCo(p.spCo);setSpFc(p.spFc);setSpEv(p.spEv);setSpCpi(p.spCpi);
+    setSpMTC(p.spMTC);setSpElect(p.spElect);setSpClinic(p.spClinic);setSpField(p.spField);
+  };
+  const saveVersion=i=>{
+    const vs=[...versions];vs[i]=planState();setVersions(vs);saveVersions(vs);
+  };
+  const loadVersion=i=>{if(versions[i])loadPlan(versions[i]);};
+  const clearVersion=i=>{const vs=[...versions];vs[i]=null;setVersions(vs);saveVersions(vs);};
 
   const clinicCrTotal=(clinicId,fieldCr)=>{
     const cl=CLINIC_OPTS.find(c=>c.id===clinicId);
@@ -755,12 +798,49 @@ export default function App(){
           <div style={{fontSize:11,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:4}}>The Reading Room</div>
           <h1 style={{margin:0,fontSize:26,fontWeight:700,color:RR.maroon,letterSpacing:"-0.01em",fontFamily:"Georgia,'Times New Roman',serif",lineHeight:1}}>Schedule Planner</h1>
         </div>
-        <div style={{textAlign:"right"}}>
-          <span style={{fontSize:15,fontWeight:700,color:rrCrCol(annualCr,24,35),fontFamily:"Georgia,serif"}}>{annualCr}cr</span>
-          <div style={{fontSize:9,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.05em",textTransform:"uppercase",marginTop:2}}>annual · req 24–35</div>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <button onClick={()=>setShowVersions(v=>!v)} style={{padding:"4px 10px",borderRadius:6,fontSize:12,fontWeight:700,cursor:"pointer",background:showVersions?"#1e2d4a":"#ede6d8",color:showVersions?"#f3ede3":"#2c2418",border:"1px solid #c4b8a8",fontFamily:"system-ui,sans-serif"}}>
+            📋 Plans {versions.filter(Boolean).length>0?`(${versions.filter(Boolean).length} saved)`:""}
+          </button>
+          <div style={{textAlign:"right"}}>
+            <span style={{fontSize:15,fontWeight:700,color:rrCrCol(annualCr,24,35),fontFamily:"Georgia,serif"}}>{annualCr}cr</span>
+            <div style={{fontSize:9,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.05em",textTransform:"uppercase",marginTop:2}}>annual · req 24–35</div>
+          </div>
         </div>
       </div>
 
+      {showVersions&&(
+        <div style={{background:"#edf0f5",borderBottom:"1px solid #c4bdb4",padding:"10px 24px",fontFamily:"system-ui,sans-serif"}}>
+          <div style={{fontSize:12,fontWeight:700,color:"#1e2d4a",marginBottom:8,textTransform:"uppercase",letterSpacing:".06em"}}>Saved Plans — click slot to save current, or load/clear</div>
+          <div style={{display:"flex",gap:10}}>
+            {[0,1,2].map(i=>{
+              const v=versions[i];
+              return(
+                <div key={i} style={{flex:1,background:v?"#fff":"#f3ede3",border:"1px solid #c4bdb4",borderRadius:6,padding:"8px 10px",minHeight:60}}>
+                  <div style={{fontSize:12,fontWeight:700,color:"#1e2d4a",marginBottom:4}}>Plan {i+1}{v?" ✓":""}</div>
+                  {v?(
+                    <>
+                      <div style={{fontSize:11,color:"#8a7e6e",lineHeight:1.5,marginBottom:6}}>
+                        Ev: {v.fEv?.replace("ev_","")} · Co: {v.fCo?.replace("co_","")} · {v.fTAW?"TAW fall":"TAW winter"}<br/>
+                        {v.f1A!=="none"?`1A: ${v.f1A} · `:""}
+                        {v.fClinic?`${v.fClinic} clinic · `:""}
+                        {(v.fElect?.length||0)+(v.spElect?.length||0)} electives
+                      </div>
+                      <div style={{display:"flex",gap:4}}>
+                        <button onClick={()=>loadVersion(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#1e2d4a",color:"#f3ede3",border:"none",borderRadius:4}}>Load</button>
+                        <button onClick={()=>saveVersion(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#d9ccba",color:"#2c2418",border:"none",borderRadius:4}}>Overwrite</button>
+                        <button onClick={()=>clearVersion(i)} style={{padding:"2px 6px",fontSize:11,cursor:"pointer",background:"#f0e4e4",color:"#6b1e2e",border:"none",borderRadius:4}}>✕</button>
+                      </div>
+                    </>
+                  ):(
+                    <button onClick={()=>saveVersion(i)} style={{width:"100%",padding:"6px 0",fontSize:12,fontWeight:700,cursor:"pointer",background:"#1e2d4a",color:"#f3ede3",border:"none",borderRadius:4,marginTop:4}}>Save current plan here</button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div style={{padding:"12px 16px",boxSizing:"border-box"}}>
       {/* Tabs */}
       <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:12,flexWrap:"wrap"}}>
