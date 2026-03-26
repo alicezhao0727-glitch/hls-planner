@@ -781,7 +781,7 @@ export default function App(){
     if(fAdm) l.push(C.f_adm);
     [...fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)l.push(c);});
     // Add clinic seminar to calendar
-    if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)l.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
+    if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)l.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:0,c:cl.c});}
     return l;
   },[fEv,fCo,fTAW,fAdm,fElect,fClinic]);
 
@@ -804,7 +804,7 @@ export default function App(){
     if(spCpi!=="none"&&C[spCpi]) l.push(C[spCpi]);
     if(spMTC!=="none"&&C[spMTC]) l.push(C[spMTC]);
     [...spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)l.push(c);});
-    if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)l.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
+    if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)l.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:0,c:cl.c});}
     return l;
   },[spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic]);
 
