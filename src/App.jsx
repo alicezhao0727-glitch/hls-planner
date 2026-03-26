@@ -1,5 +1,17 @@
 import { useState, useMemo, useEffect, useRef, useCallback, createContext, useContext } from "react";
 
+// ── MOBILE DETECTION ─────────────────────────────────────────────────────────
+const MobileContext = createContext(false);
+function useIsMobile(breakpoint = 768) {
+  const [mobile, setMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return mobile;
+}
+
 // ── PERSISTENT NOTES ──────────────────────────────────────────────────────────
 function useNotes() {
   const [notes, setNotesState] = useState(() => {
@@ -102,12 +114,6 @@ function EvalCard({ evalId, label }) {
 
 // ── SUGGESTIONS (based on interests: litigation, gender, rule of law/democracy, entertainment/IP) ──
 const SUGGESTIONS = [
-  {
-    key:"sug_fedcourts", name:"Federal Courts", prof:"Goldsmith", cr:5, term:"Fall 27",
-    evalId:"sugg_fedCourts", c:{bg:"#e4eef5",bd:"#2a6080",tx:"#12344a"},
-    why:"Litigation + Rule of Law",
-    pitch:"Essential for any litigator. Goldsmith is one of the best teachers at HLS: 'I probably learned more there than I did anywhere else at HLS.' Covers the constitutional and statutory limits of Article III courts — the foundation of federal litigation strategy. Hard but worth it.",
-  },
   {
     key:"sug_patent_trial", name:"Patent Trial Advocacy", prof:"Tompros", cr:2, term:"Fall/Spring",
     evalId:"sugg_patentTrial", c:{bg:"#ede9fe",bd:"#7c3aed",tx:"#4c1d95"},
@@ -226,10 +232,6 @@ const C = {
   co_sp: {key:"co_sp", name:"Corporations", prof:"Spamann",     cr:4, days:["Wed","Thu","Fri"], s:"8:30", e:"9:50",  c:K.green},
   co_fr: {key:"co_fr", name:"Corporations", prof:"Fried",       cr:4, days:["Wed","Thu","Fri"], s:"13:30",e:"15:30", c:K.green},
   co_pg: {key:"co_pg", name:"Corporations", prof:"Pargendler",  cr:4, days:["Mon","Tue"],       s:"15:45",e:"17:45", c:K.green},
-  // ── FALL 1A (multi-section) ──
-  f_1afe:{key:"f_1afe",name:"1st Amendment",prof:"Feldman",  cr:4, days:["Thu","Fri"],   s:"10:15",e:"12:15", c:K.indigo},
-  f_1awe:{key:"f_1awe",name:"1st Amendment",prof:"Weinrib",  cr:4, days:["Mon","Tue"],   s:"13:30",e:"15:30", c:K.indigo},
-  f_1afi:{key:"f_1afi",name:"1st Amendment",prof:"Field",    cr:4, days:["Mon","Tue"],   s:"10:15",e:"12:15", c:K.indigo},
   // ── FALL ADMIN LAW ──
   f_adm: {key:"f_adm", name:"Admin Law",    prof:"Freeman",   cr:4, days:["Wed","Thu"],  s:"13:30",e:"15:30", c:K.red},
   // ── FALL BANKRUPTCY ──
@@ -248,9 +250,6 @@ const C = {
   // ── SPRING CORPORATIONS (multi-section) ──
   sp_co_c:{key:"sp_co_c",name:"Corporations",prof:"Coates",    cr:4, days:["Mon","Tue","Wed"], s:"10:15",e:"11:35", c:K.green},
   sp_co_t:{key:"sp_co_t",name:"Corporations",prof:"Tallarita", cr:4, days:["Thu","Fri"],       s:"10:15",e:"12:15", c:K.green},
-  // ── SPRING FEDERAL COURTS (multi-section) ──
-  sp_fc_r:{key:"sp_fc_r",name:"Federal Courts",prof:"Re",    cr:4, days:["Mon","Tue","Wed"], s:"10:30",e:"11:50", c:K.teal},
-  sp_fc_s:{key:"sp_fc_s",name:"Federal Courts",prof:"Sachs", cr:4, days:["Wed","Thu","Fri"], s:"13:40",e:"15:00", c:K.teal},
   // ── SPRING EVIDENCE (multi-section) ──
   sp_ev_l:{key:"sp_ev_l",name:"Evidence",prof:"Lvovsky", cr:4, days:["Mon","Tue","Wed"], s:"10:30",e:"11:50", c:K.blue},
   sp_ev_r:{key:"sp_ev_r",name:"Evidence",prof:"Rubin",   cr:2, days:["Mon"],             s:"13:30",e:"15:30", c:K.blue},
@@ -262,7 +261,6 @@ const C = {
   sp_bk: {key:"sp_bk", name:"Bankruptcy",      prof:"Roe",     cr:4, days:["Mon","Tue","Wed"],  s:"10:30",e:"11:50", c:K.violet},
   sp_cp: {key:"sp_cp", name:"Copyright",       prof:"Fisher",  cr:4, days:["Mon","Tue","Wed"],  s:"10:30",e:"11:50", c:K.sky},
   sp_col:{key:"sp_col",name:"Conflict of Laws",prof:"Sachs",   cr:3, days:["Mon","Tue"],         s:"13:40",e:"15:10", c:K.emerald},
-  sp_1a: {key:"sp_1a", name:"1st Amendment",   prof:"Parker",  cr:4, days:["Mon","Tue"],         s:"15:45",e:"17:45", c:K.indigo},
 };
 
 const FALL_ELECTIVES={
@@ -279,7 +277,6 @@ const FALL_ELECTIVES={
     {key:"f_cp",   name:"Crim Pro: Survey",          prof:"Re",             cr:4,days:["Tue","Wed"],       s:"10:15",e:"12:15",c:K.amber, evalId:null},
     {key:"f_dpl",  name:"Drug Product Liability",    prof:"Grossi",         cr:3,days:["Wed"],             s:"13:30",e:"15:30",c:K.orange,evalId:null},
     {key:"f_emp",  name:"Employment Law",            prof:"Sachs",          cr:4,days:["Mon","Tue"],       s:"13:30",e:"15:30",c:K.rose,  evalId:"f_emp"},
-    {key:"f_fce",  name:"Federal Courts",            prof:"Goldsmith",      cr:5,days:["Wed","Thu","Fri"], s:"13:30",e:"15:10",c:K.teal,  evalId:null},
     {key:"f_iip",  name:"Intl Intellectual Property",prof:"Okediji",        cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.sky,   evalId:null},
     {key:"f_lod",  name:"Law of Democracy",          prof:"Stephanopoulos", cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.indigo,evalId:null},
     {key:"f_pat",  name:"Patent Law",                prof:"Tompros",        cr:3,days:["Thu","Fri"],       s:"10:15",e:"11:45",c:K.sky,   evalId:null},
@@ -345,7 +342,6 @@ const SP_ELECTIVES={
     {key:"sp_pi",   name:"Public International Law", prof:"Blum",       cr:4,days:["Wed","Fri"],       s:"13:30",e:"15:30",c:K.teal,  evalId:null},
     {key:"sp_rfi",  name:"Regulation of Financial Institutions",prof:"Tarullo",cr:4,days:["Mon","Tue"],s:"13:30",e:"15:30",c:K.violet,evalId:null},
     {key:"sp_ag",   name:"Role of State Attorney General",prof:"Brann", cr:2,days:["Mon"],             s:"13:30",e:"15:30",c:K.indigo,evalId:"sugg_stateAG"},
-    {key:"sp_1a",   name:"1st Amendment",            prof:"Parker",     cr:4,days:["Mon","Tue"],       s:"15:45",e:"17:45",c:K.indigo,evalId:"sp_1a"},
   ],
   seminars:[
     {key:"sp_a2j",  name:"Access to Justice Lab",    prof:"Greiner",    cr:2,days:["Thu"],             s:"18:00",e:"20:00",c:K.lime,  evalId:"sp_a2j"},
@@ -397,40 +393,46 @@ const yOf=m=>((toMin(m)-CAL_S)/(CAL_E-CAL_S))*CAL_H;
 const hOf=(s,e)=>Math.max(((toMin(e)-toMin(s))/(CAL_E-CAL_S))*CAL_H,14);
 
 function Calendar({courses,tawActive}){
+  const mob = useContext(MobileContext);
+  const calH = mob ? 340 : CAL_H;
+  const yOfLocal = m => ((toMin(m)-CAL_S)/(CAL_E-CAL_S))*calH;
+  const hOfLocal = (s,e) => Math.max(((toMin(e)-toMin(s))/(CAL_E-CAL_S))*calH,mob?10:14);
   const byDay={};
   DAYS.forEach(d=>byDay[d]=[]);
   courses.forEach(c=>{c?.days?.forEach(d=>byDay[d]?.push(c))});
-  const hrs=Array.from({length:13},(_,i)=>i+8); // 8a–8p
-  const halfHrs=Array.from({length:26},(_,i)=>8*60+i*30); // every 30min
+  const hrs=Array.from({length:13},(_,i)=>i+8);
+  const halfHrs=Array.from({length:26},(_,i)=>8*60+i*30);
   return(
-    <div style={{display:"flex",height:CAL_H+24,fontSize:11,userSelect:"none",flexShrink:0,borderRadius:5,overflow:"hidden",border:"1px solid #d9ccba"}}>
-      <div style={{width:32,position:"relative",flexShrink:0,paddingTop:24,background:"#f3ede3",borderRight:"1px solid #d9ccba"}}>
+    <div style={{overflowX:mob?"auto":"visible",WebkitOverflowScrolling:"touch"}}>
+    <div style={{display:"flex",height:calH+24,fontSize:mob?10:11,userSelect:"none",flexShrink:0,borderRadius:5,overflow:"hidden",border:"1px solid #d9ccba",minWidth:mob?420:"auto"}}>
+      <div style={{width:mob?26:32,position:"relative",flexShrink:0,paddingTop:24,background:"#f3ede3",borderRight:"1px solid #d9ccba"}}>
         {hrs.map(h=>(
-          <div key={h} style={{position:"absolute",top:yOf(`${h}:00`)+24-6,right:4,color:"#8a7e6e",fontSize:9,fontFamily:"system-ui,sans-serif",lineHeight:1}}>
+          <div key={h} style={{position:"absolute",top:yOfLocal(`${h}:00`)+24-6,right:mob?2:4,color:"#8a7e6e",fontSize:mob?8:9,fontFamily:"system-ui,sans-serif",lineHeight:1}}>
             {h===12?"12p":h<12?h+"a":(h-12)+"p"}
           </div>
         ))}
       </div>
       {DAYS.map(day=>(
         <div key={day} style={{flex:1,borderLeft:"1px solid #d9ccba",position:"relative",minWidth:0,overflow:"hidden"}}>
-          <div style={{textAlign:"center",fontWeight:700,color:"#1e2d4a",height:24,lineHeight:"24px",background:"#ede6d8",borderBottom:"1px solid #d9ccba",fontSize:11,fontFamily:"system-ui,sans-serif",letterSpacing:"0.04em"}}>{day}</div>
-          {tawActive&&<div style={{position:"absolute",top:yOf("14:00")+24,height:hOf("14:00","21:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
+          <div style={{textAlign:"center",fontWeight:700,color:"#1e2d4a",height:24,lineHeight:"24px",background:"#ede6d8",borderBottom:"1px solid #d9ccba",fontSize:mob?10:11,fontFamily:"system-ui,sans-serif",letterSpacing:"0.04em"}}>{mob?day.slice(0,2):day}</div>
+          {tawActive&&<div style={{position:"absolute",top:yOfLocal("14:00")+24,height:hOfLocal("14:00","21:00"),left:0,right:0,background:"rgba(107,99,90,.05)",borderTop:"1px dashed #c4b8a8",pointerEvents:"none"}}/>}
           {halfHrs.map(m=>{
             const isHour=m%60===0;
-            return <div key={m} style={{position:"absolute",top:yOf(`${Math.floor(m/60)}:${m%60===0?"00":"30"}`)+24,left:0,right:0,
+            return <div key={m} style={{position:"absolute",top:yOfLocal(`${Math.floor(m/60)}:${m%60===0?"00":"30"}`)+24,left:0,right:0,
               borderTop:isHour?"1px solid #ddd6cc":"1px dashed #ece6de",pointerEvents:"none"}}/>;
           })}
           {byDay[day].map((c,i)=>(
             <div key={c.key+day+i} title={`${c.name}${c.prof?" ("+c.prof+")":""}\n${c.s}–${c.e}`}
-              style={{position:"absolute",top:yOf(c.s)+24,height:hOf(c.s,c.e),left:1,right:1,
-                background:c.c.bg,borderLeft:`3px solid ${c.c.bd}`,borderRadius:2,
-                padding:"2px 4px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 3px rgba(0,0,0,.1)",cursor:"default"}}>
-              <div style={{fontWeight:700,fontSize:10,lineHeight:1.2,fontFamily:"system-ui,sans-serif"}}>{c.name}</div>
-              {c.prof&&<div style={{opacity:.65,fontSize:9,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>}
+              style={{position:"absolute",top:yOfLocal(c.s)+24,height:hOfLocal(c.s,c.e),left:1,right:1,
+                background:c.c.bg,borderLeft:`${mob?2:3}px solid ${c.c.bd}`,borderRadius:2,
+                padding:mob?"1px 2px":"2px 4px",overflow:"hidden",color:c.c.tx,boxShadow:"0 1px 3px rgba(0,0,0,.1)",cursor:"default"}}>
+              <div style={{fontWeight:700,fontSize:mob?8:10,lineHeight:1.2,fontFamily:"system-ui,sans-serif"}}>{c.name}</div>
+              {c.prof&&!mob&&<div style={{opacity:.65,fontSize:9,fontFamily:"system-ui,sans-serif"}}>{c.prof}</div>}
             </div>
           ))}
         </div>
       ))}
+    </div>
     </div>
   );
 }
@@ -448,21 +450,22 @@ function StarBadge({evalId}) {
 function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
   const sel = type==="radio"?(cur===value):cur;
   const nk = noteKey !== undefined ? noteKey : (type==="radio" ? value : null);
+  const mob = useContext(MobileContext);
   return(
-    <div style={{marginBottom:4}}>
-      <label style={{display:"flex",alignItems:"flex-start",gap:5,cursor:locked?"default":"pointer",
-        padding:"4px 7px",borderRadius:4,
+    <div style={{marginBottom:mob?3:4}}>
+      <label style={{display:"flex",alignItems:"flex-start",gap:mob?4:5,cursor:locked?"default":"pointer",
+        padding:mob?"3px 5px":"4px 7px",borderRadius:4,
         background:sel?(warn?"#f5ede0":"#edf0f5"):"transparent",
         border:sel?(warn?"1px solid #c4924a":"1px solid #b0bdd4"):"1px solid transparent",
         opacity:locked?.45:1}}>
         {type==="radio"
           ? <input type="radio" checked={sel} onChange={()=>!locked&&set(value)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>
           : <input type="checkbox" checked={sel} onChange={e=>!locked&&set(e.target.checked)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>}
-        {c&&<Dot c={c}/>}
-        <span style={{fontSize:17,fontFamily:"system-ui,sans-serif"}}>
+        {c&&<Dot c={c} sz={mob?6:8}/>}
+        <span style={{fontSize:mob?14:17,fontFamily:"system-ui,sans-serif"}}>
           <span style={{fontWeight:600,color:"#2c2418"}}>{label}</span>
           {evalId && <StarBadge evalId={evalId}/>}
-          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:14}}>{sub}</span></>}
+          {sub&&<><br/><span style={{color:warn?"#a0622a":"#8a7e6e",fontSize:mob?12:14}}>{sub}</span></>}
         </span>
       </label>
       {evalId && <EvalCard evalId={evalId}/>}
@@ -472,24 +475,29 @@ function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
 }
 
 function Sect({title,must,children}){
+  const mob = useContext(MobileContext);
+  const [open, setOpen] = useState(!!must);
   return(
-    <div style={{marginBottom:13,borderLeft:`2px solid ${must?"#6b1e2e":"#d9ccba"}`,paddingLeft:9}}>
-      <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:5}}>
-        <span style={{fontSize:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
-        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:11,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
+    <div style={{marginBottom:mob?10:13,borderLeft:`2px solid ${must?"#6b1e2e":"#d9ccba"}`,paddingLeft:mob?7:9}}>
+      <div onClick={()=>setOpen(o=>!o)}
+        style={{display:"flex",alignItems:"center",gap:5,marginBottom:open?5:0,cursor:"pointer",userSelect:"none"}}>
+        <span style={{fontSize:11,color:"#8a7e6e",fontFamily:"system-ui,sans-serif",transition:"transform .2s",transform:open?"rotate(90deg)":"rotate(0deg)"}}>▶</span>
+        <span style={{fontSize:mob?12:13,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif"}}>{title}</span>
+        {must&&<span style={{background:"#f5e8e8",color:"#6b1e2e",borderRadius:10,padding:"1px 7px",fontSize:mob?10:11,fontWeight:700,fontFamily:"system-ui,sans-serif",letterSpacing:".04em"}}>required</span>}
       </div>
-      {children}
+      {open&&children}
     </div>
   );
 }
 
 function CrBar({cr,min,max,label}){
+  const mob = useContext(MobileContext);
   const over=cr>max,under=cr<min;
   const col=over?"#6b1e2e":under?"#9a7820":"#1e2d4a";
   const barCol=over?"#7c1d2e":under?"#a0622a":"#2c4a7c";
   return(
-    <div style={{marginBottom:8}}>
-      <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
+    <div style={{marginBottom:mob?6:8}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:mob?13:14,fontWeight:600,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
         <span style={{color:col}}>{label}: <strong>{cr}cr</strong> {over?"· over max":under?"· under min":""}</span>
         <span style={{color:"#8a7e6e",fontWeight:400}}>{min}–{max}cr</span>
       </div>
@@ -501,31 +509,33 @@ function CrBar({cr,min,max,label}){
 }
 
 function ConflictBanner({conflicts,tawOk,tawHrs,tawActive}){
+  const mob = useContext(MobileContext);
   const msgs=[...conflicts.map(([a,b])=>`${a.name} (${a.prof}) ↔ ${b.name} (${b.prof})`),
     ...(tawActive&&!tawOk?[`TAW overlap ${fmtHr(tawHrs)}hr/wk — exceeds 4hr limit`]:[])];
-  if(!msgs.length) return <div style={{background:"#eaf0e8",border:"1px solid #b0c4a8",borderRadius:4,padding:"4px 10px",marginBottom:8,fontSize:14,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>✓ No schedule conflicts{tawActive?` · TAW overlap: ${fmtHr(tawHrs)}hr/wk`:""}</div>;
+  if(!msgs.length) return <div style={{background:"#eaf0e8",border:"1px solid #b0c4a8",borderRadius:4,padding:mob?"3px 8px":"4px 10px",marginBottom:mob?6:8,fontSize:mob?12:14,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>✓ No schedule conflicts{tawActive?` · TAW overlap: ${fmtHr(tawHrs)}hr/wk`:""}</div>;
   return(
-    <div style={{background:"#f5e8e8",border:"1px solid #c4a4a4",borderRadius:4,padding:"6px 10px",marginBottom:8,fontFamily:"system-ui,sans-serif"}}>
-      <div style={{fontWeight:700,color:"#6b1e2e",fontSize:14,marginBottom:2}}>⚠ {msgs.length} conflict{msgs.length>1?"s":""}</div>
-      {msgs.map((m,i)=><div key={i} style={{fontSize:13,color:"#7c1d2e"}}>{m}</div>)}
+    <div style={{background:"#f5e8e8",border:"1px solid #c4a4a4",borderRadius:4,padding:mob?"4px 8px":"6px 10px",marginBottom:mob?6:8,fontFamily:"system-ui,sans-serif"}}>
+      <div style={{fontWeight:700,color:"#6b1e2e",fontSize:mob?12:14,marginBottom:2}}>⚠ {msgs.length} conflict{msgs.length>1?"s":""}</div>
+      {msgs.map((m,i)=><div key={i} style={{fontSize:mob?11:13,color:"#7c1d2e"}}>{m}</div>)}
     </div>
   );
 }
 
 function ElectCard({c, sel, toggle}){
+  const mob = useContext(MobileContext);
   const on=sel.has(c.key);
   const schedStr=c.days?`${c.days.map(d=>d.slice(0,2)).join(", ")} ${c.s}–${c.e}`:(c.note||"");
   return(
     <div style={{borderRadius:3,background:on?c.c.bg:"#f3ede3",border:on?`1px solid ${c.c.bd}`:"1px solid #d9ccba",overflow:"hidden",marginBottom:2}}>
-      <label style={{display:"flex",alignItems:"flex-start",gap:5,cursor:"pointer",padding:"5px 7px",width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
+      <label style={{display:"flex",alignItems:"flex-start",gap:mob?4:5,cursor:"pointer",padding:mob?"4px 5px":"5px 7px",width:"100%",boxSizing:"border-box",fontFamily:"system-ui,sans-serif"}}>
         <input type="checkbox" checked={on} onChange={()=>toggle(c.key)} style={{flexShrink:0,marginTop:2,accentColor:c.c.bd}}/>
         <Dot c={c.c} sz={6} style={{marginTop:4}}/>
         <span style={{flex:1,lineHeight:1.3}}>
-          <span style={{fontWeight:600,color:"#2c2418",fontSize:14}}>{c.name}</span>
+          <span style={{fontWeight:600,color:"#2c2418",fontSize:mob?13:14}}>{c.name}</span>
           {c.evalId&&<StarBadge evalId={c.evalId}/>}
           <br/>
-          <span style={{color:"#8a7e6e",fontSize:12}}>{c.prof} · {c.cr}cr</span>
-          {schedStr&&<><br/><span style={{color:on?c.c.bd:"#5a7070",fontSize:12,fontWeight:600}}>{schedStr}</span></>}
+          <span style={{color:"#8a7e6e",fontSize:mob?11:12}}>{c.prof} · {c.cr}cr</span>
+          {schedStr&&<><br/><span style={{color:on?c.c.bd:"#5a7070",fontSize:mob?11:12,fontWeight:600}}>{schedStr}</span></>}
         </span>
       </label>
       {c.evalId&&<EvalCard evalId={c.evalId}/>}
@@ -535,11 +545,13 @@ function ElectCard({c, sel, toggle}){
 }
 
 function ElectiveSect({label, items, sel, toggle, cols=2}){
+  const mob = useContext(MobileContext);
   if(!items||items.length===0) return null;
+  const effectiveCols = mob ? 1 : cols;
   return(
-    <div style={{marginBottom:10}}>
-      <div style={{fontSize:11,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif",marginBottom:4}}>{label}</div>
-      <div style={{display:"grid",gridTemplateColumns:`repeat(${cols},1fr)`,gap:3}}>
+    <div style={{marginBottom:mob?8:10}}>
+      <div style={{fontSize:mob?10:11,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif",marginBottom:4}}>{label}</div>
+      <div style={{display:"grid",gridTemplateColumns:`repeat(${effectiveCols},1fr)`,gap:3}}>
         {items.map(c=><ElectCard key={c.key} c={c} sel={sel} toggle={toggle}/>)}
       </div>
     </div>
@@ -547,6 +559,7 @@ function ElectiveSect({label, items, sel, toggle, cols=2}){
 }
 
 function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
+  const mob = useContext(MobileContext);
   const opts=CLINIC_OPTS.filter(cl=>{
     if(allowedTerms==="fall") return cl.term==="both"||cl.term==="fall";
     if(allowedTerms==="spring") return cl.term==="both"||cl.term==="spring"||cl.term==="spring-only"||cl.term==="winter+spring";
@@ -608,9 +621,9 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 
 
 // ── PLAN VERSIONS ─────────────────────────────────────────────────────────────
-const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",f1A:"none",fTAW:true,fAdm:false,
+const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,fAdm:false,
   fElect:[],fClinic:null,fField:3,wRepro:false,
-  spAdm:"sp_adm_v",spCo:"none",spFc:"none",spEv:"none",spCpi:"none",spMTC:"none",
+  spAdm:"sp_adm_v",spCo:"none",spEv:"none",spCpi:"none",spMTC:"none",
   spElect:[],spClinic:null,spField:3};
 
 function loadVersions(){
@@ -622,10 +635,84 @@ function saveVersions(vs){ try{ localStorage.setItem("hls_versions",JSON.stringi
 function planToSnap(state){ return {...state, fElect:[...state.fElect], spElect:[...state.spElect]}; }
 function snapToPlan(snap){ return {...snap, fElect:new Set(snap.fElect||[]), spElect:new Set(snap.spElect||[])}; }
 
+// ── ICS EXPORT ───────────────────────────────────────────────────────────────
+const DAY_TO_ICS = {Mon:"MO",Tue:"TU",Wed:"WE",Thu:"TH",Fri:"FR"};
+const DAY_TO_OFFSET = {Mon:0,Tue:1,Wed:2,Thu:3,Fri:4}; // offset from Monday
+
+// Term date ranges
+const TERM_DATES = {
+  fall:   { start: new Date(2026, 8, 8),  end: "20261204T235959", weekOfMon: new Date(2026, 8, 7) },  // Sept 8 – Dec 4
+  winter: { start: new Date(2027, 0, 4),  end: "20270120T235959", weekOfMon: new Date(2027, 0, 4) },  // Jan 4 – Jan 20
+  spring: { start: new Date(2027, 0, 25), end: "20270423T235959", weekOfMon: new Date(2027, 0, 25) }, // Jan 25 – Apr 23
+};
+
+function generateICS(coursesByTerm) {
+  // coursesByTerm: [{courses:[], term:"fall"}, ...]
+  const pad2 = n => String(n).padStart(2,"0");
+  const fmtDate = d => `${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}`;
+
+  let events = [];
+  for (const {courses, term} of coursesByTerm) {
+    const td = TERM_DATES[term];
+    if (!td) continue;
+    for (const c of courses) {
+      if (!c?.days?.length || !c.s || !c.e) continue;
+      const [sh, sm] = c.s.split(":").map(Number);
+      const [eh, em] = c.e.split(":").map(Number);
+
+      for (const day of c.days) {
+        const icsDay = DAY_TO_ICS[day];
+        if (!icsDay) continue;
+        const first = new Date(td.weekOfMon);
+        first.setDate(first.getDate() + DAY_TO_OFFSET[day]);
+        if (first < td.start) first.setDate(first.getDate() + 7);
+
+        const ds = fmtDate(first);
+        const uid = `${c.key}-${day}-${term}-${ds}@hls-planner`;
+        const summary = `${c.name}${c.prof ? " (" + c.prof + ")" : ""}`;
+
+        events.push([
+          "BEGIN:VEVENT",
+          `UID:${uid}`,
+          `DTSTART:${ds}T${pad2(sh)}${pad2(sm)}00`,
+          `DTEND:${ds}T${pad2(eh)}${pad2(em)}00`,
+          `RRULE:FREQ=WEEKLY;BYDAY=${icsDay};UNTIL=${td.end}`,
+          `SUMMARY:${summary}`,
+          `DESCRIPTION:${c.cr || ""}cr${c.prof ? " · " + c.prof : ""} [${term}]`,
+          "END:VEVENT",
+        ].join("\r\n"));
+      }
+    }
+  }
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//HLS Reading Room//Schedule Planner//EN",
+    "X-WR-CALNAME:HLS 2026-27 Schedule",
+    "CALSCALE:GREGORIAN",
+    ...events,
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+
+function downloadICS(content, filename) {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
 export default function App(){
   const { notes, setNote } = useNotes();
   const E = useEvalData() || E_EMPTY;
+  const isMobile = useIsMobile();
   window.__hlsNotes   = notes;
   window.__hlsSetNote = setNote;
 
@@ -633,7 +720,6 @@ export default function App(){
   // Fall multi-section
   const [fEv,setFEv]=useState("ev_m");
   const [fCo,setFCo]=useState("co_sp");
-  const [f1A,setF1A]=useState("none");
   const [fTAW,setFTAW]=useState(true);
   const [fAdm,setFAdm]=useState(false);
   // Fall electives
@@ -645,7 +731,6 @@ export default function App(){
   // Spring multi-section
   const [spAdm,setSpAdm]=useState("sp_adm_v");
   const [spCo,setSpCo]=useState("none");
-  const [spFc,setSpFc]=useState("none");
   const [spEv,setSpEv]=useState("none");
   const [spCpi,setSpCpi]=useState("none");
   const [spMTC,setSpMTC]=useState("none");
@@ -656,15 +741,16 @@ export default function App(){
   const [evalSearch,setEvalSearch]=useState("");
   const [versions,setVersions]=useState(loadVersions); // [snap|null, snap|null, snap|null]
   const [showVersions,setShowVersions]=useState(false);
+  const [pickerOpen,setPickerOpen]=useState(true);
 
-  const planState=()=>planToSnap({fEv,fCo,f1A,fTAW,fAdm,fElect,fClinic,fField,
-    wRepro,spAdm,spCo,spFc,spEv,spCpi,spMTC,spElect,spClinic,spField});
+  const planState=()=>planToSnap({fEv,fCo,fTAW,fAdm,fElect,fClinic,fField,
+    wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic,spField});
   const loadPlan=snap=>{
     const p=snapToPlan(snap);
-    setFEv(p.fEv);setFCo(p.fCo);setF1A(p.f1A);setFTAW(p.fTAW);setFAdm(p.fAdm);
+    setFEv(p.fEv);setFCo(p.fCo);setFTAW(p.fTAW);setFAdm(p.fAdm);
     setFElect(p.fElect);setFClinic(p.fClinic);setFField(p.fField);
     setWRepro(p.wRepro);
-    setSpAdm(p.spAdm);setSpCo(p.spCo);setSpFc(p.spFc);setSpEv(p.spEv);setSpCpi(p.spCpi);
+    setSpAdm(p.spAdm);setSpCo(p.spCo);setSpEv(p.spEv);setSpCpi(p.spCpi);
     setSpMTC(p.spMTC);setSpElect(p.spElect);setSpClinic(p.spClinic);setSpField(p.spField);
   };
   const saveVersion=i=>{
@@ -682,20 +768,60 @@ export default function App(){
   const ALL_FE=FALL_ELECTIVES.courses.concat(FALL_ELECTIVES.seminars).concat(FALL_ELECTIVES.readings);
   const ALL_SE=SP_ELECTIVES.courses.concat(SP_ELECTIVES.seminars).concat(SP_ELECTIVES.readings);
 
+  // ── ICS EXPORT HELPERS ──
+  const coursesFromSnap = useCallback((snap) => {
+    const p = snapToPlan(snap);
+    const fall = [];
+    if(C[p.fEv]) fall.push(C[p.fEv]);
+    if(C[p.fCo]) fall.push(C[p.fCo]);
+    if(p.fTAW) fall.push(C.taw);
+    if(p.fAdm) fall.push(C.f_adm);
+    [...p.fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)fall.push(c);});
+    if(p.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)fall.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
+    const spring = [];
+    if(C[p.spAdm]) spring.push(C[p.spAdm]);
+    if(p.spCo!=="none"&&C[p.spCo]) spring.push(C[p.spCo]);
+    if(p.spEv!=="none"&&C[p.spEv]) spring.push(C[p.spEv]);
+    if(p.spCpi!=="none"&&C[p.spCpi]) spring.push(C[p.spCpi]);
+    if(p.spMTC!=="none"&&C[p.spMTC]) spring.push(C[p.spMTC]);
+    [...p.spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)spring.push(c);});
+    if(p.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)spring.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
+    return [...fall, ...spring];
+  }, [ALL_FE, ALL_SE]);
+
+  const exportCurrentICS = useCallback(() => {
+    const ics = generateICS([
+      {courses: fallTimed, term: "fall"},
+      {courses: spTimed, term: "spring"},
+    ]);
+    downloadICS(ics, "hls-schedule.ics");
+  }, [fallTimed, spTimed]);
+
+  const exportSavedICS = useCallback((i) => {
+    const snap = versions[i];
+    if (!snap) return;
+    const all = coursesFromSnap(snap);
+    // Split into fall/spring by key prefix
+    const fall = all.filter(c => !c.key?.startsWith("sp_"));
+    const spring = all.filter(c => c.key?.startsWith("sp_"));
+    const ics = generateICS([
+      {courses: fall, term: "fall"},
+      {courses: spring, term: "spring"},
+    ]);
+    downloadICS(ics, `hls-plan-${i+1}.ics`);
+  }, [versions, coursesFromSnap]);
+
   const fallTimed=useMemo(()=>{
     const l=[];
     if(C[fEv]) l.push(C[fEv]);
     if(C[fCo]) l.push(C[fCo]);
     if(fTAW) l.push(C.taw);
     if(fAdm) l.push(C.f_adm);
-    if(f1A==="feld") l.push(C.f_1afe);
-    if(f1A==="fi")   l.push(C.f_1afi);
-    if(f1A==="wein") l.push(C.f_1awe);
     [...fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)l.push(c);});
     // Add clinic seminar to calendar
     if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)l.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     return l;
-  },[fEv,fCo,fTAW,fAdm,f1A,fElect,fClinic]);
+  },[fEv,fCo,fTAW,fAdm,fElect,fClinic]);
 
   const fallNoTAW=fallTimed.filter(c=>c.key!=="taw");
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
@@ -712,14 +838,13 @@ export default function App(){
     const l=[];
     if(C[spAdm]) l.push(C[spAdm]);
     if(spCo!=="none"&&C[spCo]) l.push(C[spCo]);
-    if(spFc!=="none"&&C[spFc]) l.push(C[spFc]);
     if(spEv!=="none"&&C[spEv]) l.push(C[spEv]);
     if(spCpi!=="none"&&C[spCpi]) l.push(C[spCpi]);
     if(spMTC!=="none"&&C[spMTC]) l.push(C[spMTC]);
     [...spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)l.push(c);});
     if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)l.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     return l;
-  },[spAdm,spCo,spFc,spEv,spCpi,spMTC,spElect,spClinic]);
+  },[spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic]);
 
   const spConflicts=useMemo(()=>getConflicts(spTimed),[spTimed]);
   const spElectCr=useMemo(()=>[...spElect].reduce((s,k)=>{const c=ALL_SE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[spElect]);
@@ -730,7 +855,9 @@ export default function App(){
   const crCol=(cr,min,max)=>cr>max?"#6b1e2e":cr<min?"#9a7820":"#1e2d4a";
   const TABS=["fall","winter","spring","summary","evals","suggest"];
   const TL={fall:"🍂 Fall",winter:"❄️ Winter",spring:"🌸 Spring",summary:"📋 Summary",evals:"★ Evals",suggest:"💡 Suggest"};
-  const side={flex:1,minWidth:0,borderRight:`1px solid #d9ccba`,paddingRight:16,overflowY:"auto",maxHeight:"84vh"};
+  const side=isMobile
+    ?{width:"100%",paddingBottom:12}
+    :{flex:1,minWidth:0,borderRight:`1px solid #d9ccba`,paddingRight:16,overflowY:"auto",maxHeight:"84vh"};
 
   const toggleF=k=>setFElect(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
   const toggleSp=k=>setSpElect(p=>{const n=new Set(p);n.has(k)?n.delete(k):n.add(k);return n;});
@@ -750,9 +877,6 @@ export default function App(){
     {id:"sp_adm_v",name:"Admin Law",           prof:"Vermeule"},
     {id:"sp_adm_b",name:"Admin Law",           prof:"Block"},
     {id:"sp_col",name:"Conflict of Laws",      prof:"Sachs"},
-    {id:"sp_1a", name:"1st Amendment",         prof:"Parker"},
-    {id:"f1a_fe",name:"1st Amendment",         prof:"Feldman"},
-    {id:"f1a_we",name:"1st Amendment",         prof:"Weinrib"},
     {id:"f_sex", name:"Sex Equality",          prof:"MacKinnon"},
     {id:"f_gi",  name:"Gender Identity & Sexual Orientation",prof:"Chen"},
     {id:"f_emp", name:"Employment Law",        prof:"Sachs"},
@@ -770,7 +894,6 @@ export default function App(){
     {id:"clinicFedCourts",name:"Federal Courts Clinic",    prof:"Zimmer"},
     {id:"clinicJudicial",name:"Judicial Process Clinic",   prof:"Cratsley/Berenson"},
     {id:"clinicCrimPros",name:"Criminal Prosecution Clinic",prof:"Corrigan"},
-    {id:"sugg_fedCourts",name:"Federal Courts",            prof:"Goldsmith"},
     {id:"sugg_patentTrial",name:"Patent Trial Advocacy",   prof:"Tompros"},
     {id:"sugg_compCon",  name:"Comparative Constitutional Law",prof:"Lessig"},
     {id:"sugg_massMedia",name:"Mass Media Law",            prof:"McCraw"},
@@ -790,29 +913,30 @@ export default function App(){
   const rrCrCol=(cr,min,max)=>cr>max?RR.maroon:cr<min?RR.gold:RR.navy;
 
   return(
+    <MobileContext.Provider value={isMobile}>
     <EvalContext.Provider value={E}>
     <div style={{fontFamily:"Georgia,'Times New Roman',serif",background:RR.bg,minHeight:"100vh",boxSizing:"border-box",color:RR.ink}}>
       {/* Banner — mirrors The Reading Room nav bar */}
-      <div style={{background:RR.bg,borderBottom:`1px solid ${RR.border}`,padding:"18px 24px 14px",display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
-        <div>
-          <div style={{fontSize:11,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:4}}>The Reading Room</div>
-          <h1 style={{margin:0,fontSize:26,fontWeight:700,color:RR.maroon,letterSpacing:"-0.01em",fontFamily:"Georgia,'Times New Roman',serif",lineHeight:1}}>Schedule Planner</h1>
+      <div style={{background:RR.bg,borderBottom:`1px solid ${RR.border}`,padding:isMobile?"12px 12px 10px":"18px 24px 14px",display:"flex",alignItems:isMobile?"center":"baseline",justifyContent:"space-between",gap:isMobile?8:0}}>
+        <div style={{minWidth:0}}>
+          <div style={{fontSize:isMobile?9:11,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:isMobile?2:4}}>The Reading Room</div>
+          <h1 style={{margin:0,fontSize:isMobile?20:26,fontWeight:700,color:RR.maroon,letterSpacing:"-0.01em",fontFamily:"Georgia,'Times New Roman',serif",lineHeight:1}}>Schedule Planner</h1>
         </div>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <button onClick={()=>setShowVersions(v=>!v)} style={{padding:"4px 10px",borderRadius:6,fontSize:12,fontWeight:700,cursor:"pointer",background:showVersions?"#1e2d4a":"#ede6d8",color:showVersions?"#f3ede3":"#2c2418",border:"1px solid #c4b8a8",fontFamily:"system-ui,sans-serif"}}>
-            📋 Plans {versions.filter(Boolean).length>0?`(${versions.filter(Boolean).length} saved)`:""}
+        <div style={{display:"flex",alignItems:"center",gap:isMobile?8:12,flexShrink:0}}>
+          <button onClick={()=>setShowVersions(v=>!v)} style={{padding:isMobile?"3px 7px":"4px 10px",borderRadius:6,fontSize:isMobile?11:12,fontWeight:700,cursor:"pointer",background:showVersions?"#1e2d4a":"#ede6d8",color:showVersions?"#f3ede3":"#2c2418",border:"1px solid #c4b8a8",fontFamily:"system-ui,sans-serif"}}>
+            📋 {isMobile?"Plans":"Plans"} {versions.filter(Boolean).length>0?`(${versions.filter(Boolean).length})`:""}
           </button>
           <div style={{textAlign:"right"}}>
-            <span style={{fontSize:15,fontWeight:700,color:rrCrCol(annualCr,24,35),fontFamily:"Georgia,serif"}}>{annualCr}cr</span>
-            <div style={{fontSize:9,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.05em",textTransform:"uppercase",marginTop:2}}>annual · req 24–35</div>
+            <span style={{fontSize:isMobile?14:15,fontWeight:700,color:rrCrCol(annualCr,24,35),fontFamily:"Georgia,serif"}}>{annualCr}cr</span>
+            <div style={{fontSize:9,color:RR.muted,fontFamily:"system-ui,sans-serif",letterSpacing:"0.05em",textTransform:"uppercase",marginTop:2}}>{isMobile?"annual":"annual · req 24–35"}</div>
           </div>
         </div>
       </div>
 
       {showVersions&&(
-        <div style={{background:"#edf0f5",borderBottom:"1px solid #c4bdb4",padding:"10px 24px",fontFamily:"system-ui,sans-serif"}}>
-          <div style={{fontSize:12,fontWeight:700,color:"#1e2d4a",marginBottom:8,textTransform:"uppercase",letterSpacing:".06em"}}>Saved Plans — click slot to save current, or load/clear</div>
-          <div style={{display:"flex",gap:10}}>
+        <div style={{background:"#edf0f5",borderBottom:"1px solid #c4bdb4",padding:isMobile?"8px 12px":"10px 24px",fontFamily:"system-ui,sans-serif"}}>
+          <div style={{fontSize:isMobile?11:12,fontWeight:700,color:"#1e2d4a",marginBottom:8,textTransform:"uppercase",letterSpacing:".06em"}}>Saved Plans{!isMobile&&" — click slot to save current, or load/clear"}</div>
+          <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:isMobile?6:10}}>
             {[0,1,2].map(i=>{
               const v=versions[i];
               return(
@@ -822,13 +946,13 @@ export default function App(){
                     <>
                       <div style={{fontSize:11,color:"#8a7e6e",lineHeight:1.5,marginBottom:6}}>
                         Ev: {v.fEv?.replace("ev_","")} · Co: {v.fCo?.replace("co_","")} · {v.fTAW?"TAW fall":"TAW winter"}<br/>
-                        {v.f1A!=="none"?`1A: ${v.f1A} · `:""}
                         {v.fClinic?`${v.fClinic} clinic · `:""}
                         {(v.fElect?.length||0)+(v.spElect?.length||0)} electives
                       </div>
-                      <div style={{display:"flex",gap:4}}>
+                      <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                         <button onClick={()=>loadVersion(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#1e2d4a",color:"#f3ede3",border:"none",borderRadius:4}}>Load</button>
                         <button onClick={()=>saveVersion(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#d9ccba",color:"#2c2418",border:"none",borderRadius:4}}>Overwrite</button>
+                        {!isMobile&&<button onClick={()=>exportSavedICS(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#2d6e4a",color:"#f3ede3",border:"none",borderRadius:4}}>📅 .ics</button>}
                         <button onClick={()=>clearVersion(i)} style={{padding:"2px 6px",fontSize:11,cursor:"pointer",background:"#f0e4e4",color:"#6b1e2e",border:"none",borderRadius:4}}>✕</button>
                       </div>
                     </>
@@ -839,13 +963,18 @@ export default function App(){
               );
             })}
           </div>
+          {!isMobile&&<div style={{marginTop:8}}>
+            <button onClick={exportCurrentICS} style={{padding:"4px 14px",borderRadius:6,fontSize:12,fontWeight:700,cursor:"pointer",background:"#2d6e4a",color:"#f3ede3",border:"none",fontFamily:"system-ui,sans-serif"}}>
+              📅 Export current plan to .ics (Fall 9/8–12/4 · Winter 1/4–1/20 · Spring 1/25–4/23, weekly)
+            </button>
+          </div>}
         </div>
       )}
-      <div style={{padding:"12px 16px",boxSizing:"border-box"}}>
+      <div style={{padding:isMobile?"8px 10px":"12px 16px",boxSizing:"border-box"}}>
       {/* Tabs */}
-      <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:12,flexWrap:"wrap"}}>
+      <div style={{display:"flex",borderBottom:`1px solid ${RR.border}`,marginBottom:isMobile?8:12,flexWrap:isMobile?"nowrap":"wrap",overflowX:isMobile?"auto":"visible",WebkitOverflowScrolling:"touch",gap:0}}>
         {TABS.map(t=>(
-          <button key={t} onClick={()=>setTab(t)} style={{padding:"6px 13px",fontSize:15,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3}}>
+          <button key={t} onClick={()=>{setTab(t);setPickerOpen(true);}} style={{padding:isMobile?"5px 8px":"6px 13px",fontSize:isMobile?13:15,fontWeight:tab===t?700:400,border:"none",background:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",letterSpacing:"0.03em",borderBottom:tab===t?`2px solid ${RR.maroon}`:"2px solid transparent",color:tab===t?RR.maroon:RR.muted,marginBottom:-1,display:"flex",alignItems:"center",gap:3,whiteSpace:"nowrap",flexShrink:0}}>
             {TL[t]}
             {t==="fall"  &&<span style={{fontSize:11,fontWeight:700,color:rrCrCol(fallCr,10,16)}}>{fallCr}</span>}
             {t==="winter"&&<span style={{fontSize:11,fontWeight:700,color:rrCrCol(winterCrCalc,2,3)}}>{winterCrCalc}</span>}
@@ -856,64 +985,65 @@ export default function App(){
 
       {/* ── FALL ── */}
       {tab==="fall"&&(
-        <div style={{display:"flex",gap:11}}>
-          <div style={side}>
+        <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:isMobile?8:11}}>
+          {isMobile&&(
+            <button onClick={()=>setPickerOpen(p=>!p)} style={{
+              display:"flex",alignItems:"center",justifyContent:"space-between",
+              width:"100%",padding:"8px 10px",borderRadius:5,fontSize:13,fontWeight:700,cursor:"pointer",
+              background:pickerOpen?"#1e2d4a":"#ede6d8",color:pickerOpen?"#f3ede3":"#2c2418",
+              border:"1px solid #c4b8a8",fontFamily:"system-ui,sans-serif",boxSizing:"border-box"
+            }}>
+              <span>{pickerOpen?"▼ Hide course picker":"▶ Show course picker"}</span>
+              <span style={{fontWeight:400,fontSize:12,opacity:.8}}>{fallCr}cr selected</span>
+            </button>
+          )}
+          {(!isMobile||pickerOpen)&&<div style={side}>
 
             {/* ─── CLINICS ─── */}
-            <Sect title="Clinics (Fall)">
+            <Sect title="Clinics">
               <ClinicSelector clinicId={fClinic} setClinicId={setFClinic} fieldCr={fField} setFieldCr={setFField} allowedTerms="fall"/>
             </Sect>
 
-            {/* ─── MULTI-SECTION REQUIRED ─── */}
-            <Sect title="Evidence" must>
-              <Option type="radio" value="ev_m"  cur={fEv} set={setFEv} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
-              <Option type="radio" value="ev_w"  cur={fEv} set={setFEv} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
-              <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Video clips·rules-focused·brutal exam" noteKey="ev_s"/>
-              <Option type="radio" value="ev_r"  cur={fEv} set={setFEv} c={K.blue}   label="Rubin · 2cr · M 1:30"        evalId="ev_r"  sub="2cr condensed version" noteKey="ev_r"/>
-              <Option type="radio" value="ev_br" cur={fEv} set={setFEv} c={K.blue}   label="Brewer · 4cr · T, W 3:45"   evalId={null}  sub="Jurisprudence-focused approach" noteKey="ev_br"/>
-            </Sect>
+            {/* ─── MULTI-SECTIONS ─── */}
+            <Sect title="Multi-Sections" must>
+              <Sect title="Evidence" must>
+                <Option type="radio" value="ev_m"  cur={fEv} set={setFEv} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
+                <Option type="radio" value="ev_w"  cur={fEv} set={setFEv} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
+                <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Video clips·rules-focused·brutal exam" noteKey="ev_s"/>
+                <Option type="radio" value="ev_r"  cur={fEv} set={setFEv} c={K.blue}   label="Rubin · 2cr · M 1:30"        evalId="ev_r"  sub="2cr condensed version" noteKey="ev_r"/>
+                <Option type="radio" value="ev_br" cur={fEv} set={setFEv} c={K.blue}   label="Brewer · 4cr · T, W 3:45"   evalId={null}  sub="Jurisprudence-focused approach" noteKey="ev_br"/>
+              </Sect>
 
-            <Sect title="Corporations" must>
-              <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="MC + essay · cold calls · not DE law" noteKey="co_sp"/>
-              <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="MC + policy · no cold calls · funny" noteKey="co_fr"/>
-              <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
-            </Sect>
+              <Sect title="Corporations" must>
+                <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="MC + essay · cold calls · not DE law" noteKey="co_sp"/>
+                <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="MC + policy · no cold calls · funny" noteKey="co_fr"/>
+                <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
+              </Sect>
 
-            <Sect title="Admin Law — Fall" must>
-              <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · W, Th 1:30" evalId="f_adm"
-                sub={fCo==="co_fr"?"⚠ conflicts with Fried Corporations WThF":""} warn={fCo==="co_fr"} noteKey="f_adm"/>
-            </Sect>
+              <Sect title="Admin Law" must>
+                <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · W, Th 1:30" evalId="f_adm"
+                  sub={fCo==="co_fr"?"⚠ conflicts with Fried Corporations WThF":""} warn={fCo==="co_fr"} noteKey="f_adm"/>
+              </Sect>
 
-            <Sect title="Trial Advocacy Workshop" must>
-              <Option type="radio" value={true}  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
-                label="Take in Fall (M–F 2–9pm intensive)"
-                sub={`TAW overlap w/ other courses: ${fmtHr(fallTAWHrs)}hr/wk · max 4hr/wk`} warn={!fallTAWOk}/>
-              <Option type="radio" value={false} cur={fTAW} set={setFTAW} label="Move to Winter" evalId={null} noteKey={null}/>
-            </Sect>
-
-            {/* ─── 1A: multi-section but optional ─── */}
-            <Sect title="1st Amendment (pick section or take Spring)">
-              <Option type="radio" value="none" cur={f1A} set={setF1A} label="Skip — take Parker in Spring" evalId={null} noteKey={null}/>
-              <Option type="radio" value="feld" cur={f1A} set={setF1A} c={K.indigo} label="Feldman · 4cr · Th, F 10:15" evalId="f1a_fe" noteKey="f1a_fe"/>
-              <Option type="radio" value="fi"   cur={f1A} set={setF1A} c={K.indigo} label="Field · 4cr · M, T 10:15"    evalId="f1a_fi" noteKey="f1a_fi"/>
-              <Option type="radio" value="wein" cur={f1A} set={setF1A} c={K.indigo} label="Weinrib · 4cr · M, T 1:30"   evalId="f1a_we" noteKey="f1a_we"/>
+              <Sect title="Trial Advocacy Workshop" must>
+                <Option type="radio" value={true}  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
+                  label="Take in Fall (M–F 2–9pm intensive)"
+                  sub={`TAW overlap w/ other courses: ${fmtHr(fallTAWHrs)}hr/wk · max 4hr/wk`} warn={!fallTAWOk}/>
+                <Option type="radio" value={false} cur={fTAW} set={setFTAW} label="Move to Winter" evalId={null} noteKey={null}/>
+              </Sect>
             </Sect>
 
             {/* ─── ELECTIVES ─── */}
-            <Sect title="Electives — Courses">
+            <Sect title="Electives">
               <ElectiveSect label="Courses" items={FALL_ELECTIVES.courses} sel={fElect} toggle={toggleF}/>
-            </Sect>
-            <Sect title="Electives — Seminars">
               <ElectiveSect label="Seminars" items={FALL_ELECTIVES.seminars} sel={fElect} toggle={toggleF}/>
-            </Sect>
-            <Sect title="Electives — Reading Groups">
               <ElectiveSect label="Reading Groups (1cr)" items={FALL_ELECTIVES.readings} sel={fElect} toggle={toggleF} cols={1}/>
             </Sect>
 
-          </div>
+          </div>}
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={fallCr} min={10} max={16} label="Fall"/>
-            {fTAW&&<div style={{fontSize:13,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
+            {fTAW&&<div style={{fontSize:isMobile?12:13,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:isMobile?"2px 7px":"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
               TAW overlap: <strong>{fmtHr(fallTAWHrs)}hr/wk</strong> / 4hr max {fallTAWOk?"✓":"⚠ exceeded"}
             </div>}
             <ConflictBanner conflicts={fallConflicts} tawOk={fallTAWOk} tawHrs={fallTAWHrs} tawActive={fTAW}/>
@@ -956,65 +1086,68 @@ export default function App(){
 
       {/* ── SPRING ── */}
       {tab==="spring"&&(
-        <div style={{display:"flex",gap:11}}>
-          <div style={side}>
+        <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:isMobile?8:11}}>
+          {isMobile&&(
+            <button onClick={()=>setPickerOpen(p=>!p)} style={{
+              display:"flex",alignItems:"center",justifyContent:"space-between",
+              width:"100%",padding:"8px 10px",borderRadius:5,fontSize:13,fontWeight:700,cursor:"pointer",
+              background:pickerOpen?"#1e2d4a":"#ede6d8",color:pickerOpen?"#f3ede3":"#2c2418",
+              border:"1px solid #c4b8a8",fontFamily:"system-ui,sans-serif",boxSizing:"border-box"
+            }}>
+              <span>{pickerOpen?"▼ Hide course picker":"▶ Show course picker"}</span>
+              <span style={{fontWeight:400,fontSize:12,opacity:.8}}>{springCr}cr selected</span>
+            </button>
+          )}
+          {(!isMobile||pickerOpen)&&<div style={side}>
 
             {/* ─── CLINICS ─── */}
-            <Sect title="Clinics (Spring)">
+            <Sect title="Clinics">
               {fClinic&&<div style={{fontSize:13,color:"#6b1e2e",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>⚠ Already have fall clinic — max 1/term</div>}
               <ClinicSelector clinicId={spClinic} setClinicId={setSpClinic} fieldCr={spField} setFieldCr={setSpField} allowedTerms="spring"/>
             </Sect>
 
-            {/* ─── MULTI-SECTION REQUIRED ─── */}
-            <Sect title="Admin Law" must>
-              <Option type="radio" value="sp_adm_v" cur={spAdm} set={setSpAdm} c={K.red} label="Vermeule · 4cr · W, Th 1:30"   evalId="sp_adm_v" sub="In-class exam" noteKey="sp_adm_v"/>
-              <Option type="radio" value="sp_adm_b" cur={spAdm} set={setSpAdm} c={K.red} label="Block · 3cr · T, W 3:45–5:15"  evalId="sp_adm_b" sub="Take-home exam" noteKey="sp_adm_b"/>
-            </Sect>
+            {/* ─── MULTI-SECTIONS ─── */}
+            <Sect title="Multi-Sections" must>
+              <Sect title="Admin Law" must>
+                <Option type="radio" value="sp_adm_v" cur={spAdm} set={setSpAdm} c={K.red} label="Vermeule · 4cr · W, Th 1:30"   evalId="sp_adm_v" sub="In-class exam" noteKey="sp_adm_v"/>
+                <Option type="radio" value="sp_adm_b" cur={spAdm} set={setSpAdm} c={K.red} label="Block · 3cr · T, W 3:45–5:15"  evalId="sp_adm_b" sub="Take-home exam" noteKey="sp_adm_b"/>
+              </Sect>
 
-            <Sect title="Corporations (Spring)">
-              <Option type="radio" value="none"    cur={spCo} set={setSpCo} label="Skip" evalId={null} noteKey={null}/>
-              <Option type="radio" value="sp_co_c" cur={spCo} set={setSpCo} c={K.green} label="Coates · 4cr · M, T, W 10:15"  evalId={null} noteKey="sp_co_c"/>
-              <Option type="radio" value="sp_co_t" cur={spCo} set={setSpCo} c={K.green} label="Tallarita · 4cr · Th, F 10:15" evalId={null} noteKey="sp_co_t"/>
-            </Sect>
+              <Sect title="Corporations">
+                <Option type="radio" value="none"    cur={spCo} set={setSpCo} label="Skip" evalId={null} noteKey={null}/>
+                <Option type="radio" value="sp_co_c" cur={spCo} set={setSpCo} c={K.green} label="Coates · 4cr · M, T, W 10:15"  evalId={null} noteKey="sp_co_c"/>
+                <Option type="radio" value="sp_co_t" cur={spCo} set={setSpCo} c={K.green} label="Tallarita · 4cr · Th, F 10:15" evalId={null} noteKey="sp_co_t"/>
+              </Sect>
 
-            <Sect title="Federal Courts (Spring)">
-              <Option type="radio" value="none"    cur={spFc} set={setSpFc} label="Skip" evalId={null} noteKey={null}/>
-              <Option type="radio" value="sp_fc_r" cur={spFc} set={setSpFc} c={K.teal}  label="Re · 4cr · M, T, W 10:30"       evalId="sp_fc_r" sub="SCOTUS and lower court focus" noteKey="sp_fc_r"/>
-              <Option type="radio" value="sp_fc_s" cur={spFc} set={setSpFc} c={K.teal}  label="Sachs · 4cr · W, Th, F 1:40"   evalId="sp_fc_s" sub="Doctrine + history" noteKey="sp_fc_s"/>
-            </Sect>
+              <Sect title="Evidence">
+                <Option type="radio" value="none"    cur={spEv} set={setSpEv} label="Skip (took in Fall)" evalId={null} noteKey={null}/>
+                <Option type="radio" value="sp_ev_l" cur={spEv} set={setSpEv} c={K.blue}  label="Lvovsky · 4cr · M, T, W 10:30" evalId="sp_ev_l" sub="Evidence history + doctrine" noteKey="sp_ev_l"/>
+                <Option type="radio" value="sp_ev_r" cur={spEv} set={setSpEv} c={K.blue}  label="Rubin · 2cr · M 1:30"          evalId="sp_ev_r" sub="Condensed" noteKey="sp_ev_r"/>
+                <Option type="radio" value="sp_ev_c" cur={spEv} set={setSpEv} c={K.blue}  label="Clary · 3cr · W, Th 1:30"      evalId="sp_ev_c" sub="Litigation-focused" noteKey="sp_ev_c"/>
+              </Sect>
 
-            <Sect title="Evidence (Spring)">
-              <Option type="radio" value="none"    cur={spEv} set={setSpEv} label="Skip (took in Fall)" evalId={null} noteKey={null}/>
-              <Option type="radio" value="sp_ev_l" cur={spEv} set={setSpEv} c={K.blue}  label="Lvovsky · 4cr · M, T, W 10:30" evalId="sp_ev_l" sub="Evidence history + doctrine" noteKey="sp_ev_l"/>
-              <Option type="radio" value="sp_ev_r" cur={spEv} set={setSpEv} c={K.blue}  label="Rubin · 2cr · M 1:30"          evalId="sp_ev_r" sub="Condensed" noteKey="sp_ev_r"/>
-              <Option type="radio" value="sp_ev_c" cur={spEv} set={setSpEv} c={K.blue}  label="Clary · 3cr · W, Th 1:30"      evalId="sp_ev_c" sub="Litigation-focused" noteKey="sp_ev_c"/>
-            </Sect>
+              <Sect title="Crim Pro: Investigations">
+                <Option type="radio" value="none"     cur={spCpi} set={setSpCpi} label="Skip" evalId={null} noteKey={null}/>
+                <Option type="radio" value="sp_cpi_n" cur={spCpi} set={setSpCpi} c={K.amber} label="Natapoff · 4cr · Th, F 10:15" evalId={null} sub="Policing + investigation focus" noteKey="sp_cpi_n"/>
+                <Option type="radio" value="sp_cpi_w" cur={spCpi} set={setSpCpi} c={K.amber} label="Whiting · 4cr · M, T 10:15"   evalId={null} sub="International/crim procedure" noteKey="sp_cpi_w"/>
+              </Sect>
 
-            <Sect title="Crim Pro: Investigations (Spring)">
-              <Option type="radio" value="none"     cur={spCpi} set={setSpCpi} label="Skip" evalId={null} noteKey={null}/>
-              <Option type="radio" value="sp_cpi_n" cur={spCpi} set={setSpCpi} c={K.amber} label="Natapoff · 4cr · Th, F 10:15" evalId={null} sub="Policing + investigation focus" noteKey="sp_cpi_n"/>
-              <Option type="radio" value="sp_cpi_w" cur={spCpi} set={setSpCpi} c={K.amber} label="Whiting · 4cr · M, T 10:15"   evalId={null} sub="International/crim procedure" noteKey="sp_cpi_w"/>
-            </Sect>
-
-            <Sect title="Bankruptcy / Copyright (share M,T,W 10:30 slot)">
-              <div style={{fontSize:13,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe (Bankruptcy) and Fisher (Copyright) share the same slot</div>
-              <Option type="radio" value="none"  cur={spMTC} set={setSpMTC} label="Skip both" evalId={null} noteKey={null}/>
-              <Option type="radio" value="sp_bk" cur={spMTC} set={setSpMTC} c={K.violet} label="Bankruptcy (Roe) · 4cr · M, T, W 10:30"  evalId="sp_bk" noteKey="sp_bk"/>
-              <Option type="radio" value="sp_cp" cur={spMTC} set={setSpMTC} c={K.sky}    label="Copyright (Fisher) · 4cr · M, T, W 10:30" evalId="sp_cp" noteKey="sp_cp"/>
+              <Sect title="Bankruptcy / Copyright (share M,T,W 10:30 slot)">
+                <div style={{fontSize:13,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe (Bankruptcy) and Fisher (Copyright) share the same slot</div>
+                <Option type="radio" value="none"  cur={spMTC} set={setSpMTC} label="Skip both" evalId={null} noteKey={null}/>
+                <Option type="radio" value="sp_bk" cur={spMTC} set={setSpMTC} c={K.violet} label="Bankruptcy (Roe) · 4cr · M, T, W 10:30"  evalId="sp_bk" noteKey="sp_bk"/>
+                <Option type="radio" value="sp_cp" cur={spMTC} set={setSpMTC} c={K.sky}    label="Copyright (Fisher) · 4cr · M, T, W 10:30" evalId="sp_cp" noteKey="sp_cp"/>
+              </Sect>
             </Sect>
 
             {/* ─── ELECTIVES ─── */}
-            <Sect title="Electives — Courses">
+            <Sect title="Electives">
               <ElectiveSect label="Courses" items={SP_ELECTIVES.courses} sel={spElect} toggle={toggleSp}/>
-            </Sect>
-            <Sect title="Electives — Seminars">
               <ElectiveSect label="Seminars" items={SP_ELECTIVES.seminars} sel={spElect} toggle={toggleSp}/>
-            </Sect>
-            <Sect title="Electives — Reading Groups">
               <ElectiveSect label="Reading Groups (1cr)" items={SP_ELECTIVES.readings} sel={spElect} toggle={toggleSp} cols={1}/>
             </Sect>
 
-          </div>
+          </div>}
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={springCr} min={10} max={16} label="Spring"/>
             <ConflictBanner conflicts={spConflicts} tawOk={true} tawHrs={0} tawActive={false}/>
@@ -1031,7 +1164,6 @@ export default function App(){
         const fClinicObj=CLINIC_OPTS.find(c=>c.id===fClinic);
         const spClinicObj=CLINIC_OPTS.find(c=>c.id===spClinic);
         const fallItems=[C[fEv],C[fCo],fTAW?C.taw:null,fAdm?C.f_adm:null,
-          f1A==="feld"?C.f_1afe:f1A==="fi"?C.f_1afi:f1A==="wein"?C.f_1awe:null,
           ...[...fElect].map(k=>ALL_FE.find(x=>x.key===k)),
           fClinicObj?{...fClinicObj,name:fClinicObj.name+" Clinic",cr:fClinicCr}:null].filter(Boolean);
         const winterItems=[
@@ -1039,7 +1171,7 @@ export default function App(){
           !fTAW?C.taw:null,
           wRepro&&fTAW&&!useFedWinter?{name:"Repro Rights After Dobbs",cr:2,c:K.pink}:null].filter(Boolean);
         const spItems=[C[spAdm],
-          spCo!=="none"?C[spCo]:null,spFc!=="none"?C[spFc]:null,
+          spCo!=="none"?C[spCo]:null,
           spEv!=="none"?C[spEv]:null,spCpi!=="none"?C[spCpi]:null,
           spMTC!=="none"?C[spMTC]:null,
           ...[...spElect].map(k=>ALL_SE.find(x=>x.key===k)),
@@ -1061,7 +1193,7 @@ export default function App(){
         const ok=!issues.length;
         return(
           <div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:7,marginBottom:11}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,1fr)":"repeat(4,1fr)",gap:7,marginBottom:11}}>
               {[{l:"🍂 Fall",cr:fallCr,min:10,max:16},{l:"❄️ Winter",cr:winterCrCalc,min:2,max:3},{l:"🌸 Spring",cr:springCr,min:10,max:16},{l:"📅 Annual",cr:annualCr,min:24,max:35}].map(({l,cr,min,max})=>{
                 const ok2=cr>=min&&cr<=max;
                 return(
@@ -1073,10 +1205,10 @@ export default function App(){
                 );
               })}
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:11}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",gap:8,marginBottom:11}}>
               {[{l:"🍂 Fall",items:fallItems},{l:"❄️ Winter",items:winterItems},{l:"🌸 Spring",items:spItems}].map(term=>(
-                <div key={term.l} style={{background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:"9px",fontFamily:"system-ui,sans-serif"}}>
-                  <div style={{fontWeight:700,fontSize:16,marginBottom:6,color:"#1e2d4a"}}>{term.l}</div>
+                <div key={term.l} style={{background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:isMobile?"7px":"9px",fontFamily:"system-ui,sans-serif"}}>
+                  <div style={{fontWeight:700,fontSize:isMobile?14:16,marginBottom:6,color:"#1e2d4a"}}>{term.l}</div>
                   {term.items.length===0?<div style={{color:"#8a7e6e",fontSize:14}}>Nothing selected</div>
                    :term.items.map((c,i)=>(
                      <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:3,fontSize:14}}>
@@ -1106,22 +1238,22 @@ export default function App(){
           <div style={{marginBottom:10,display:"flex",alignItems:"center",gap:8}}>
             <input value={evalSearch} onChange={e=>setEvalSearch(e.target.value)}
               placeholder="Search courses or professors…"
-              style={{flex:1,maxWidth:320,padding:"6px 10px",borderRadius:4,border:"1px solid #d9ccba",fontSize:15,outline:"none",background:"#f3ede3",color:"#2c2418",fontFamily:"system-ui,sans-serif"}}/>
-            <span style={{fontSize:14,color:"#8a7e6e",fontFamily:"system-ui,sans-serif"}}>{filteredEvals.length} courses</span>
+              style={{flex:1,maxWidth:isMobile?undefined:320,padding:isMobile?"5px 8px":"6px 10px",borderRadius:4,border:"1px solid #d9ccba",fontSize:isMobile?14:15,outline:"none",background:"#f3ede3",color:"#2c2418",fontFamily:"system-ui,sans-serif"}}/>
+            <span style={{fontSize:isMobile?12:14,color:"#8a7e6e",fontFamily:"system-ui,sans-serif",flexShrink:0}}>{filteredEvals.length}</span>
           </div>
-          <div style={{columns:2,columnGap:14}}>
+          <div style={{columns:isMobile?1:2,columnGap:14}}>
             {filteredEvals.map(item=>{
               const ev=E[item.id];
               if(!ev) return null;
               const avg=ev.avg;
               const col=starColor(avg);
               return(
-                <div key={item.id} style={{breakInside:"avoid",marginBottom:12,background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:"10px 12px"}}>
-                  <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>
-                    <span style={{fontWeight:700,fontSize:16,color:"#1e2d4a"}}>{item.name}</span>
-                    <span style={{fontSize:14,color:"#8a7e6e"}}>{item.prof}</span>
-                    <span style={{marginLeft:"auto",fontWeight:700,fontSize:16,color:col}}>{avg?`★${avg}`:"★?"}</span>
-                    {ev.n>0&&<span style={{fontSize:13,color:"#8a7e6e"}}>n={ev.n}</span>}
+                <div key={item.id} style={{breakInside:"avoid",marginBottom:isMobile?8:12,background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:isMobile?"8px 10px":"10px 12px"}}>
+                  <div style={{display:"flex",alignItems:"baseline",gap:isMobile?4:6,marginBottom:4,fontFamily:"system-ui,sans-serif",flexWrap:isMobile?"wrap":"nowrap"}}>
+                    <span style={{fontWeight:700,fontSize:isMobile?14:16,color:"#1e2d4a"}}>{item.name}</span>
+                    <span style={{fontSize:isMobile?12:14,color:"#8a7e6e"}}>{item.prof}</span>
+                    <span style={{marginLeft:"auto",fontWeight:700,fontSize:isMobile?14:16,color:col}}>{avg?`★${avg}`:"★?"}</span>
+                    {ev.n>0&&<span style={{fontSize:isMobile?11:13,color:"#8a7e6e"}}>n={ev.n}</span>}
                   </div>
                   {ev.note&&<div style={{fontSize:13,color:"#5c4e3a",fontStyle:"italic",marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{ev.note}</div>}
                   {ev.comments.map((c,i)=>(
@@ -1150,20 +1282,20 @@ export default function App(){
       {/* ── SUGGESTIONS ── */}
       {tab==="suggest"&&(
         <div>
-          <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:"10px 12px",marginBottom:14,fontSize:11,fontFamily:"system-ui,sans-serif"}}>
-            <div style={{fontWeight:700,fontSize:15,marginBottom:4,color:"#1e2d4a"}}>Based on your interests: litigation · trial work · gender issues · rule of law/democracy · entertainment · IP disputes</div>
-            <div style={{color:"#5c4e3a"}}>These courses are not in your main schedule but are worth considering. Click "▼ eval & tips" to see direct peer quotes.</div>
+          <div style={{background:"#edf0f5",border:"1px solid #b0bdd4",borderRadius:5,padding:isMobile?"8px 10px":"10px 12px",marginBottom:isMobile?10:14,fontSize:11,fontFamily:"system-ui,sans-serif"}}>
+            <div style={{fontWeight:700,fontSize:isMobile?13:15,marginBottom:4,color:"#1e2d4a"}}>Based on your interests: litigation · trial work · gender issues · rule of law/democracy · entertainment · IP disputes</div>
+            <div style={{color:"#5c4e3a",fontSize:isMobile?11:undefined}}>These courses are not in your main schedule but are worth considering. Click "▼ eval & tips" to see direct peer quotes.</div>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?8:10}}>
             {SUGGESTIONS.map(s=>(
-              <div key={s.key} style={{background:s.c.bg,border:`1px solid ${s.c.bd}`,borderRadius:5,padding:"10px 12px"}}>
-                <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:3,fontFamily:"system-ui,sans-serif"}}>
-                  <span style={{fontWeight:700,fontSize:16,color:s.c.tx}}>{s.name}</span>
-                  <span style={{fontSize:14,color:s.c.tx,opacity:.8}}>{s.prof}</span>
-                  <span style={{marginLeft:"auto",fontSize:13,fontWeight:700,color:s.c.bd,background:"#f3ede3",borderRadius:8,padding:"1px 6px"}}>{s.cr}cr · {s.term}</span>
+              <div key={s.key} style={{background:s.c.bg,border:`1px solid ${s.c.bd}`,borderRadius:5,padding:isMobile?"8px 10px":"10px 12px"}}>
+                <div style={{display:"flex",alignItems:"baseline",gap:isMobile?4:6,marginBottom:3,fontFamily:"system-ui,sans-serif",flexWrap:isMobile?"wrap":"nowrap"}}>
+                  <span style={{fontWeight:700,fontSize:isMobile?14:16,color:s.c.tx}}>{s.name}</span>
+                  <span style={{fontSize:isMobile?12:14,color:s.c.tx,opacity:.8}}>{s.prof}</span>
+                  <span style={{marginLeft:isMobile?0:"auto",fontSize:isMobile?11:13,fontWeight:700,color:s.c.bd,background:"#f3ede3",borderRadius:8,padding:"1px 6px"}}>{s.cr}cr · {s.term}</span>
                 </div>
-                <div style={{fontSize:13,fontWeight:700,color:s.c.bd,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>🎯 Why: {s.why}</div>
-                <div style={{fontSize:14,color:s.c.tx,lineHeight:1.55,marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{s.pitch}</div>
+                <div style={{fontSize:isMobile?12:13,fontWeight:700,color:s.c.bd,marginBottom:4,fontFamily:"system-ui,sans-serif"}}>🎯 Why: {s.why}</div>
+                <div style={{fontSize:isMobile?13:14,color:s.c.tx,lineHeight:1.55,marginBottom:5,fontFamily:"system-ui,sans-serif"}}>{s.pitch}</div>
                 {s.evalId&&<EvalCard evalId={s.evalId} label="peer quotes"/>}
                 {window.__hlsSetNote&&<NoteField courseKey={s.key}/>}
               </div>
@@ -1174,5 +1306,6 @@ export default function App(){
       </div>
     </div>
     </EvalContext.Provider>
+    </MobileContext.Provider>
   );
 }
