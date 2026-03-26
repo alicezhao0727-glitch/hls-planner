@@ -438,7 +438,7 @@ function Calendar({courses,tawActive}){
 }
 
 // ── UI ATOMS ──────────────────────────────────────────────────────────────────
-const Dot=({c,sz=8})=><span style={{display:"inline-block",width:sz,height:sz,borderRadius:"50%",background:c.bd,flexShrink:0,marginRight:4}}/>;
+const Dot=({c,sz=8,style={}})=><span style={{display:"inline-block",width:sz,height:sz,borderRadius:"50%",background:c.bd,flexShrink:0,marginRight:4,verticalAlign:"middle",...style}}/>;
 
 function StarBadge({evalId}) {
   const E = useContext(EvalContext);
@@ -461,7 +461,7 @@ function Option({type,value,cur,set,label,sub,c,evalId,warn,locked,noteKey}){
         {type==="radio"
           ? <input type="radio" checked={sel} onChange={()=>!locked&&set(value)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>
           : <input type="checkbox" checked={sel} onChange={e=>!locked&&set(e.target.checked)} disabled={locked} style={{marginTop:2,flexShrink:0,accentColor:"#1e2d4a"}}/>}
-        {c&&<Dot c={c} sz={mob?6:8}/>}
+        {c&&<Dot c={c} sz={mob?6:8} style={{marginTop:mob?5:6}}/>}
         <span style={{fontSize:mob?14:17,fontFamily:"system-ui,sans-serif"}}>
           <span style={{fontWeight:600,color:"#2c2418"}}>{label}</span>
           {evalId && <StarBadge evalId={evalId}/>}
@@ -546,14 +546,19 @@ function ElectCard({c, sel, toggle}){
 
 function ElectiveSect({label, items, sel, toggle, cols=2}){
   const mob = useContext(MobileContext);
+  const [open, setOpen] = useState(false);
   if(!items||items.length===0) return null;
   const effectiveCols = mob ? 1 : cols;
+  const selCount = items.filter(c=>sel.has(c.key)).length;
   return(
     <div style={{marginBottom:mob?8:10}}>
-      <div style={{fontSize:mob?10:11,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif",marginBottom:4}}>{label}</div>
-      <div style={{display:"grid",gridTemplateColumns:`repeat(${effectiveCols},1fr)`,gap:3}}>
-        {items.map(c=><ElectCard key={c.key} c={c} sel={sel} toggle={toggle}/>)}
+      <div onClick={()=>setOpen(o=>!o)} style={{fontSize:mob?10:11,fontWeight:700,color:"#8a7e6e",textTransform:"uppercase",letterSpacing:".07em",fontFamily:"system-ui,sans-serif",marginBottom:open?4:0,cursor:"pointer",userSelect:"none",display:"flex",alignItems:"center",gap:4}}>
+        <span style={{fontSize:10,transition:"transform .2s",transform:open?"rotate(90deg)":"rotate(0deg)"}}>▶</span>
+        {label}{selCount>0&&<span style={{color:"#2c4a7c",fontSize:11}}>({selCount})</span>}
       </div>
+      {open&&<div style={{display:"grid",gridTemplateColumns:`repeat(${effectiveCols},1fr)`,gap:3}}>
+        {items.map(c=><ElectCard key={c.key} c={c} sel={sel} toggle={toggle}/>)}
+      </div>}
     </div>
   );
 }
@@ -951,7 +956,7 @@ export default function App(){
                       <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                         <button onClick={()=>loadVersion(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#1e2d4a",color:"#f3ede3",border:"none",borderRadius:4}}>Load</button>
                         <button onClick={()=>saveVersion(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#d9ccba",color:"#2c2418",border:"none",borderRadius:4}}>Overwrite</button>
-                        {!isMobile&&<button onClick={()=>exportSavedICS(i)} style={{flex:1,padding:"2px 0",fontSize:11,fontWeight:700,cursor:"pointer",background:"#2d6e4a",color:"#f3ede3",border:"none",borderRadius:4}}>📅 .ics</button>}
+                        {!isMobile&&<button onClick={()=>exportSavedICS(i)} style={{padding:"2px 6px",fontSize:13,cursor:"pointer",background:"#2d6e4a",color:"#f3ede3",border:"none",borderRadius:4}} title="Export to .ics">📅</button>}
                         <button onClick={()=>clearVersion(i)} style={{padding:"2px 6px",fontSize:11,cursor:"pointer",background:"#f0e4e4",color:"#6b1e2e",border:"none",borderRadius:4}}>✕</button>
                       </div>
                     </>
@@ -963,8 +968,8 @@ export default function App(){
             })}
           </div>
           {!isMobile&&<div style={{marginTop:8}}>
-            <button onClick={exportCurrentICS} style={{padding:"4px 14px",borderRadius:6,fontSize:12,fontWeight:700,cursor:"pointer",background:"#2d6e4a",color:"#f3ede3",border:"none",fontFamily:"system-ui,sans-serif"}}>
-              📅 Export current plan to .ics (Fall 9/8–12/4 · Winter 1/4–1/20 · Spring 1/25–4/23, weekly)
+            <button onClick={exportCurrentICS} style={{padding:"4px 10px",borderRadius:6,fontSize:14,fontWeight:700,cursor:"pointer",background:"#2d6e4a",color:"#f3ede3",border:"none",fontFamily:"system-ui,sans-serif"}} title="Export current plan to .ics (Fall 9/8–12/4 · Winter 1/4–1/20 · Spring 1/25–4/23)">
+              📅
             </button>
           </div>}
         </div>
