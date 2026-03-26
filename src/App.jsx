@@ -768,49 +768,6 @@ export default function App(){
   const ALL_FE=FALL_ELECTIVES.courses.concat(FALL_ELECTIVES.seminars).concat(FALL_ELECTIVES.readings);
   const ALL_SE=SP_ELECTIVES.courses.concat(SP_ELECTIVES.seminars).concat(SP_ELECTIVES.readings);
 
-  // ── ICS EXPORT HELPERS ──
-  const coursesFromSnap = useCallback((snap) => {
-    const p = snapToPlan(snap);
-    const fall = [];
-    if(C[p.fEv]) fall.push(C[p.fEv]);
-    if(C[p.fCo]) fall.push(C[p.fCo]);
-    if(p.fTAW) fall.push(C.taw);
-    if(p.fAdm) fall.push(C.f_adm);
-    [...p.fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)fall.push(c);});
-    if(p.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)fall.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
-    const spring = [];
-    if(C[p.spAdm]) spring.push(C[p.spAdm]);
-    if(p.spCo!=="none"&&C[p.spCo]) spring.push(C[p.spCo]);
-    if(p.spEv!=="none"&&C[p.spEv]) spring.push(C[p.spEv]);
-    if(p.spCpi!=="none"&&C[p.spCpi]) spring.push(C[p.spCpi]);
-    if(p.spMTC!=="none"&&C[p.spMTC]) spring.push(C[p.spMTC]);
-    [...p.spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)spring.push(c);});
-    if(p.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)spring.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
-    return [...fall, ...spring];
-  }, [ALL_FE, ALL_SE]);
-
-  const exportCurrentICS = useCallback(() => {
-    const ics = generateICS([
-      {courses: fallTimed, term: "fall"},
-      {courses: spTimed, term: "spring"},
-    ]);
-    downloadICS(ics, "hls-schedule.ics");
-  }, [fallTimed, spTimed]);
-
-  const exportSavedICS = useCallback((i) => {
-    const snap = versions[i];
-    if (!snap) return;
-    const all = coursesFromSnap(snap);
-    // Split into fall/spring by key prefix
-    const fall = all.filter(c => !c.key?.startsWith("sp_"));
-    const spring = all.filter(c => c.key?.startsWith("sp_"));
-    const ics = generateICS([
-      {courses: fall, term: "fall"},
-      {courses: spring, term: "spring"},
-    ]);
-    downloadICS(ics, `hls-plan-${i+1}.ics`);
-  }, [versions, coursesFromSnap]);
-
   const fallTimed=useMemo(()=>{
     const l=[];
     if(C[fEv]) l.push(C[fEv]);
@@ -851,6 +808,48 @@ export default function App(){
   const spClinicCr=spClinic==="fedcourts"?(spField+1):clinicCrTotal(spClinic,spField);
   const springCr=sumCr(spTimed)+spElectCr+spClinicCr;
   const annualCr=fallCr+winterCrCalc+springCr;
+
+  // ── ICS EXPORT HELPERS ──
+  const coursesFromSnap = useCallback((snap) => {
+    const p = snapToPlan(snap);
+    const fall = [];
+    if(C[p.fEv]) fall.push(C[p.fEv]);
+    if(C[p.fCo]) fall.push(C[p.fCo]);
+    if(p.fTAW) fall.push(C.taw);
+    if(p.fAdm) fall.push(C.f_adm);
+    [...p.fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)fall.push(c);});
+    if(p.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)fall.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
+    const spring = [];
+    if(C[p.spAdm]) spring.push(C[p.spAdm]);
+    if(p.spCo!=="none"&&C[p.spCo]) spring.push(C[p.spCo]);
+    if(p.spEv!=="none"&&C[p.spEv]) spring.push(C[p.spEv]);
+    if(p.spCpi!=="none"&&C[p.spCpi]) spring.push(C[p.spCpi]);
+    if(p.spMTC!=="none"&&C[p.spMTC]) spring.push(C[p.spMTC]);
+    [...p.spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)spring.push(c);});
+    if(p.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)spring.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
+    return [...fall, ...spring];
+  }, [ALL_FE, ALL_SE]);
+
+  const exportCurrentICS = useCallback(() => {
+    const ics = generateICS([
+      {courses: fallTimed, term: "fall"},
+      {courses: spTimed, term: "spring"},
+    ]);
+    downloadICS(ics, "hls-schedule.ics");
+  }, [fallTimed, spTimed]);
+
+  const exportSavedICS = useCallback((i) => {
+    const snap = versions[i];
+    if (!snap) return;
+    const all = coursesFromSnap(snap);
+    const fall = all.filter(c => !c.key?.startsWith("sp_"));
+    const spring = all.filter(c => c.key?.startsWith("sp_"));
+    const ics = generateICS([
+      {courses: fall, term: "fall"},
+      {courses: spring, term: "spring"},
+    ]);
+    downloadICS(ics, `hls-plan-${i+1}.ics`);
+  }, [versions, coursesFromSnap]);
 
   const crCol=(cr,min,max)=>cr>max?"#6b1e2e":cr<min?"#9a7820":"#1e2d4a";
   const TABS=["fall","winter","spring","summary","evals","suggest"];
