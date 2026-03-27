@@ -1195,6 +1195,84 @@ export default function App(){
           ...(fClinic&&spClinic&&fClinic!=="fedcourts"&&spClinic!=="fedcourts"?["Clinic in both fall AND spring — max 1/term"]:[]),
         ];
         const ok=!issues.length;
+
+        // ── GRADUATION REQUIREMENTS PROGRESS ──
+        const INTL_COMP_KEYS = new Set(["f_ccl","f_iip","f_imm","sp_iip","sp_pi","sp_itl"]);
+        const EXPERIENTIAL_COURSE_KEYS = new Set(["taw"]); // courses (non-clinic) tagged experiential
+        const allKeys = [...fallItems,...winterItems,...spItems].map(c=>c?.key).filter(Boolean);
+        const allElectKeys = new Set([...fElect,...spElect]);
+
+        // 1) International / Comparative — need 1 course ≥ 3 classroom credits
+        const intlCourse = [...fallItems,...spItems].find(c => c?.key && INTL_COMP_KEYS.has(c.key) && (c.cr||0) >= 3);
+        const intlMet = !!intlCourse;
+
+        // 2) Professional Responsibility — need ≥ 2 classroom credits
+        //    Some clinic seminars *may* satisfy PR (check catalog); typically taken 3L
+        //    We flag clinics whose seminars are known to satisfy PR
+        const PR_CLINIC_IDS = new Set(["employment","consumer","cyberlaw"]);
+        const prFromClinic = (fClinic && PR_CLINIC_IDS.has(fClinic)) || (spClinic && PR_CLINIC_IDS.has(spClinic));
+        const prMet = prFromClinic; // conservative: only if enrolled in a qualifying clinic
+        const prNote = prFromClinic
+          ? `May be satisfied by ${[fClinic,spClinic].filter(id=>PR_CLINIC_IDS.has(id)).map(id=>CLINIC_OPTS.find(c=>c.id===id)?.name).join(" / ")} clinic seminar — confirm with Registrar`
+          : "Not yet fulfilled — typically taken 3L. Some clinic seminars may qualify; check catalog.";
+
+        // 3) Written Work — analytical paper (20-25p seminar/independent) + professional writing (clinic/experiential)
+        const FALL_SEM_KEYS = new Set(FALL_ELECTIVES.seminars.map(s=>s.key));
+        const SP_SEM_KEYS = new Set(SP_ELECTIVES.seminars.map(s=>s.key));
+        const hasAnalyticalPaperCourse = [...allElectKeys].some(k => FALL_SEM_KEYS.has(k) || SP_SEM_KEYS.has(k));
+        const hasProfWritingSource = !!fClinicObj || !!spClinicObj;
+        const writtenBoth = hasAnalyticalPaperCourse && hasProfWritingSource;
+        const writtenPartial = hasAnalyticalPaperCourse || hasProfWritingSource;
+
+        // 4) Experiential Learning — need ≥ 6 credits total
+        //    1L baseline: JET (2cr) + Spring LRW (2cr) = 4cr
+        const EL_1L = 4;
+        let elCr2L = 0;
+        if (allKeys.includes("taw")) elCr2L += 3;
+        if (fClinicObj) elCr2L += fClinicCr;
+        if (spClinicObj) elCr2L += spClinicCr;
+        const elTotal = EL_1L + elCr2L;
+        const elMet = elTotal >= 6;
+
+        const reqItems = [
+          {
+            label: "International / Comparative",
+            icon: "🌐",
+            met: intlMet,
+            partial: false,
+            detail: intlMet
+              ? `✓ ${intlCourse.name} (${intlCourse.prof}, ${intlCourse.cr}cr)`
+              : "Need 1 course ≥ 3cr — e.g. Comp Con Law, Intl IP, Public Intl Law",
+          },
+          {
+            label: "Professional Responsibility",
+            icon: "⚖️",
+            met: prMet,
+            partial: prFromClinic,
+            detail: prNote,
+          },
+          {
+            label: "Written Work",
+            icon: "✍️",
+            met: writtenBoth,
+            partial: writtenPartial,
+            detail: (() => {
+              const parts = [];
+              parts.push(hasAnalyticalPaperCourse ? "✓ Analytical paper (seminar enrolled)" : "✗ Analytical paper — enroll in a seminar or arrange independent writing");
+              parts.push(hasProfWritingSource ? "✓ Professional writing (clinic enrolled)" : "✗ Professional writing — enroll in a clinic or experiential course");
+              return parts.join("\n");
+            })(),
+          },
+          {
+            label: "Experiential Learning",
+            icon: "🏛️",
+            met: elMet,
+            partial: elCr2L > 0,
+            detail: `${elTotal}cr of 6cr required (1L: ${EL_1L}cr${elCr2L > 0 ? ` + 2L: ${elCr2L}cr` : ""})${!elMet ? " — add TAW or a clinic" : ""}`,
+            bar: { cur: elTotal, max: 6 },
+          },
+        ];
+
         return(
           <div>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,1fr)":"repeat(4,1fr)",gap:7,marginBottom:11}}>
@@ -1231,6 +1309,41 @@ export default function App(){
                 {ok?"✓ Valid schedule":`⚠ ${issues.length} issue${issues.length>1?"s":""}`}
               </div>
               {issues.map((m,i)=><div key={i} style={{fontSize:14,color:"#6b1e2e"}}>{m}</div>)}
+            </div>
+
+            {/* ── GRADUATION REQUIREMENTS PROGRESS ── */}
+            <div style={{background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:isMobile?"10px":"12px 14px",fontFamily:"system-ui,sans-serif"}}>
+              <div style={{fontWeight:700,fontSize:isMobile?14:16,color:"#1e2d4a",marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
+                🎓 Graduation Requirements Progress
+                <span style={{fontSize:11,fontWeight:400,color:"#8a7e6e",marginLeft:"auto"}}>
+                  {reqItems.filter(r=>r.met).length}/{reqItems.length} fulfilled
+                </span>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?8:10}}>
+                {reqItems.map(r => {
+                  const bg = r.met ? "#eaf0e8" : r.partial ? "#f5ede0" : "#f5e8e8";
+                  const bd = r.met ? "#b0c4a8" : r.partial ? "#c4924a" : "#c4a4a4";
+                  const statusColor = r.met ? "#2a4a22" : r.partial ? "#9a7820" : "#6b1e2e";
+                  const statusText = r.met ? "✓ Fulfilled" : r.partial ? "⏳ In progress" : "✗ Not yet";
+                  return (
+                    <div key={r.label} style={{background:bg,border:`1px solid ${bd}`,borderRadius:5,padding:isMobile?"8px":"10px 12px"}}>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
+                        <span style={{fontWeight:700,fontSize:isMobile?13:14,color:"#1e2d4a"}}>{r.icon} {r.label}</span>
+                        <span style={{fontSize:isMobile?11:12,fontWeight:700,color:statusColor,background:"#fff",borderRadius:8,padding:"1px 7px"}}>{statusText}</span>
+                      </div>
+                      {r.bar && (
+                        <div style={{height:5,background:"#d9ccba",borderRadius:3,overflow:"hidden",marginBottom:5}}>
+                          <div style={{height:"100%",width:`${Math.min(r.bar.cur/r.bar.max,1)*100}%`,background:r.met?"#3d6b4f":"#a0622a",borderRadius:3,transition:"width .3s"}}/>
+                        </div>
+                      )}
+                      <div style={{fontSize:isMobile?12:13,color:"#5c4e3a",lineHeight:1.5,whiteSpace:"pre-line"}}>{r.detail}</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{marginTop:8,fontSize:11,color:"#8a7e6e",lineHeight:1.5}}>
+                Assumes standard 1L completion (JET 2cr + LRW 2cr = 4cr experiential). Verify all requirement satisfaction with your Degree Audit in HELIOS and the Registrar's Office. Pro bono (50hr) tracked separately.
+              </div>
             </div>
           </div>
         );
