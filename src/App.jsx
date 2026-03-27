@@ -176,6 +176,27 @@ const SUGGESTIONS = [
   },
 ];
 
+// ── MULTI-SECTION RANKING POOL ───────────────────────────────────────────────
+const RANKING_POOL = [
+  {id:"ev_m",    label:"Evidence · Medwed",    sub:"Fall · 3cr · Th,F 10:30–12:00",     cat:"ev",  cKey:"ev_m"},
+  {id:"ev_s",    label:"Evidence · Schulman",  sub:"Fall · 4cr · M,T 8:00–10:00",       cat:"ev",  cKey:"ev_s"},
+  {id:"ev_w",    label:"Evidence · Whiting",   sub:"Fall · 4cr · M,T 10:15–12:15",      cat:"ev",  cKey:"ev_w"},
+  {id:"sp_ev_c", label:"Evidence · Clary",     sub:"Spr · 3cr · W,Th 1:30–3:00",        cat:"ev",  cKey:"sp_ev_c"},
+  {id:"sp_ev_l", label:"Evidence · Lvovsky",   sub:"Spr · 4cr · M–W 10:30–11:50",       cat:"ev",  cKey:"sp_ev_l"},
+  {id:"co_sp",   label:"Corps · Spamann",      sub:"Fall · 4cr · W–F 8:30–9:50",        cat:"co",  cKey:"co_sp"},
+  {id:"co_fr",   label:"Corps · Fried",        sub:"Fall · 4cr · W–F 1:30–3:30",        cat:"co",  cKey:"co_fr"},
+  {id:"co_pg",   label:"Corps · Pargendler",   sub:"Fall · 4cr · M,T 3:45–5:45",        cat:"co",  cKey:"co_pg"},
+  {id:"sp_co_c", label:"Corps · Coates",       sub:"Spr · 4cr · M–W 10:15–11:35",       cat:"co",  cKey:"sp_co_c"},
+  {id:"sp_co_t", label:"Corps · Tallarita",    sub:"Spr · 4cr · Th,F 10:15–12:15",      cat:"co",  cKey:"sp_co_t"},
+  {id:"sp_adm_v",label:"Admin · Vermeule",     sub:"Spr · 4cr · W,Th 1:30–3:30",        cat:"adm", cKey:"sp_adm_v"},
+  {id:"sp_adm_b",label:"Admin · Block",        sub:"Spr · 3cr · T,W 3:45–5:15",         cat:"adm", cKey:"sp_adm_b"},
+  {id:"taw_f",   label:"TAW · Fall",           sub:"Fall · 3cr · M–F 2–9pm",            cat:"taw", cKey:"taw"},
+  {id:"taw_w",   label:"TAW · Winter",         sub:"Winter · 3cr",                       cat:"taw", cKey:"taw"},
+];
+const RANK_CAT_COLORS={ev:"#2c4a7c",co:"#3d6b4f",adm:"#7c1d2e",taw:"#7a6e64"};
+const RANK_CAT_BG={ev:"#e8ecf4",co:"#e8ede6",adm:"#f0e8e8",taw:"#edeae4"};
+const RANK_CAT_LABELS={ev:"Evidence",co:"Corporations",adm:"Admin Law",taw:"TAW"};
+
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
 const overlapMin = (s,e,ws="14:00",we="21:00") => Math.max(0, Math.min(toMin(e),toMin(we)) - Math.max(toMin(s),toMin(ws)));
@@ -196,6 +217,64 @@ const getConflicts = list => {
 };
 const sumCr = list => list.reduce((s,c)=>s+(c?.cr||c?.credits||0),0);
 const fmtHr = n => n===0?"0":(n%1===0?String(n):n.toFixed(1));
+
+function generateSuggestedRanking(plan){
+  // Gather all "fixed" timed courses (electives, non-ranking multi-sections, clinics)
+  const ALL_FE_R=FALL_ELECTIVES.courses.concat(FALL_ELECTIVES.seminars).concat(FALL_ELECTIVES.readings);
+  const ALL_SE_R=SP_ELECTIVES.courses.concat(SP_ELECTIVES.seminars).concat(SP_ELECTIVES.readings);
+  const fixed=[];
+  (plan.fElect||[]).forEach(k=>{const c=ALL_FE_R.find(x=>x.key===k);if(c?.days)fixed.push(c);});
+  (plan.spElect||[]).forEach(k=>{const c=ALL_SE_R.find(x=>x.key===k);if(c?.days)fixed.push(c);});
+  if(plan.spMTC&&plan.spMTC!=="none"&&C[plan.spMTC]) fixed.push(C[plan.spMTC]);
+  if(plan.spCpi&&plan.spCpi!=="none"&&C[plan.spCpi]) fixed.push(C[plan.spCpi]);
+  if(plan.fAdm&&C.f_adm) fixed.push(C.f_adm);
+  if(plan.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.fClinic);if(cl?.semFall)fixed.push(cl.semFall);}
+  if(plan.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixed.push(sem);}
+
+  const selectedIds=new Set();
+  if(plan.fEv) selectedIds.add(plan.fEv);
+  if(plan.spEv&&plan.spEv!=="none") selectedIds.add(plan.spEv);
+  if(plan.fCo) selectedIds.add(plan.fCo);
+  if(plan.spCo&&plan.spCo!=="none") selectedIds.add(plan.spCo);
+  if(plan.spAdm) selectedIds.add(plan.spAdm);
+  const tawSel=plan.fTAW?"taw_f":"taw_w";
+
+  const scored=RANKING_POOL.map(item=>{
+    let score=0;
+    const isSel=item.id===tawSel||selectedIds.has(item.id);
+    if(isSel) score+=1000;
+
+    const cd=C[item.cKey];
+    const cfl=[];
+    if(cd?.days){
+      // Check vs fixed electives/clinics
+      for(const fc of fixed){if(fc.days&&timesOverlap(cd,fc))cfl.push(fc.name||fc.key);}
+      // Check vs OTHER multi-section categories
+      if(item.cat!=="ev"){
+        const ek=plan.fEv||(plan.spEv!=="none"?plan.spEv:null);
+        if(ek&&C[ek]?.days&&timesOverlap(cd,C[ek]))cfl.push(C[ek].name);
+      }
+      if(item.cat!=="co"){
+        const ck=plan.fCo||(plan.spCo!=="none"?plan.spCo:null);
+        if(ck&&C[ck]?.days&&timesOverlap(cd,C[ck]))cfl.push(C[ck].name);
+      }
+      if(item.cat!=="adm"&&plan.spAdm&&C[plan.spAdm]?.days&&timesOverlap(cd,C[plan.spAdm]))
+        cfl.push(C[plan.spAdm].name);
+      // TAW overlap check for fall courses
+      if(item.cat!=="taw"&&plan.fTAW&&!item.id.startsWith("sp_")&&item.id!=="taw_w"){
+        const hrs=tawOverlapHrsPerWeek(cd);
+        if(hrs>4)cfl.push("TAW ("+fmtHr(hrs)+"hr/wk overlap > 4hr)");
+        else if(hrs>0) score-=10; // mild penalty for any overlap
+      }
+    }
+    if(cfl.length===0) score+=100;
+    score-=cfl.length*200;
+    if(!item.id.startsWith("sp_")&&item.id!=="taw_w") score+=5; // slight fall preference
+    return{id:item.id,note:"",score,conflicts:cfl,isSel};
+  });
+  scored.sort((a,b)=>b.score-a.score);
+  return scored.map(({id,note})=>({id,note}));
+}
 
 // ── COLOURS ───────────────────────────────────────────────────────────────────
 const K={
@@ -629,7 +708,7 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,fAdm:false,
   fElect:[],fClinic:null,fField:3,wRepro:false,
   spAdm:"sp_adm_v",spCo:"none",spEv:"none",spCpi:"none",spMTC:"none",
-  spElect:[],spClinic:null,spField:3};
+  spElect:[],spClinic:null,spField:3,ranking:null};
 
 function loadVersions(){
   try{ return JSON.parse(localStorage.getItem("hls_versions")||"[null,null,null]"); }
@@ -637,8 +716,8 @@ function loadVersions(){
 }
 function saveVersions(vs){ try{ localStorage.setItem("hls_versions",JSON.stringify(vs)); }catch{} }
 
-function planToSnap(state){ return {...state, fElect:[...state.fElect], spElect:[...state.spElect]}; }
-function snapToPlan(snap){ return {...snap, fElect:new Set(snap.fElect||[]), spElect:new Set(snap.spElect||[])}; }
+function planToSnap(state){ return {...state, fElect:[...state.fElect], spElect:[...state.spElect], ranking:state.ranking||[]}; }
+function snapToPlan(snap){ return {...snap, fElect:new Set(snap.fElect||[]), spElect:new Set(snap.spElect||[]), ranking:snap.ranking||[]}; }
 
 // ── ICS EXPORT ───────────────────────────────────────────────────────────────
 const DAY_TO_ICS = {Mon:"MO",Tue:"TU",Wed:"WE",Thu:"TH",Fri:"FR"};
@@ -747,9 +826,11 @@ export default function App(){
   const [versions,setVersions]=useState(loadVersions); // [snap|null, snap|null, snap|null]
   const [showVersions,setShowVersions]=useState(false);
   const [pickerOpen,setPickerOpen]=useState(true);
+  const [ranking,setRanking]=useState(()=>generateSuggestedRanking(BLANK_PLAN));
+  const [rankNoteOpen,setRankNoteOpen]=useState(new Set());
 
   const planState=()=>planToSnap({fEv,fCo,fTAW,fAdm,fElect,fClinic,fField,
-    wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic,spField});
+    wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic,spField,ranking});
   const loadPlan=snap=>{
     const p=snapToPlan(snap);
     setFEv(p.fEv);setFCo(p.fCo);setFTAW(p.fTAW);setFAdm(p.fAdm);
@@ -757,9 +838,15 @@ export default function App(){
     setWRepro(p.wRepro);
     setSpAdm(p.spAdm);setSpCo(p.spCo);setSpEv(p.spEv);setSpCpi(p.spCpi);
     setSpMTC(p.spMTC);setSpElect(p.spElect);setSpClinic(p.spClinic);setSpField(p.spField);
+    if(p.ranking&&p.ranking.length>0) setRanking(p.ranking);
   };
   const saveVersion=i=>{
-    const vs=[...versions];vs[i]=planState();setVersions(vs);saveVersions(vs);
+    // Regenerate ranking suggestion on save
+    const curPlan={fEv,fCo,fTAW,fAdm,fElect:[...fElect],fClinic,fField,
+      wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect:[...spElect],spClinic,spField};
+    const newRanking=generateSuggestedRanking(curPlan);
+    setRanking(newRanking);
+    const vs=[...versions];vs[i]=planToSnap({...curPlan,fElect,spElect,ranking:newRanking});setVersions(vs);saveVersions(vs);
   };
   const loadVersion=i=>{if(versions[i])loadPlan(versions[i]);};
   const clearVersion=i=>{const vs=[...versions];vs[i]=null;setVersions(vs);saveVersions(vs);};
@@ -1345,6 +1432,173 @@ export default function App(){
                 Assumes standard 1L completion (JET 2cr + LRW 2cr = 4cr experiential). Verify all requirement satisfaction with your Degree Audit in HELIOS and the Registrar's Office. Pro bono (50hr) tracked separately.
               </div>
             </div>
+
+            {/* ── MULTI-SECTION RANKING ── */}
+            {(()=>{
+              // Compute live conflict info for each ranking item
+              const curPlan={fEv,fCo,fTAW,fAdm,fElect:[...fElect],fClinic,fField,
+                wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect:[...spElect],spClinic,spField};
+              const fixedR=[];
+              ALL_FE.forEach(c=>{if(fElect.has(c.key)&&c.days)fixedR.push(c);});
+              ALL_SE.forEach(c=>{if(spElect.has(c.key)&&c.days)fixedR.push(c);});
+              if(spMTC!=="none"&&C[spMTC])fixedR.push(C[spMTC]);
+              if(spCpi!=="none"&&C[spCpi])fixedR.push(C[spCpi]);
+              if(fAdm&&C.f_adm)fixedR.push(C.f_adm);
+              if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);if(cl?.semFall)fixedR.push(cl.semFall);}
+              if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixedR.push(sem);}
+
+              const selectedIdsR=new Set();
+              selectedIdsR.add(fEv); if(spEv!=="none")selectedIdsR.add(spEv);
+              selectedIdsR.add(fCo); if(spCo!=="none")selectedIdsR.add(spCo);
+              selectedIdsR.add(spAdm);
+              const tawSelR=fTAW?"taw_f":"taw_w";
+
+              const infoMap={};
+              RANKING_POOL.forEach(item=>{
+                const isSel=item.id===tawSelR||selectedIdsR.has(item.id);
+                const cd=C[item.cKey];
+                const cfl=[];
+                if(cd?.days){
+                  for(const fc of fixedR){if(fc.days&&timesOverlap(cd,fc))cfl.push(fc.name||fc.key);}
+                  if(item.cat!=="ev"){const ek=fEv||(spEv!=="none"?spEv:null);if(ek&&C[ek]?.days&&timesOverlap(cd,C[ek]))cfl.push(C[ek].name);}
+                  if(item.cat!=="co"){const ck=fCo||(spCo!=="none"?spCo:null);if(ck&&C[ck]?.days&&timesOverlap(cd,C[ck]))cfl.push(C[ck].name);}
+                  if(item.cat!=="adm"&&C[spAdm]?.days&&timesOverlap(cd,C[spAdm]))cfl.push(C[spAdm].name);
+                  if(item.cat!=="taw"&&fTAW&&!item.id.startsWith("sp_")&&item.id!=="taw_w"){
+                    const hrs=tawOverlapHrsPerWeek(cd);
+                    if(hrs>4)cfl.push("TAW ("+fmtHr(hrs)+"hr > 4hr limit)");
+                  }
+                }
+                infoMap[item.id]={isSel,conflicts:cfl};
+              });
+
+              const moveRank=(from,to)=>{
+                setRanking(prev=>{
+                  const next=[...prev];const[moved]=next.splice(from,1);next.splice(to,0,moved);return next;
+                });
+              };
+              const setRankNote=(idx,note)=>{
+                setRanking(prev=>{const next=[...prev];next[idx]={...next[idx],note};return next;});
+              };
+              const regenRanking=()=>{setRanking(generateSuggestedRanking(curPlan));};
+
+              return(
+                <div style={{background:"#f3ede3",border:"1px solid #d9ccba",borderRadius:5,padding:isMobile?"10px":"12px 14px",marginTop:11,fontFamily:"system-ui,sans-serif"}}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10,flexWrap:"wrap",gap:6}}>
+                    <div style={{fontWeight:700,fontSize:isMobile?14:16,color:"#1e2d4a"}}>
+                      🗳️ Multi-Section Preference Ranking
+                    </div>
+                    <button onClick={regenRanking} style={{padding:"3px 10px",borderRadius:5,fontSize:12,fontWeight:700,cursor:"pointer",background:"#ede6d8",color:"#2c2418",border:"1px solid #c4b8a8"}}>
+                      🔄 Regenerate from plan
+                    </button>
+                  </div>
+                  <div style={{fontSize:12,color:"#5c4e3a",marginBottom:10,lineHeight:1.5}}>
+                    Drag to reorder (or use arrows). Save a plan version to auto-generate suggestion. Your customizations are preserved when you load a saved plan.
+                  </div>
+
+                  {ranking.map((r,idx)=>{
+                    const pool=RANKING_POOL.find(p=>p.id===r.id);
+                    if(!pool) return null;
+                    const info=infoMap[r.id]||{isSel:false,conflicts:[]};
+                    const catCol=RANK_CAT_COLORS[pool.cat];
+                    const catBg=RANK_CAT_BG[pool.cat];
+                    const hasCfl=info.conflicts.length>0;
+                    const borderCol=info.isSel?catCol:hasCfl?"#c4a4a4":"#d9ccba";
+                    const bgCol=info.isSel?catBg:hasCfl?"#f9f0f0":"#faf8f4";
+                    const noteIsOpen=rankNoteOpen.has(r.id);
+
+                    // Eval data & bid tips
+                    const evalKey = pool.cKey === "taw" ? "taw" : pool.id;
+                    const ev = E[evalKey] || E[pool.cKey] || null;
+                    const bidTips = ev?.bid || [];
+                    const bidStr = bidTips.join(" ").toLowerCase();
+                    const isCompetitive = bidStr.includes("high") || bidStr.includes("first") || bidStr.includes("rank it 1") || bidStr.includes("competitive") || bidStr.includes("bid high");
+                    const isEasy = bidStr.includes("vacanc") || bidStr.includes("empty") || bidStr.includes("not difficult") || bidStr.includes("not too") || bidStr.includes("no need");
+                    // TAW overlap for non-TAW fall items
+                    let tawWarn = null;
+                    if (pool.cat !== "taw" && fTAW && !pool.id.startsWith("sp_") && pool.id !== "taw_w") {
+                      const cd = C[pool.cKey];
+                      if (cd?.days) {
+                        const tawHrs = tawOverlapHrsPerWeek(cd);
+                        if (tawHrs > 4) tawWarn = { t: `TAW ${fmtHr(tawHrs)}hr > 4hr`, c: "#6b1e2e" };
+                        else if (tawHrs > 0) tawWarn = { t: `TAW ${fmtHr(tawHrs)}hr/wk`, c: "#9a7820" };
+                      }
+                    }
+
+                    return(
+                      <div key={r.id}
+                        draggable
+                        onDragStart={e=>{e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",String(idx));}}
+                        onDragOver={e=>{e.preventDefault();}}
+                        onDrop={e=>{e.preventDefault();const from=parseInt(e.dataTransfer.getData("text/plain"),10);if(!isNaN(from)&&from!==idx)moveRank(from,idx);}}
+                        style={{
+                          display:"flex",alignItems:"stretch",gap:0,
+                          marginBottom:3,borderRadius:5,overflow:"hidden",
+                          border:`1.5px solid ${borderCol}`,
+                          background:bgCol,
+                          cursor:"grab",
+                          opacity:hasCfl&&!info.isSel?0.7:1,
+                          transition:"box-shadow .15s",
+                        }}>
+
+                        {/* Rank number + drag zone */}
+                        <div style={{width:isMobile?30:36,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:info.isSel?catCol:"#ede6d8",flexShrink:0,padding:"4px 0"}}>
+                          <div style={{fontWeight:900,fontSize:isMobile?13:15,color:info.isSel?"#fff":"#2c2418",lineHeight:1}}>{idx+1}</div>
+                          <div style={{fontSize:8,color:info.isSel?"rgba(255,255,255,.7)":"#8a7e6e",marginTop:1}}>⋮⋮</div>
+                        </div>
+
+                        {/* Content */}
+                        <div style={{flex:1,padding:isMobile?"5px 7px":"6px 10px",minWidth:0}}>
+                          <div style={{display:"flex",alignItems:"center",gap:5,flexWrap:"wrap"}}>
+                            <span style={{fontSize:11,fontWeight:700,color:catCol,background:catBg,borderRadius:8,padding:"1px 6px",flexShrink:0}}>
+                              {RANK_CAT_LABELS[pool.cat]}
+                            </span>
+                            <span style={{fontWeight:600,fontSize:isMobile?13:14,color:"#2c2418"}}>{pool.label.split(" · ")[1]}</span>
+                            <span style={{fontSize:isMobile?11:12,color:"#8a7e6e"}}>{pool.sub}</span>
+                            {ev?.avg&&<span style={{fontSize:11,fontWeight:700,color:starColor(ev.avg),flexShrink:0}}>★{ev.avg}</span>}
+                            {info.isSel&&<span style={{fontSize:10,fontWeight:700,color:"#fff",background:catCol,borderRadius:8,padding:"0 5px",flexShrink:0}}>★ PLAN</span>}
+                            {isCompetitive&&<span style={{fontSize:10,fontWeight:700,color:"#b05c20",background:"#fef3e2",borderRadius:8,padding:"0 5px",flexShrink:0}}>🔥 Competitive</span>}
+                            {isEasy&&!isCompetitive&&<span style={{fontSize:10,fontWeight:700,color:"#3d6b4f",background:"#eaf0e8",borderRadius:8,padding:"0 5px",flexShrink:0}}>😌 Easy</span>}
+                            {tawWarn&&<span style={{fontSize:10,fontWeight:700,color:tawWarn.c,background:tawWarn.c==="#6b1e2e"?"#f5e8e8":"#f5ede0",borderRadius:8,padding:"0 5px",flexShrink:0}}>{tawWarn.t}</span>}
+                            {hasCfl&&<span style={{fontSize:10,fontWeight:700,color:"#6b1e2e",background:"#f5e8e8",borderRadius:8,padding:"0 5px",flexShrink:0}}>⚠ {info.conflicts.join(", ")}</span>}
+                          </div>
+                          {/* Bid tip quote */}
+                          {bidTips.length>0&&(
+                            <div style={{fontSize:11,color:"#7a6e5e",marginTop:2,fontStyle:"italic",lineHeight:1.4}}>
+                              🎯 {bidTips[0]}
+                            </div>
+                          )}
+                          {/* Note */}
+                          {(r.note||noteIsOpen)&&(
+                            <div style={{marginTop:3}}>
+                              <input value={r.note} onChange={e=>setRankNote(idx,e.target.value)}
+                                placeholder="Add note…"
+                                style={{width:"100%",boxSizing:"border-box",fontSize:12,padding:"2px 6px",borderRadius:3,border:"1px solid #d9ccba",outline:"none",background:"#fff",color:"#2c2418",fontFamily:"system-ui,sans-serif"}}/>
+                            </div>
+                          )}
+                          {!r.note&&!noteIsOpen&&(
+                            <button onClick={(e)=>{e.stopPropagation();setRankNoteOpen(prev=>{const n=new Set(prev);n.add(r.id);return n;});}} style={{fontSize:11,border:"none",cursor:"pointer",padding:"1px 4px",borderRadius:3,color:"#8a7e6e",background:"transparent",marginTop:2}}>
+                              + note
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Up/Down arrows */}
+                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",gap:1,padding:"0 4px",flexShrink:0}}>
+                          <button disabled={idx===0} onClick={e=>{e.stopPropagation();moveRank(idx,idx-1);}}
+                            style={{border:"none",cursor:idx===0?"default":"pointer",background:"transparent",fontSize:isMobile?12:14,padding:0,lineHeight:1,color:idx===0?"#d9ccba":"#5c4e3a",opacity:idx===0?.4:1}}>▲</button>
+                          <button disabled={idx===ranking.length-1} onClick={e=>{e.stopPropagation();moveRank(idx,idx+1);}}
+                            style={{border:"none",cursor:idx===ranking.length-1?"default":"pointer",background:"transparent",fontSize:isMobile?12:14,padding:0,lineHeight:1,color:idx===ranking.length-1?"#d9ccba":"#5c4e3a",opacity:idx===ranking.length-1?.4:1}}>▼</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <div style={{marginTop:8,fontSize:11,color:"#8a7e6e",lineHeight:1.5}}>
+                    ★ PLAN = section in your current plan. ⚠ = time conflict with your schedule. 🔥 = competitive (bid high). 😌 = easy to get in. 🎯 = peer bid tip. Once enrolled in one section, all lower-ranked sections of that course are automatically skipped by the algorithm.
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         );
       })()}
