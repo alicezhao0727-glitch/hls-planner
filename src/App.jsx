@@ -464,6 +464,9 @@ const CLINIC_OPTS=[
   {id:"judicial",  name:"Judicial Process in Trial Courts", semCr:2, fMin:2,fMax:5, term:"both",   c:K.amber,  evalId:"clinicJudicial",
    note:"Fall or spring · observe & assist in MA trial courts · Barbara Berenson",
    semFall:{days:["Thu"],s:"15:45",e:"17:45"}, semSpring:{days:["Wed"],s:"15:45",e:"17:45"}},
+  {id:"electionlaw",name:"Election Law",       semCr:2, fMin:2,fMax:5, term:"both",        c:K.indigo, evalId:null,
+   note:"Fall or spring · voting rights, redistricting, election admin · Stephanopoulos/Greenwood",
+   semFall:{days:["Tue"],s:"15:45",e:"17:45"}, semSpring:{days:["Tue"],s:"15:45",e:"17:45"}},
 ];
 
 // ── CALENDAR ─────────────────────────────────────────────────────────────────
@@ -711,8 +714,8 @@ const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,fAdm:false,
   spElect:[],spClinic:null,spField:3,ranking:null};
 
 function loadVersions(){
-  try{ return JSON.parse(localStorage.getItem("hls_versions")||"[null,null,null]"); }
-  catch{ return [null,null,null]; }
+  try{ const v=JSON.parse(localStorage.getItem("hls_versions")||"[null,null,null,null]"); while(v.length<4)v.push(null); return v; }
+  catch{ return [null,null,null,null]; }
 }
 function saveVersions(vs){ try{ localStorage.setItem("hls_versions",JSON.stringify(vs)); }catch{} }
 
@@ -1028,7 +1031,7 @@ export default function App(){
         <div style={{background:"#edf0f5",borderBottom:"1px solid #c4bdb4",padding:isMobile?"8px 12px":"10px 24px",fontFamily:"system-ui,sans-serif"}}>
           <div style={{fontSize:isMobile?11:12,fontWeight:700,color:"#1e2d4a",marginBottom:8,textTransform:"uppercase",letterSpacing:".06em"}}>Saved Plans{!isMobile&&" — click slot to save current, or load/clear"}</div>
           <div style={{display:"flex",flexDirection:isMobile?"column":"row",gap:isMobile?6:10}}>
-            {[0,1,2].map(i=>{
+            {[0,1,2,3].map(i=>{
               const v=versions[i];
               return(
                 <div key={i} style={{flex:1,background:v?"#fff":"#f3ede3",border:"1px solid #c4bdb4",borderRadius:6,padding:"8px 10px",minHeight:60}}>
