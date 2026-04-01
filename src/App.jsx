@@ -226,8 +226,6 @@ function generateSuggestedRanking(plan){
   (plan.fElect||[]).forEach(k=>{const c=ALL_FE_R.find(x=>x.key===k);if(c?.days)fixed.push(c);});
   (plan.spElect||[]).forEach(k=>{const c=ALL_SE_R.find(x=>x.key===k);if(c?.days)fixed.push(c);});
   if(plan.spMTC&&plan.spMTC!=="none"&&C[plan.spMTC]) fixed.push(C[plan.spMTC]);
-  if(plan.spCpi&&plan.spCpi!=="none"&&C[plan.spCpi]) fixed.push(C[plan.spCpi]);
-  if(plan.fAdm&&C.f_adm) fixed.push(C.f_adm);
   if(plan.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.fClinic);if(cl?.semFall)fixed.push(cl.semFall);}
   if(plan.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixed.push(sem);}
 
@@ -305,14 +303,11 @@ const C = {
   ev_m:  {key:"ev_m",  name:"Evidence", prof:"Medwed",   cr:3, days:["Thu","Fri"],      s:"10:30",e:"12:00", c:K.blue},
   ev_s:  {key:"ev_s",  name:"Evidence", prof:"Schulman", cr:4, days:["Mon","Tue"],       s:"8:00", e:"10:00", c:K.blue},
   ev_w:  {key:"ev_w",  name:"Evidence", prof:"Whiting",  cr:4, days:["Mon","Tue"],       s:"10:15",e:"12:15", c:K.blue},
-  ev_r:  {key:"ev_r",  name:"Evidence", prof:"Rubin",    cr:2, days:["Mon"],             s:"13:30",e:"15:30", c:K.blue},
   ev_br: {key:"ev_br", name:"Evidence", prof:"Brewer",   cr:4, days:["Tue","Wed"],       s:"15:45",e:"17:45", c:K.blue},
   // ── FALL CORPORATIONS (multi-section) ──
   co_sp: {key:"co_sp", name:"Corporations", prof:"Spamann",     cr:4, days:["Wed","Thu","Fri"], s:"8:30", e:"9:50",  c:K.green},
   co_fr: {key:"co_fr", name:"Corporations", prof:"Fried",       cr:4, days:["Wed","Thu","Fri"], s:"13:30",e:"15:30", c:K.green},
   co_pg: {key:"co_pg", name:"Corporations", prof:"Pargendler",  cr:4, days:["Mon","Tue"],       s:"15:45",e:"17:45", c:K.green},
-  // ── FALL ADMIN LAW ──
-  f_adm: {key:"f_adm", name:"Admin Law",    prof:"Freeman",   cr:4, days:["Wed","Thu"],  s:"13:30",e:"15:30", c:K.red},
   // ── FALL BANKRUPTCY ──
   f_bke: {key:"f_bke", name:"Bankruptcy",   prof:"Ellias",    cr:4, days:["Mon","Tue"],  s:"10:15",e:"12:15", c:K.violet},
   // ── TAW ──
@@ -331,11 +326,7 @@ const C = {
   sp_co_t:{key:"sp_co_t",name:"Corporations",prof:"Tallarita", cr:4, days:["Thu","Fri"],       s:"10:15",e:"12:15", c:K.green},
   // ── SPRING EVIDENCE (multi-section) ──
   sp_ev_l:{key:"sp_ev_l",name:"Evidence",prof:"Lvovsky", cr:4, days:["Mon","Tue","Wed"], s:"10:30",e:"11:50", c:K.blue},
-  sp_ev_r:{key:"sp_ev_r",name:"Evidence",prof:"Rubin",   cr:2, days:["Mon"],             s:"13:30",e:"15:30", c:K.blue},
   sp_ev_c:{key:"sp_ev_c",name:"Evidence",prof:"Clary",   cr:3, days:["Wed","Thu"],       s:"13:30",e:"15:00", c:K.blue},
-  // ── SPRING CRIM PRO INVESTIGATIONS (multi-section) ──
-  sp_cpi_n:{key:"sp_cpi_n",name:"Crim Pro: Investigations",prof:"Natapoff",cr:4,days:["Thu","Fri"],s:"10:15",e:"12:15",c:K.amber},
-  sp_cpi_w:{key:"sp_cpi_w",name:"Crim Pro: Investigations",prof:"Whiting", cr:4,days:["Mon","Tue"],s:"10:15",e:"12:15",c:K.amber},
   // ── SPRING SINGLE-SECTION ──
   sp_bk: {key:"sp_bk", name:"Bankruptcy",      prof:"Roe",     cr:4, days:["Mon","Tue","Wed"],  s:"10:30",e:"11:50", c:K.violet},
   sp_cp: {key:"sp_cp", name:"Copyright",       prof:"Fisher",  cr:4, days:["Mon","Tue","Wed"],  s:"10:30",e:"11:50", c:K.sky},
@@ -345,21 +336,14 @@ const C = {
 const FALL_ELECTIVES={
   courses:[
     {key:"f_bke",  name:"Bankruptcy",               prof:"Ellias",         cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"f_bke"},
-    {key:"f_cap",  name:"Capital Punishment",        prof:"Steiker",        cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.amber, evalId:null},
     {key:"f_cl",   name:"Complex Litigation",        prof:"Clary",          cr:2,days:["Wed"],             s:"10:15",e:"12:15",c:K.cyan,  evalId:"f_cl"},
     {key:"f_ca",   name:"Class Actions",             prof:"Clary",          cr:2,days:["Tue"],             s:"13:30",e:"15:30",c:K.cyan,  evalId:"f_ca"},
-    {key:"f_clsj", name:"Communication Law & Social Justice",prof:"Jenkins",cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.red,   evalId:null},
-    {key:"f_ccl",  name:"Comparative Constitutional Law",prof:"Jackson",    cr:4,days:["Wed","Thu"],       s:"13:30",e:"15:30",c:K.teal,  evalId:null},
     {key:"f_ctr",  name:"Copyright",                 prof:"Tushnet",        cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.sky,   evalId:null},
     {key:"f_ctml", name:"Copyright & TM Litigation", prof:"Cendali",        cr:2,days:["Mon"],             s:"13:30",e:"15:30",c:K.sky,   evalId:"f_ctml"},
-    {key:"f_cpa",  name:"Crim Pro: Adjudication",    prof:"Lanni",          cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.amber, evalId:null},
-    {key:"f_cp",   name:"Crim Pro: Survey",          prof:"Re",             cr:4,days:["Tue","Wed"],       s:"10:15",e:"12:15",c:K.amber, evalId:null},
-    {key:"f_dpl",  name:"Drug Product Liability",    prof:"Grossi",         cr:3,days:["Wed"],             s:"13:30",e:"15:30",c:K.orange,evalId:null},
-    {key:"f_emp",  name:"Employment Law",            prof:"Sachs",          cr:4,days:["Mon","Tue"],       s:"13:30",e:"15:30",c:K.rose,  evalId:"f_emp"},
+    {key:"f_dpl",  name:"Drug Product Liability",    prof:"Grossi",         cr:3,days:["Wed"],             s:"13:30",e:"15:30",c:K.orange,evalId:"f_dpl"},
     {key:"f_iip",  name:"Intl Intellectual Property",prof:"Okediji",        cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.sky,   evalId:null},
     {key:"f_lod",  name:"Law of Democracy",          prof:"Stephanopoulos", cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.indigo,evalId:null},
     {key:"f_pat",  name:"Patent Law",                prof:"Tompros",        cr:3,days:["Thu","Fri"],       s:"10:15",e:"11:45",c:K.sky,   evalId:null},
-    {key:"f_rac",  name:"Race Relations Law",        prof:"Kennedy",        cr:3,days:["Mon","Tue"],       s:"13:30",e:"15:00",c:K.red,   evalId:null},
     {key:"f_slg",  name:"State & Local Government",  prof:"Bowie",          cr:4,days:["Wed","Thu","Fri"], s:"13:30",e:"14:50",c:K.violet,evalId:null},
     {key:"f_sex",  name:"Sex Equality",              prof:"MacKinnon",      cr:3,days:["Mon","Tue","Wed"], s:"18:00",e:"20:00",c:K.pink,  evalId:"f_sex"},
     {key:"f_wcc",  name:"White Collar Criminal",     prof:"Apps",           cr:2,days:["Mon"],             s:"15:45",e:"17:45",c:K.fuchsia,evalId:null},
@@ -367,6 +351,7 @@ const FALL_ELECTIVES={
     {key:"f_bsl",  name:"Business Strategy",         prof:"Spier",          cr:3,days:["Mon","Tue"],       s:"8:30", e:"10:00",c:K.teal,  evalId:"f_bsl"},
     {key:"f_bn",   name:"Business Negotiations",     prof:"Coakley",        cr:3,days:["Wed"],             s:"18:00",e:"21:15",c:K.lime,  evalId:null},
     {key:"f_imm",  name:"Immigration Law",           prof:"Neuman",         cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.amber, evalId:null},
+    {key:"f_te",   name:"Trust and Estates",           prof:"Sitkoff",      cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"sp_te"},
   ],
   seminars:[
     {key:"f_sexA", name:"Adv Problems in Sex Equality",prof:"MacKinnon",  cr:2,days:["Mon","Tue"],       s:"13:30",e:"15:30",c:K.pink,  evalId:null},
@@ -374,15 +359,10 @@ const FALL_ELECTIVES={
     {key:"f_di",   name:"Democratic Innovations",     prof:"Lessig",      cr:2,days:["Wed"],             s:"15:45",e:"17:45",c:K.indigo,evalId:null},
     {key:"f_ec",   name:"Engaging China",             prof:"Alford",      cr:2,days:["Mon","Tue"],       s:"18:00",e:"20:00",c:K.red,   evalId:null},
     {key:"f_fl",   name:"Facts & Lies",               prof:"Saris",       cr:2,days:["Wed"],             s:"15:45",e:"17:45",c:K.orange,evalId:"f_fl"},
-    {key:"f_iov",  name:"Independent Oversight",      prof:"Goldsmith",   cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.teal,  evalId:null},
-    {key:"f_jrd",  name:"Role of Judiciary/Democracy",prof:"Abella",      cr:2,days:["Tue","Wed"],       s:"15:45",e:"17:45",c:K.teal,  evalId:null},
-    {key:"f_jsg",  name:"Jurisprudence of Sports",    prof:"Re",          cr:2,days:["Mon"],             s:"13:30",e:"15:30",c:K.lime,  evalId:null},
     {key:"f_ltd",  name:"Legal Tools for Democracy",  prof:"Schwartztol", cr:2,days:["Wed"],             s:"15:45",e:"17:45",c:K.indigo,evalId:null},
     {key:"f_aa",   name:"Asian Americans & Law",      prof:"Lee",         cr:2,days:["Tue"],             s:"15:45",e:"17:45",c:K.amber, evalId:null},
     {key:"f_pfmb", name:"Past & Future of Music Biz", prof:"Ferrell",     cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.lime,  evalId:null},
     {key:"f_sct",  name:"The U.S. Supreme Court",     prof:"Sunstein/Breyer",cr:2,days:["Tue"],          s:"13:30",e:"15:30",c:K.violet,evalId:null},
-    {key:"f_tss",  name:"Trade Secret Law",           prof:"Gershenson",  cr:2,days:["Thu"],             s:"15:45",e:"17:45",c:K.sky,   evalId:null},
-    {key:"f_cci",  name:"Corporate Criminal Invest.", prof:"Kahn/Tsao",   cr:2,c:K.fuchsia,             evalId:"f_cci"},
   ],
   readings:[
     {key:"f_rg_atjl",name:"Advanced Topics in Jewish Law",  prof:"Feldman",    cr:1,days:["Thu"],s:"18:00",e:"20:00",c:K.gray},
@@ -404,8 +384,6 @@ const SP_ELECTIVES={
   courses:[
     {key:"sp_crl",  name:"Civil Rights Litigation",  prof:"Michelman",  cr:3,days:["Thu","Fri"],       s:"15:45",e:"17:15",c:K.indigo,evalId:"sp_crl"},
     {key:"sp_col",  name:"Conflict of Laws",         prof:"Sachs",      cr:3,days:["Mon","Tue"],       s:"13:40",e:"15:10",c:K.emerald,evalId:null},
-    {key:"sp_cr",   name:"Corporate Restructuring",  prof:"Ellias",     cr:4,days:["Mon","Tue"],       s:"13:30",e:"15:30",c:K.violet,evalId:null},
-    {key:"sp_ej",   name:"Environmental Justice",    prof:"Simms",      cr:3,days:["Mon","Tue"],       s:"8:30", e:"10:00",c:K.lime,  evalId:null},
     {key:"sp_fam",  name:"Family Law",               prof:"Gersen",     cr:4,days:["Tue","Wed"],       s:"15:45",e:"17:45",c:K.pink,  evalId:null},
     {key:"sp_iip",  name:"Intl IP Law",              prof:"Okediji",    cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.sky,   evalId:null},
     {key:"sp_itl",  name:"Intl Trade Law",           prof:"Wu",         cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.teal,  evalId:null},
@@ -418,22 +396,28 @@ const SP_ELECTIVES={
     {key:"sp_adv",  name:"Advertising Law",          prof:"Tushnet",    cr:3,days:["Mon","Tue"],       s:"13:30",e:"15:00",c:K.sky,   evalId:null},
     {key:"sp_gi",   name:"Gender Identity & Sex Orientation",prof:"Chen",cr:2,days:["Tue"],           s:"15:45",e:"17:45",c:K.fuchsia,evalId:"f_gi"},
     {key:"sp_gvls", name:"Gender Violence Law",      prof:"Rosenfeld",  cr:3,days:["Wed","Thu"],       s:"13:30",e:"15:00",c:K.pink,  evalId:null},
-    {key:"sp_pi",   name:"Public International Law", prof:"Blum",       cr:4,days:["Wed","Fri"],       s:"13:30",e:"15:30",c:K.teal,  evalId:null},
     {key:"sp_rfi",  name:"Regulation of Financial Institutions",prof:"Tarullo",cr:4,days:["Mon","Tue"],s:"13:30",e:"15:30",c:K.violet,evalId:null},
     {key:"sp_ag",   name:"Role of State Attorney General",prof:"Brann", cr:2,days:["Mon"],             s:"13:30",e:"15:30",c:K.indigo,evalId:"sugg_stateAG"},
+    {key:"sp_fcg",  name:"Federal Courts",          prof:"Goldsmith",  cr:4,c:K.teal,                                                evalId:"sugg_fedCourts"},
+    {key:"sp_rem",  name:"Remedies",                prof:"Gersen",     cr:3,days:["Tue","Wed"],       s:"15:45",e:"17:15",c:K.emerald,evalId:"sp_rem"},
+    {key:"sp_te",   name:"Trust and Estates",        prof:"Sitkoff",   cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"sp_te"},
+    {key:"sp_clwl", name:"Comp Law: Why Law? China", prof:"Alford",    cr:4,days:["Mon","Wed"],       s:"15:45",e:"17:45",c:K.red,   evalId:null},
+    {key:"sp_advn", name:"Adv Negotiation: Money & You",prof:"Heen", cr:3,days:["Tue"],             s:"15:45",e:"19:00",c:K.lime,  evalId:"f_advn"},
+    {key:"sp_ante", name:"Antitrust Law & Economics",prof:"Elhauge", cr:4,days:["Wed","Thu","Fri"],  s:"13:30",e:"14:50",c:K.teal,  evalId:"f_ante"},
   ],
   seminars:[
     {key:"sp_a2j",  name:"Access to Justice Lab",    prof:"Greiner",    cr:2,days:["Thu"],             s:"18:00",e:"20:00",c:K.lime,  evalId:"sp_a2j"},
-    {key:"sp_adm2", name:"Advanced Issues in Admin Law",prof:"Vermeule",cr:2,days:["Tue"],             s:"15:45",e:"17:45",c:K.red,   evalId:null},
     {key:"sp_awa",  name:"Advanced Written Advocacy", prof:"Clary",     cr:2,days:["Wed"],             s:"15:45",e:"17:45",c:K.cyan,  evalId:null},
     {key:"sp_sexA", name:"Comparative & Intl Reproductive Rights",prof:"Yamin",cr:2,days:["Wed"],      s:"15:45",e:"17:45",c:K.pink,  evalId:null},
-    {key:"sp_elsc", name:"Environ. Law in Supreme Court",prof:"Lazarus", cr:2,days:["Mon","Tue"],       s:"15:45",e:"17:45",c:K.lime,  evalId:null},
     {key:"sp_ltd",  name:"Legal Tools for Democracy", prof:"Schwartztol",cr:2,days:["Tue"],            s:"15:45",e:"17:45",c:K.indigo,evalId:null},
-    {key:"sp_pol",  name:"Policing in America",       prof:"Umunna",    cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.amber, evalId:null},
     {key:"sp_rc",   name:"The Roberts Court",         prof:"Gershengorn",cr:2,days:["Tue"],            s:"15:45",e:"17:45",c:K.violet,evalId:null},
     {key:"sp_tc",   name:"Teaching Copyright",        prof:"Fisher",    cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.sky,   evalId:null},
-    {key:"sp_tint", name:"Terrorism & Intl Law",      prof:"Modirzadeh",cr:2,days:["Tue"],             s:"15:45",e:"17:45",c:K.amber, evalId:null},
     {key:"sp_rob",  name:"The Obama Presidency",      prof:"Mack",      cr:2,days:["Tue"],             s:"18:00",e:"20:00",c:K.teal,  evalId:null},
+    {key:"sp_cilo", name:"China & Intl Legal Order",  prof:"Wu",        cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.red,   evalId:"f_cilo"},
+    {key:"sp_lfm",  name:"Leading from the Middle",   prof:"DeFilippo", cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.lime,  evalId:"f_lfm"},
+    {key:"sp_aaldc",name:"Adaptive Leadership",        prof:"Westfahl",  cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.lime,  evalId:null},
+    {key:"sp_ldr",  name:"Law & Democracy: Demise/Renewal",prof:"Robinson",cr:2,days:["Mon"],          s:"13:30",e:"15:30",c:K.indigo,evalId:null},
+    {key:"sp_lmci", name:"Law & Media: Contesting Images",prof:"Robinson",cr:2,days:["Tue"],           s:"13:30",e:"15:30",c:K.sky,   evalId:null},
   ],
   readings:[
     {key:"sp_rg_fe", name:"Feminist Utopias",               prof:"Rosenfeld",  cr:1,days:["Tue"],s:"15:45",e:"17:45",c:K.pink},
@@ -446,15 +430,9 @@ const SP_ELECTIVES={
 };
 
 const CLINIC_OPTS=[
-  {id:"consumer",  name:"Consumer Protection", semCr:2, fMin:3,fMax:5, term:"spring-only", c:K.lime,   evalId:"clinicConsumer",
-   note:"Spring only · WilmerHale Legal Services Center · litigation-heavy · Alexa Rosenbloom",
-   semSpring:{days:["Tue"],s:"13:30",e:"15:30"}},
-  {id:"cyberlaw",  name:"Cyberlaw",            semCr:2, fMin:3,fMax:5, term:"both",        c:K.sky,    evalId:"clinicCyber",
-   note:"Fall or spring · Berkman Klein · IP/privacy/tech/AI · Christopher Bavitz",
-   semFall:{days:["Wed"],s:"13:30",e:"15:30"}, semSpring:{days:["Wed"],s:"13:30",e:"15:30"}},
-  {id:"employment",name:"Employment",          semCr:2, fMin:3,fMax:5, term:"both",        c:K.rose,   evalId:null,
-   note:"Fall or spring · employment rights & discrimination · Steve Churchill",
-   semFall:{days:["Tue"],s:"18:00",e:"20:00"}, semSpring:{days:["Tue"],s:"18:00",e:"20:00"}},
+  {id:"consumer",  name:"Consumer Protection", semCr:2, fMin:3,fMax:5, term:"both",        c:K.lime,   evalId:"clinicConsumer",
+   note:"Fall or spring · WilmerHale Legal Services Center · litigation-heavy · Alexa Rosenbloom",
+   semFall:{days:["Tue"],s:"13:30",e:"15:30"}, semSpring:{days:["Tue"],s:"13:30",e:"15:30"}},
   {id:"fedcourts", name:"Federal Courts",      semCr:1, fMin:2,fMax:3, term:"winter+spring",c:K.teal,  evalId:"clinicFedCourts",
    note:"Winter 2cr + Spring 2–3cr fieldwork + 1cr seminar · externship at any federal court nationwide · David Zimmer",
    semSpring:{days:["Wed"],s:"8:30",e:"10:00"}},
@@ -708,9 +686,9 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 
 
 // ── PLAN VERSIONS ─────────────────────────────────────────────────────────────
-const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,fAdm:false,
+const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,
   fElect:[],fClinic:null,fField:3,wRepro:false,
-  spAdm:"sp_adm_v",spCo:"none",spEv:"none",spCpi:"none",spMTC:"none",
+  spAdm:"sp_adm_v",spCo:"none",spEv:"none",spMTC:"none",
   spElect:[],spClinic:null,spField:3,ranking:null};
 
 function loadVersions(){
@@ -808,7 +786,6 @@ export default function App(){
   const [fEv,setFEv]=useState("ev_m");
   const [fCo,setFCo]=useState("co_sp");
   const [fTAW,setFTAW]=useState(true);
-  const [fAdm,setFAdm]=useState(false);
   // Fall electives
   const [fElect,setFElect]=useState(new Set());
   const [fClinic,setFClinic]=useState(null);
@@ -819,7 +796,6 @@ export default function App(){
   const [spAdm,setSpAdm]=useState("sp_adm_v");
   const [spCo,setSpCo]=useState("none");
   const [spEv,setSpEv]=useState("none");
-  const [spCpi,setSpCpi]=useState("none");
   const [spMTC,setSpMTC]=useState("none");
   // Spring electives
   const [spElect,setSpElect]=useState(new Set());
@@ -832,21 +808,21 @@ export default function App(){
   const [ranking,setRanking]=useState(()=>generateSuggestedRanking(BLANK_PLAN));
   const [rankNoteOpen,setRankNoteOpen]=useState(new Set());
 
-  const planState=()=>planToSnap({fEv,fCo,fTAW,fAdm,fElect,fClinic,fField,
-    wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic,spField,ranking});
+  const planState=()=>planToSnap({fEv,fCo,fTAW,fElect,fClinic,fField,
+    wRepro,spAdm,spCo,spEv,spMTC,spElect,spClinic,spField,ranking});
   const loadPlan=snap=>{
     const p=snapToPlan(snap);
-    setFEv(p.fEv);setFCo(p.fCo);setFTAW(p.fTAW);setFAdm(p.fAdm);
+    setFEv(p.fEv);setFCo(p.fCo);setFTAW(p.fTAW);
     setFElect(p.fElect);setFClinic(p.fClinic);setFField(p.fField);
     setWRepro(p.wRepro);
-    setSpAdm(p.spAdm);setSpCo(p.spCo);setSpEv(p.spEv);setSpCpi(p.spCpi);
+    setSpAdm(p.spAdm);setSpCo(p.spCo);setSpEv(p.spEv);
     setSpMTC(p.spMTC);setSpElect(p.spElect);setSpClinic(p.spClinic);setSpField(p.spField);
     if(p.ranking&&p.ranking.length>0) setRanking(p.ranking);
   };
   const saveVersion=i=>{
     // Regenerate ranking suggestion on save
-    const curPlan={fEv,fCo,fTAW,fAdm,fElect:[...fElect],fClinic,fField,
-      wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect:[...spElect],spClinic,spField};
+    const curPlan={fEv,fCo,fTAW,fElect:[...fElect],fClinic,fField,
+      wRepro,spAdm,spCo,spEv,spMTC,spElect:[...spElect],spClinic,spField};
     const newRanking=generateSuggestedRanking(curPlan);
     setRanking(newRanking);
     const vs=[...versions];vs[i]=planToSnap({...curPlan,fElect,spElect,ranking:newRanking});setVersions(vs);saveVersions(vs);
@@ -868,12 +844,11 @@ export default function App(){
     if(C[fEv]) l.push(C[fEv]);
     if(C[fCo]) l.push(C[fCo]);
     if(fTAW) l.push(C.taw);
-    if(fAdm) l.push(C.f_adm);
     [...fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)l.push(c);});
     // Add clinic seminar to calendar
     if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)l.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:0,c:cl.c});}
     return l;
-  },[fEv,fCo,fTAW,fAdm,fElect,fClinic]);
+  },[fEv,fCo,fTAW,fElect,fClinic]);
 
   const fallNoTAW=fallTimed.filter(c=>c.key!=="taw");
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
@@ -891,12 +866,11 @@ export default function App(){
     if(C[spAdm]) l.push(C[spAdm]);
     if(spCo!=="none"&&C[spCo]) l.push(C[spCo]);
     if(spEv!=="none"&&C[spEv]) l.push(C[spEv]);
-    if(spCpi!=="none"&&C[spCpi]) l.push(C[spCpi]);
     if(spMTC!=="none"&&C[spMTC]) l.push(C[spMTC]);
     [...spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)l.push(c);});
     if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)l.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:0,c:cl.c});}
     return l;
-  },[spAdm,spCo,spEv,spCpi,spMTC,spElect,spClinic]);
+  },[spAdm,spCo,spEv,spMTC,spElect,spClinic]);
 
   const spConflicts=useMemo(()=>getConflicts(spTimed),[spTimed]);
   const spElectCr=useMemo(()=>[...spElect].reduce((s,k)=>{const c=ALL_SE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[spElect]);
@@ -911,14 +885,12 @@ export default function App(){
     if(C[p.fEv]) fall.push(C[p.fEv]);
     if(C[p.fCo]) fall.push(C[p.fCo]);
     if(p.fTAW) fall.push(C.taw);
-    if(p.fAdm) fall.push(C.f_adm);
     [...p.fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)fall.push(c);});
     if(p.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)fall.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     const spring = [];
     if(C[p.spAdm]) spring.push(C[p.spAdm]);
     if(p.spCo!=="none"&&C[p.spCo]) spring.push(C[p.spCo]);
     if(p.spEv!=="none"&&C[p.spEv]) spring.push(C[p.spEv]);
-    if(p.spCpi!=="none"&&C[p.spCpi]) spring.push(C[p.spCpi]);
     if(p.spMTC!=="none"&&C[p.spMTC]) spring.push(C[p.spMTC]);
     [...p.spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)spring.push(c);});
     if(p.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)spring.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
@@ -961,6 +933,8 @@ export default function App(){
     {id:"ev_m",  name:"Evidence",              prof:"Medwed"},
     {id:"ev_s",  name:"Evidence",              prof:"Schulman"},
     {id:"ev_w",  name:"Evidence",              prof:"Whiting"},
+    {id:"sp_ev_l",name:"Evidence",             prof:"Lvovsky"},
+    {id:"sp_ev_c",name:"Evidence",             prof:"Clary"},
     {id:"co_sp", name:"Corporations",          prof:"Spaaman"},
     {id:"co_fr", name:"Corporations",          prof:"Fried"},
     {id:"taw",   name:"Trial Advocacy Workshop",prof:"Harden"},
@@ -973,18 +947,23 @@ export default function App(){
     {id:"sp_col",name:"Conflict of Laws",      prof:"Sachs"},
     {id:"f_sex", name:"Sex Equality",          prof:"MacKinnon"},
     {id:"f_gi",  name:"Gender Identity & Sexual Orientation",prof:"Chen"},
-    {id:"f_emp", name:"Employment Law",        prof:"Sachs"},
     {id:"f_ca",  name:"Class Actions",         prof:"Clary"},
     {id:"f_cl",  name:"Complex Litigation",    prof:"Clary"},
-    {id:"f_cci", name:"Corporate Criminal Invest.",prof:"Kahn/Tsao"},
     {id:"f_taxB",name:"Taxation",              prof:"Brennan"},
     {id:"f_taxD",name:"Taxation",              prof:"Desai"},
     {id:"f_bsl", name:"Business Strategy for Lawyers",prof:"Spier"},
+    {id:"f_dpl", name:"Drug Product Liability", prof:"Grossi"},
+    {id:"f_ante",name:"Antitrust Law & Economics",prof:"Elhauge"},
+    {id:"f_advn",name:"Advanced Negotiation",   prof:"Heen"},
+    {id:"f_cilo",name:"China & Intl Legal Order",prof:"Wu"},
+    {id:"f_lfm", name:"Leading from the Middle", prof:"DeFilippo"},
+    {id:"sp_rem",name:"Remedies",               prof:"Gersen"},
+    {id:"sp_te", name:"Trust and Estates",       prof:"Sitkoff"},
     {id:"sp_mus",name:"Music & Digital Media", prof:"Bavitz"},
     {id:"sp_aml",name:"Analytical Methods",    prof:"Spier"},
     {id:"sp_crl",name:"Civil Rights Litigation",prof:"Michelman"},
+    {id:"sugg_fedCourts",name:"Federal Courts", prof:"Goldsmith"},
     {id:"clinicConsumer",name:"Consumer Protection Clinic",prof:"Bertling/Rosenbloom"},
-    {id:"clinicCyber",   name:"Cyberlaw Clinic",           prof:"Bavitz"},
     {id:"clinicFedCourts",name:"Federal Courts Clinic",    prof:"Zimmer"},
     {id:"clinicJudicial",name:"Judicial Process Clinic",   prof:"Cratsley/Berenson"},
     {id:"clinicCrimPros",name:"Criminal Prosecution Clinic",prof:"Corrigan"},
@@ -1103,21 +1082,16 @@ export default function App(){
               <Sect title="Evidence" must>
                 <Option type="radio" value="ev_m"  cur={fEv} set={setFEv} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
                 <Option type="radio" value="ev_w"  cur={fEv} set={setFEv} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
-                <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Video clips·rules-focused·brutal exam" noteKey="ev_s"/>
-                <Option type="radio" value="ev_r"  cur={fEv} set={setFEv} c={K.blue}   label="Rubin · 2cr · M 1:30"        evalId="ev_r"  sub="2cr condensed version" noteKey="ev_r"/>
+                <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Great · brutal exam · no cold call" noteKey="ev_s"/>
                 <Option type="radio" value="ev_br" cur={fEv} set={setFEv} c={K.blue}   label="Brewer · 4cr · T, W 3:45"   evalId={null}  sub="Jurisprudence-focused approach" noteKey="ev_br"/>
               </Sect>
 
               <Sect title="Corporations" must>
-                <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="MC + essay · cold calls · not DE law" noteKey="co_sp"/>
-                <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="MC + policy · no cold calls · funny" noteKey="co_fr"/>
+                <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="Rapid fire · strange exam · harsh grader" noteKey="co_sp"/>
+                <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="No attendance req · organized · no LP · MC only" noteKey="co_fr"/>
                 <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
               </Sect>
 
-              <Sect title="Admin Law" must>
-                <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · W, Th 1:30" evalId="f_adm"
-                  sub={fCo==="co_fr"?"⚠ conflicts with Fried Corporations WThF":""} warn={fCo==="co_fr"} noteKey="f_adm"/>
-              </Sect>
 
               <Sect title="Trial Advocacy Workshop" must>
                 <Option type="radio" value={true}  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
@@ -1215,16 +1189,10 @@ export default function App(){
 
               <Sect title="Evidence">
                 <Option type="radio" value="none"    cur={spEv} set={setSpEv} label="Skip (took in Fall)" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_ev_l" cur={spEv} set={setSpEv} c={K.blue}  label="Lvovsky · 4cr · M, T, W 10:30" evalId="sp_ev_l" sub="Evidence history + doctrine" noteKey="sp_ev_l"/>
-                <Option type="radio" value="sp_ev_r" cur={spEv} set={setSpEv} c={K.blue}  label="Rubin · 2cr · M 1:30"          evalId="sp_ev_r" sub="Condensed" noteKey="sp_ev_r"/>
-                <Option type="radio" value="sp_ev_c" cur={spEv} set={setSpEv} c={K.blue}  label="Clary · 3cr · W, Th 1:30"      evalId="sp_ev_c" sub="Litigation-focused" noteKey="sp_ev_c"/>
+                <Option type="radio" value="sp_ev_l" cur={spEv} set={setSpEv} c={K.blue}  label="Lvovsky · 4cr · M, T, W 10:30" evalId="sp_ev_l" sub="Rapid fire · tough cold call · brutal curve" noteKey="sp_ev_l"/>
+                <Option type="radio" value="sp_ev_c" cur={spEv} set={setSpEv} c={K.blue}  label="Clary · 3cr · W, Th 1:30"      evalId="sp_ev_c" sub="Kinda ok · soft cold call · can miss class · dry but accessible" noteKey="sp_ev_c"/>
               </Sect>
 
-              <Sect title="Crim Pro: Investigations">
-                <Option type="radio" value="none"     cur={spCpi} set={setSpCpi} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_cpi_n" cur={spCpi} set={setSpCpi} c={K.amber} label="Natapoff · 4cr · Th, F 10:15" evalId={null} sub="Policing + investigation focus" noteKey="sp_cpi_n"/>
-                <Option type="radio" value="sp_cpi_w" cur={spCpi} set={setSpCpi} c={K.amber} label="Whiting · 4cr · M, T 10:15"   evalId={null} sub="International/crim procedure" noteKey="sp_cpi_w"/>
-              </Sect>
 
               <Sect title="Bankruptcy / Copyright (share M,T,W 10:30 slot)">
                 <div style={{fontSize:13,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe (Bankruptcy) and Fisher (Copyright) share the same slot</div>
@@ -1257,7 +1225,7 @@ export default function App(){
       {tab==="summary"&&(()=>{
         const fClinicObj=CLINIC_OPTS.find(c=>c.id===fClinic);
         const spClinicObj=CLINIC_OPTS.find(c=>c.id===spClinic);
-        const fallItems=[C[fEv],C[fCo],fTAW?C.taw:null,fAdm?C.f_adm:null,
+        const fallItems=[C[fEv],C[fCo],fTAW?C.taw:null,
           ...[...fElect].map(k=>ALL_FE.find(x=>x.key===k)),
           fClinicObj?{...fClinicObj,name:fClinicObj.name+" Clinic",cr:fClinicCr}:null].filter(Boolean);
         const winterItems=[
@@ -1266,7 +1234,7 @@ export default function App(){
           wRepro&&fTAW&&!useFedWinter?{name:"Repro Rights After Dobbs",cr:2,c:K.pink}:null].filter(Boolean);
         const spItems=[C[spAdm],
           spCo!=="none"?C[spCo]:null,
-          spEv!=="none"?C[spEv]:null,spCpi!=="none"?C[spCpi]:null,
+          spEv!=="none"?C[spEv]:null,
           spMTC!=="none"?C[spMTC]:null,
           ...[...spElect].map(k=>ALL_SE.find(x=>x.key===k)),
           spClinicObj?{...spClinicObj,name:spClinicObj.name+" Clinic",cr:spClinicCr}:null].filter(Boolean);
@@ -1287,7 +1255,7 @@ export default function App(){
         const ok=!issues.length;
 
         // ── GRADUATION REQUIREMENTS PROGRESS ──
-        const INTL_COMP_KEYS = new Set(["f_ccl","f_iip","f_imm","sp_iip","sp_pi","sp_itl"]);
+        const INTL_COMP_KEYS = new Set(["f_iip","f_imm","sp_iip","sp_itl","sp_clwl","sp_cilo"]);
         const EXPERIENTIAL_COURSE_KEYS = new Set(["taw"]); // courses (non-clinic) tagged experiential
         const allKeys = [...fallItems,...winterItems,...spItems].map(c=>c?.key).filter(Boolean);
         const allElectKeys = new Set([...fElect,...spElect]);
@@ -1299,7 +1267,7 @@ export default function App(){
         // 2) Professional Responsibility — need ≥ 2 classroom credits
         //    Some clinic seminars *may* satisfy PR (check catalog); typically taken 3L
         //    We flag clinics whose seminars are known to satisfy PR
-        const PR_CLINIC_IDS = new Set(["employment","consumer","cyberlaw"]);
+        const PR_CLINIC_IDS = new Set(["consumer"]);
         const prFromClinic = (fClinic && PR_CLINIC_IDS.has(fClinic)) || (spClinic && PR_CLINIC_IDS.has(spClinic));
         const prMet = prFromClinic; // conservative: only if enrolled in a qualifying clinic
         const prNote = prFromClinic
@@ -1439,14 +1407,12 @@ export default function App(){
             {/* ── MULTI-SECTION RANKING ── */}
             {(()=>{
               // Compute live conflict info for each ranking item
-              const curPlan={fEv,fCo,fTAW,fAdm,fElect:[...fElect],fClinic,fField,
-                wRepro,spAdm,spCo,spEv,spCpi,spMTC,spElect:[...spElect],spClinic,spField};
+              const curPlan={fEv,fCo,fTAW,fElect:[...fElect],fClinic,fField,
+                wRepro,spAdm,spCo,spEv,spMTC,spElect:[...spElect],spClinic,spField};
               const fixedR=[];
               ALL_FE.forEach(c=>{if(fElect.has(c.key)&&c.days)fixedR.push(c);});
               ALL_SE.forEach(c=>{if(spElect.has(c.key)&&c.days)fixedR.push(c);});
               if(spMTC!=="none"&&C[spMTC])fixedR.push(C[spMTC]);
-              if(spCpi!=="none"&&C[spCpi])fixedR.push(C[spCpi]);
-              if(fAdm&&C.f_adm)fixedR.push(C.f_adm);
               if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);if(cl?.semFall)fixedR.push(cl.semFall);}
               if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixedR.push(sem);}
 
