@@ -329,7 +329,6 @@ const C = {
   f_1afe:{key:"f_1afe",name:"1st Amendment",prof:"Feldman",   cr:4, days:["Thu","Fri"],       s:"10:15",e:"12:15", c:K.indigo},
   f_1awe:{key:"f_1awe",name:"1st Amendment",prof:"Weinrib",   cr:4, days:["Mon","Tue"],       s:"13:30",e:"15:30", c:K.indigo},
   // ── FALL CRIM PRO (multi-section) ──
-  f_cpa: {key:"f_cpa", name:"Crim Pro: Adjudication",prof:"Lanni",cr:4, days:["Thu","Fri"],   s:"10:15",e:"12:15", c:K.amber},
   f_cpsu:{key:"f_cpsu",name:"Crim Pro: Survey",      prof:"Re",   cr:4, days:["Tue","Wed"],   s:"10:15",e:"12:15", c:K.amber},
   // ── SPRING ADMIN LAW (multi-section) ──
   sp_adm_v:{key:"sp_adm_v",name:"Admin Law",prof:"Vermeule", cr:4, days:["Wed","Thu"],   s:"13:30",e:"15:30", c:K.red},
@@ -358,6 +357,7 @@ const FALL_ELECTIVES={
     {key:"f_ca",   name:"Class Actions",             prof:"Clary",          cr:2,days:["Tue"],             s:"13:30",e:"15:30",c:K.cyan,  evalId:"f_ca"},
     {key:"f_ctr",  name:"Copyright",                 prof:"Tushnet",        cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.sky,   evalId:null},
     {key:"f_ctml", name:"Copyright & TM Litigation", prof:"Cendali",        cr:2,days:["Mon"],             s:"13:30",e:"15:30",c:K.sky,   evalId:"f_ctml"},
+    {key:"f_cpa",  name:"Crim Pro: Adjudication",   prof:"Lanni",          cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.amber, evalId:null},
     {key:"f_dpl",  name:"Drug Product Liability",    prof:"Grossi",         cr:3,days:["Wed"],             s:"13:30",e:"15:30",c:K.orange,evalId:"f_dpl"},
     {key:"f_iip",  name:"Intl Intellectual Property",prof:"Okediji",        cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.sky,   evalId:null},
     {key:"f_lod",  name:"Law of Democracy",          prof:"Stephanopoulos", cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.indigo,evalId:null},
@@ -1118,26 +1118,26 @@ export default function App(){
             </Sect>
 
             {/* ─── MULTI-SECTIONS ─── */}
-            <Sect title="Multi-Sections" must>
-              <Sect title="Evidence" must>
+            <Sect title="Multi-Sections">
+              <Sect title="Evidence">
                 <Option type="radio" value="ev_m"  cur={fEv} set={setFEv} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
                 <Option type="radio" value="ev_w"  cur={fEv} set={setFEv} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
                 <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Great · brutal exam · no cold call" noteKey="ev_s"/>
                 <Option type="radio" value="ev_br" cur={fEv} set={setFEv} c={K.blue}   label="Brewer · 4cr · T, W 3:45"   evalId={null}  sub="Jurisprudence-focused approach" noteKey="ev_br"/>
               </Sect>
 
-              <Sect title="Corporations" must>
+              <Sect title="Corporations">
                 <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="Rapid fire · strange exam · harsh grader" noteKey="co_sp"/>
                 <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="No attendance req · organized · no LP · MC only" noteKey="co_fr"/>
                 <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
               </Sect>
 
-              <Sect title="Admin Law" must>
+              <Sect title="Admin Law">
                 <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · W, Th 1:30" evalId="f_adm"
                   sub={fCo==="co_fr"?"⚠ conflicts with Fried Corporations WThF":""} warn={fCo==="co_fr"} noteKey="f_adm"/>
               </Sect>
 
-              <Sect title="Trial Advocacy Workshop" must>
+              <Sect title="Trial Advocacy Workshop">
                 <Option type="radio" value={true}  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
                   label="Take in Fall (M–F 2–9pm intensive)"
                   sub={`TAW overlap w/ other courses: ${fmtHr(fallTAWHrs)}hr/wk · max 4hr/wk`} warn={!fallTAWOk}/>
@@ -1152,8 +1152,7 @@ export default function App(){
 
               <Sect title="Criminal Procedure">
                 <Option type="radio" value="none"    cur={fCp} set={setFCp} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="f_cpa"   cur={fCp} set={setFCp} c={K.amber} label="Adjudication · Lanni · 4cr · Th, F 10:15" evalId={null} noteKey="f_cpa"/>
-                <Option type="radio" value="f_cpsu"  cur={fCp} set={setFCp} c={K.amber} label="Survey · Re · 4cr · T, W 10:15"           evalId={null} noteKey="f_cpsu"/>
+                <Option type="radio" value="f_cpsu"  cur={fCp} set={setFCp} c={K.amber} label="Survey · Re · 4cr · T, W 10:15" evalId={null} noteKey="f_cpsu"/>
               </Sect>
             </Sect>
 
@@ -1190,7 +1189,7 @@ export default function App(){
                 <EvalCard evalId="clinicFedCourts" label="clinic eval"/>
               </div>
             : <>
-                {!fTAW&&<Sect title="Trial Advocacy Workshop" must>
+                {!fTAW&&<Sect title="Trial Advocacy Workshop">
                   <div style={{fontSize:14,padding:"5px 8px",background:"#ede6d8",borderRadius:4,color:"#2c2418",fontWeight:600,fontFamily:"system-ui,sans-serif"}}>TAW (Sullivan) · 3cr · fills winter slot</div>
                   <EvalCard evalId="taw"/>
                 </Sect>}
@@ -1231,8 +1230,8 @@ export default function App(){
             </Sect>
 
             {/* ─── MULTI-SECTIONS ─── */}
-            <Sect title="Multi-Sections" must>
-              <Sect title="Admin Law" must>
+            <Sect title="Multi-Sections">
+              <Sect title="Admin Law">
                 <Option type="radio" value="sp_adm_v" cur={spAdm} set={setSpAdm} c={K.red} label="Vermeule · 4cr · W, Th 1:30"   evalId="sp_adm_v" sub="In-class exam" noteKey="sp_adm_v"/>
                 <Option type="radio" value="sp_adm_b" cur={spAdm} set={setSpAdm} c={K.red} label="Block · 3cr · T, W 3:45–5:15"  evalId="sp_adm_b" sub="Take-home exam" noteKey="sp_adm_b"/>
               </Sect>
