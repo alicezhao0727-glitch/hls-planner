@@ -425,6 +425,7 @@ const SP_ELECTIVES={
   ],
   seminars:[
     {key:"sp_a2j",  name:"Access to Justice Lab",    prof:"Greiner",    cr:2,days:["Thu"],             s:"18:00",e:"20:00",c:K.lime,  evalId:"sp_a2j"},
+    {key:"sp_adm2", name:"Advanced Issues in Admin Law",prof:"Vermeule",cr:2,days:["Tue"],             s:"15:45",e:"17:45",c:K.red,   evalId:null},
     {key:"sp_awa",  name:"Advanced Written Advocacy", prof:"Clary",     cr:2,days:["Wed"],             s:"15:45",e:"17:45",c:K.cyan,  evalId:null},
     {key:"sp_sexA", name:"Comparative & Intl Reproductive Rights",prof:"Yamin",cr:2,days:["Wed"],      s:"15:45",e:"17:45",c:K.pink,  evalId:null},
     {key:"sp_ltd",  name:"Legal Tools for Democracy", prof:"Schwartztol",cr:2,days:["Tue"],            s:"15:45",e:"17:45",c:K.indigo,evalId:null},
