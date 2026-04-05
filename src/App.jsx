@@ -240,7 +240,7 @@ function generateSuggestedRanking(plan){
   if(plan.fCo) selectedIds.add(plan.fCo);
   if(plan.spCo&&plan.spCo!=="none") selectedIds.add(plan.spCo);
   if(plan.spAdm) selectedIds.add(plan.spAdm);
-  const tawSel=plan.fTAW?"taw_f":"taw_w";
+  const tawSel=plan.fTAW==="fall"?"taw_f":"taw_w";
 
   const scored=RANKING_POOL.map(item=>{
     let score=0;
@@ -264,7 +264,7 @@ function generateSuggestedRanking(plan){
       if(item.cat!=="adm"&&plan.spAdm&&C[plan.spAdm]?.days&&timesOverlap(cd,C[plan.spAdm]))
         cfl.push(C[plan.spAdm].name);
       // TAW overlap check for fall courses
-      if(item.cat!=="taw"&&plan.fTAW&&!item.id.startsWith("sp_")&&item.id!=="taw_w"){
+      if(item.cat!=="taw"&&plan.fTAW==="fall"&&!item.id.startsWith("sp_")&&item.id!=="taw_w"){
         const hrs=tawOverlapHrsPerWeek(cd);
         if(hrs>4)cfl.push("TAW ("+fmtHr(hrs)+"hr/wk overlap > 4hr)");
         else if(hrs>0) score-=10; // mild penalty for any overlap
@@ -704,7 +704,7 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 
 
 // ── PLAN VERSIONS ─────────────────────────────────────────────────────────────
-const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,fAdm:false,f1a:"none",fCp:"none",
+const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:"fall",fAdm:false,f1a:"none",fCp:"none",
   fElect:[],fClinic:null,fField:3,wRepro:false,
   spAdm:"sp_adm_v",spCo:"none",spEv:"none",spMTC:"none",sp1a:"none",spCpi:"none",
   spElect:[],spClinic:null,spField:3,ranking:null};
@@ -803,7 +803,7 @@ export default function App(){
   // Fall multi-section
   const [fEv,setFEv]=useState("ev_m");
   const [fCo,setFCo]=useState("co_sp");
-  const [fTAW,setFTAW]=useState(true);
+  const [fTAW,setFTAW]=useState("fall");
   const [fAdm,setFAdm]=useState(false);
   // Fall 1A + Crim Pro
   const [f1a,setF1a]=useState("none");
@@ -869,7 +869,7 @@ export default function App(){
     const l=[];
     if(C[fEv]) l.push(C[fEv]);
     if(C[fCo]) l.push(C[fCo]);
-    if(fTAW) l.push(C.taw);
+    if(fTAW==="fall") l.push(C.taw);
     if(fAdm) l.push(C.f_adm);
     if(f1a!=="none"&&C[f1a]) l.push(C[f1a]);
     if(fCp!=="none"&&C[fCp]) l.push(C[fCp]);
@@ -881,14 +881,14 @@ export default function App(){
 
   const fallNoTAW=fallTimed.filter(c=>c.key!=="taw");
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
-  const fallTAWHrs=useMemo(()=>fTAW?fallNoTAW.reduce((s,c)=>s+tawOverlapHrsPerWeek(c),0):0,[fTAW,fallNoTAW]);
+  const fallTAWHrs=useMemo(()=>fTAW==="fall"?fallNoTAW.reduce((s,c)=>s+tawOverlapHrsPerWeek(c),0):0,[fTAW,fallNoTAW]);
   const fallTAWOk=fallTAWHrs<=4;
   const fElectCr=useMemo(()=>[...fElect].reduce((s,k)=>{const c=ALL_FE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[fElect]);
   const fClinicCr=clinicCrTotal(fClinic,fField);
   const fallCr=sumCr(fallTimed)+fElectCr+fClinicCr;
 
   const useFedWinter=spClinic==="fedcourts";
-  const winterCrCalc=useFedWinter?2:(!fTAW?3:(wRepro?2:0));
+  const winterCrCalc=useFedWinter?2:(fTAW==="winter"?3:(wRepro?2:0));
 
   const spTimed=useMemo(()=>{
     const l=[];
@@ -915,7 +915,7 @@ export default function App(){
     const fall = [];
     if(C[p.fEv]) fall.push(C[p.fEv]);
     if(C[p.fCo]) fall.push(C[p.fCo]);
-    if(p.fTAW) fall.push(C.taw);
+    if(p.fTAW==="fall") fall.push(C.taw);
     if(p.fAdm) fall.push(C.f_adm);
     if(p.f1a&&p.f1a!=="none"&&C[p.f1a]) fall.push(C[p.f1a]);
     if(p.fCp&&p.fCp!=="none"&&C[p.fCp]) fall.push(C[p.fCp]);
@@ -1058,7 +1058,7 @@ export default function App(){
                   {v?(
                     <>
                       <div style={{fontSize:11,color:"#8a7e6e",lineHeight:1.5,marginBottom:6}}>
-                        Ev: {v.fEv?.replace("ev_","")} · Co: {v.fCo?.replace("co_","")} · {v.fTAW?"TAW fall":"TAW winter"}<br/>
+                        Ev: {v.fEv?.replace("ev_","")} · Co: {v.fCo?.replace("co_","")} · {v.fTAW==="fall"?"TAW fall":v.fTAW==="winter"?"TAW winter":"no TAW"}<br/>
                         {v.fClinic?`${v.fClinic} clinic · `:""}
                         {(v.fElect?.length||0)+(v.spElect?.length||0)} electives
                       </div>
@@ -1120,6 +1120,7 @@ export default function App(){
             {/* ─── MULTI-SECTIONS ─── */}
             <Sect title="Multi-Sections">
               <Sect title="Evidence">
+                <Option type="radio" value="none"  cur={fEv} set={setFEv} label="Skip" evalId={null} noteKey={null}/>
                 <Option type="radio" value="ev_m"  cur={fEv} set={setFEv} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
                 <Option type="radio" value="ev_w"  cur={fEv} set={setFEv} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
                 <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Great · brutal exam · no cold call" noteKey="ev_s"/>
@@ -1127,6 +1128,7 @@ export default function App(){
               </Sect>
 
               <Sect title="Corporations">
+                <Option type="radio" value="none"  cur={fCo} set={setFCo} label="Skip" evalId={null} noteKey={null}/>
                 <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="Rapid fire · strange exam · harsh grader" noteKey="co_sp"/>
                 <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="No attendance req · organized · no LP · MC only" noteKey="co_fr"/>
                 <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
@@ -1138,10 +1140,11 @@ export default function App(){
               </Sect>
 
               <Sect title="Trial Advocacy Workshop">
-                <Option type="radio" value={true}  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
+                <Option type="radio" value="fall"  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
                   label="Take in Fall (M–F 2–9pm intensive)"
                   sub={`TAW overlap w/ other courses: ${fmtHr(fallTAWHrs)}hr/wk · max 4hr/wk`} warn={!fallTAWOk}/>
-                <Option type="radio" value={false} cur={fTAW} set={setFTAW} label="Move to Winter" evalId={null} noteKey={null}/>
+                <Option type="radio" value="winter" cur={fTAW} set={setFTAW} label="Move to Winter" evalId={null} noteKey={null}/>
+                <Option type="radio" value="none" cur={fTAW} set={setFTAW} label="Skip TAW" evalId={null} noteKey={null}/>
               </Sect>
 
               <Sect title="1st Amendment">
@@ -1166,14 +1169,14 @@ export default function App(){
           </div>}
           <div style={{flex:1,minWidth:0}}>
             <CrBar cr={fallCr} min={10} max={16} label="Fall"/>
-            {fTAW&&<div style={{fontSize:isMobile?12:13,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:isMobile?"2px 7px":"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
+            {fTAW==="fall"&&<div style={{fontSize:isMobile?12:13,background:fallTAWOk?"#eaf0e8":"#f5e8e8",border:`1px solid ${fallTAWOk?"#b0c4a8":"#c4a4a4"}`,borderRadius:4,padding:isMobile?"2px 7px":"3px 9px",marginBottom:6,color:fallTAWOk?"#2a4a22":"#6b1e2e",fontFamily:"system-ui,sans-serif"}}>
               TAW overlap: <strong>{fmtHr(fallTAWHrs)}hr/wk</strong> / 4hr max {fallTAWOk?"✓":"⚠ exceeded"}
             </div>}
-            <ConflictBanner conflicts={fallConflicts} tawOk={fallTAWOk} tawHrs={fallTAWHrs} tawActive={fTAW}/>
+            <ConflictBanner conflicts={fallConflicts} tawOk={fallTAWOk} tawHrs={fallTAWHrs} tawActive={fTAW==="fall"}/>
             {fClinic&&<div style={{fontSize:13,background:"#e8ede6",border:"1px solid #b0c4a8",borderRadius:4,padding:"3px 8px",marginBottom:6,color:"#2a4a22",fontFamily:"system-ui,sans-serif"}}>
               🏥 {CLINIC_OPTS.find(c=>c.id===fClinic)?.name} Clinic · {fClinicCr}cr
             </div>}
-            <Calendar courses={fallTimed} tawActive={fTAW}/>
+            <Calendar courses={fallTimed} tawActive={fTAW==="fall"}/>
           </div>
         </div>
       )}
@@ -1189,11 +1192,11 @@ export default function App(){
                 <EvalCard evalId="clinicFedCourts" label="clinic eval"/>
               </div>
             : <>
-                {!fTAW&&<Sect title="Trial Advocacy Workshop">
+                {fTAW==="winter"&&<Sect title="Trial Advocacy Workshop">
                   <div style={{fontSize:14,padding:"5px 8px",background:"#ede6d8",borderRadius:4,color:"#2c2418",fontWeight:600,fontFamily:"system-ui,sans-serif"}}>TAW (Sullivan) · 3cr · fills winter slot</div>
                   <EvalCard evalId="taw"/>
                 </Sect>}
-                {fTAW&&<Sect title="Winter courses">
+                {fTAW==="fall"&&<Sect title="Winter courses">
                   <Option type="checkbox" cur={wRepro} set={setWRepro} c={K.pink} label="Repro Rights After Dobbs (Spera) · 2cr" evalId={null} noteKey="w_repro"/>
                 </Sect>}
               </>
@@ -1290,14 +1293,14 @@ export default function App(){
       {tab==="summary"&&(()=>{
         const fClinicObj=CLINIC_OPTS.find(c=>c.id===fClinic);
         const spClinicObj=CLINIC_OPTS.find(c=>c.id===spClinic);
-        const fallItems=[C[fEv],C[fCo],fTAW?C.taw:null,fAdm?C.f_adm:null,
+        const fallItems=[C[fEv],C[fCo],fTAW==="fall"?C.taw:null,fAdm?C.f_adm:null,
           f1a!=="none"?C[f1a]:null,fCp!=="none"?C[fCp]:null,
           ...[...fElect].map(k=>ALL_FE.find(x=>x.key===k)),
           fClinicObj?{...fClinicObj,name:fClinicObj.name+" Clinic",cr:fClinicCr}:null].filter(Boolean);
         const winterItems=[
           useFedWinter?{name:"Fed Courts (winter)",cr:2,c:K.teal}:null,
-          !fTAW?C.taw:null,
-          wRepro&&fTAW&&!useFedWinter?{name:"Repro Rights After Dobbs",cr:2,c:K.pink}:null].filter(Boolean);
+          fTAW==="winter"?C.taw:null,
+          wRepro&&fTAW==="fall"&&!useFedWinter?{name:"Repro Rights After Dobbs",cr:2,c:K.pink}:null].filter(Boolean);
         const spItems=[C[spAdm],
           spCo!=="none"?C[spCo]:null,
           spEv!=="none"?C[spEv]:null,
@@ -1492,7 +1495,7 @@ export default function App(){
               selectedIdsR.add(fEv); if(spEv!=="none")selectedIdsR.add(spEv);
               selectedIdsR.add(fCo); if(spCo!=="none")selectedIdsR.add(spCo);
               selectedIdsR.add(spAdm);
-              const tawSelR=fTAW?"taw_f":"taw_w";
+              const tawSelR=fTAW==="fall"?"taw_f":"taw_w";
 
               const infoMap={};
               RANKING_POOL.forEach(item=>{
@@ -1504,7 +1507,7 @@ export default function App(){
                   if(item.cat!=="ev"){const ek=fEv||(spEv!=="none"?spEv:null);if(ek&&C[ek]?.days&&timesOverlap(cd,C[ek]))cfl.push(C[ek].name);}
                   if(item.cat!=="co"){const ck=fCo||(spCo!=="none"?spCo:null);if(ck&&C[ck]?.days&&timesOverlap(cd,C[ck]))cfl.push(C[ck].name);}
                   if(item.cat!=="adm"&&C[spAdm]?.days&&timesOverlap(cd,C[spAdm]))cfl.push(C[spAdm].name);
-                  if(item.cat!=="taw"&&fTAW&&!item.id.startsWith("sp_")&&item.id!=="taw_w"){
+                  if(item.cat!=="taw"&&fTAW==="fall"&&!item.id.startsWith("sp_")&&item.id!=="taw_w"){
                     const hrs=tawOverlapHrsPerWeek(cd);
                     if(hrs>4)cfl.push("TAW ("+fmtHr(hrs)+"hr > 4hr limit)");
                   }
@@ -1556,7 +1559,7 @@ export default function App(){
                     const isEasy = bidStr.includes("vacanc") || bidStr.includes("empty") || bidStr.includes("not difficult") || bidStr.includes("not too") || bidStr.includes("no need");
                     // TAW overlap for non-TAW fall items
                     let tawWarn = null;
-                    if (pool.cat !== "taw" && fTAW && !pool.id.startsWith("sp_") && pool.id !== "taw_w") {
+                    if (pool.cat !== "taw" && fTAW==="fall" && !pool.id.startsWith("sp_") && pool.id !== "taw_w") {
                       const cd = C[pool.cKey];
                       if (cd?.days) {
                         const tawHrs = tawOverlapHrsPerWeek(cd);
