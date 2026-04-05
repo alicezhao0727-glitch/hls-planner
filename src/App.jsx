@@ -226,6 +226,11 @@ function generateSuggestedRanking(plan){
   (plan.fElect||[]).forEach(k=>{const c=ALL_FE_R.find(x=>x.key===k);if(c?.days)fixed.push(c);});
   (plan.spElect||[]).forEach(k=>{const c=ALL_SE_R.find(x=>x.key===k);if(c?.days)fixed.push(c);});
   if(plan.spMTC&&plan.spMTC!=="none"&&C[plan.spMTC]) fixed.push(C[plan.spMTC]);
+  if(plan.fAdm&&C.f_adm) fixed.push(C.f_adm);
+  if(plan.f1a&&plan.f1a!=="none"&&C[plan.f1a]) fixed.push(C[plan.f1a]);
+  if(plan.fCp&&plan.fCp!=="none"&&C[plan.fCp]) fixed.push(C[plan.fCp]);
+  if(plan.sp1a&&plan.sp1a!=="none"&&C[plan.sp1a]) fixed.push(C[plan.sp1a]);
+  if(plan.spCpi&&plan.spCpi!=="none"&&C[plan.spCpi]) fixed.push(C[plan.spCpi]);
   if(plan.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.fClinic);if(cl?.semFall)fixed.push(cl.semFall);}
   if(plan.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixed.push(sem);}
 
@@ -310,6 +315,8 @@ const C = {
   co_pg: {key:"co_pg", name:"Corporations", prof:"Pargendler",  cr:4, days:["Mon","Tue"],       s:"15:45",e:"17:45", c:K.green},
   // ── FALL BANKRUPTCY ──
   f_bke: {key:"f_bke", name:"Bankruptcy",   prof:"Ellias",    cr:4, days:["Mon","Tue"],  s:"10:15",e:"12:15", c:K.violet},
+  // ── FALL ADMIN LAW ──
+  f_adm: {key:"f_adm", name:"Admin Law",    prof:"Freeman",   cr:4, days:["Wed","Thu"],  s:"13:30",e:"15:30", c:K.red},
   // ── TAW ──
   taw:   {key:"taw",   name:"Trial Advocacy Workshop", prof:"Sullivan", cr:3, days:DAYS, s:"14:00",e:"21:00", c:K.gray},
   // ── FALL SEMINARS / COURSES ──
@@ -318,6 +325,12 @@ const C = {
   f_fl:  {key:"f_fl",  name:"Facts & Lies",    prof:"Saris",     cr:2, days:["Wed"],             s:"15:45",e:"17:45", c:K.orange},
   f_ec:  {key:"f_ec",  name:"Engaging China",  prof:"Alford",    cr:2, days:["Mon","Tue"],       s:"18:00",e:"20:00", c:K.red},
   f_aa:  {key:"f_aa",  name:"Asian Am & Law",  prof:"Lee",       cr:2, days:["Tue"],             s:"15:45",e:"17:45", c:K.amber},
+  // ── FALL 1ST AMENDMENT (multi-section) ──
+  f_1afe:{key:"f_1afe",name:"1st Amendment",prof:"Feldman",   cr:4, days:["Thu","Fri"],       s:"10:15",e:"12:15", c:K.indigo},
+  f_1awe:{key:"f_1awe",name:"1st Amendment",prof:"Weinrib",   cr:4, days:["Mon","Tue"],       s:"13:30",e:"15:30", c:K.indigo},
+  // ── FALL CRIM PRO (multi-section) ──
+  f_cpa: {key:"f_cpa", name:"Crim Pro: Adjudication",prof:"Lanni",cr:4, days:["Thu","Fri"],   s:"10:15",e:"12:15", c:K.amber},
+  f_cpsu:{key:"f_cpsu",name:"Crim Pro: Survey",      prof:"Re",   cr:4, days:["Tue","Wed"],   s:"10:15",e:"12:15", c:K.amber},
   // ── SPRING ADMIN LAW (multi-section) ──
   sp_adm_v:{key:"sp_adm_v",name:"Admin Law",prof:"Vermeule", cr:4, days:["Wed","Thu"],   s:"13:30",e:"15:30", c:K.red},
   sp_adm_b:{key:"sp_adm_b",name:"Admin Law",prof:"Block",    cr:3, days:["Tue","Wed"],   s:"15:45",e:"17:15", c:K.red},
@@ -327,6 +340,11 @@ const C = {
   // ── SPRING EVIDENCE (multi-section) ──
   sp_ev_l:{key:"sp_ev_l",name:"Evidence",prof:"Lvovsky", cr:4, days:["Mon","Tue","Wed"], s:"10:30",e:"11:50", c:K.blue},
   sp_ev_c:{key:"sp_ev_c",name:"Evidence",prof:"Clary",   cr:3, days:["Wed","Thu"],       s:"13:30",e:"15:00", c:K.blue},
+  // ── SPRING 1ST AMENDMENT ──
+  sp_1a:  {key:"sp_1a", name:"1st Amendment",prof:"Parker",  cr:4, c:K.indigo},
+  // ── SPRING CRIM PRO INVESTIGATIONS (multi-section) ──
+  sp_cpi_n:{key:"sp_cpi_n",name:"Crim Pro: Investigations",prof:"Natapoff",cr:4,days:["Thu","Fri"],s:"10:15",e:"12:15",c:K.amber},
+  sp_cpi_w:{key:"sp_cpi_w",name:"Crim Pro: Investigations",prof:"Whiting", cr:4,days:["Mon","Tue"],s:"10:15",e:"12:15",c:K.amber},
   // ── SPRING SINGLE-SECTION ──
   sp_bk: {key:"sp_bk", name:"Bankruptcy",      prof:"Roe",     cr:4, days:["Mon","Tue","Wed"],  s:"10:30",e:"11:50", c:K.violet},
   sp_cp: {key:"sp_cp", name:"Copyright",       prof:"Fisher",  cr:4, days:["Mon","Tue","Wed"],  s:"10:30",e:"11:50", c:K.sky},
@@ -686,9 +704,9 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 
 
 // ── PLAN VERSIONS ─────────────────────────────────────────────────────────────
-const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,
+const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:true,fAdm:false,f1a:"none",fCp:"none",
   fElect:[],fClinic:null,fField:3,wRepro:false,
-  spAdm:"sp_adm_v",spCo:"none",spEv:"none",spMTC:"none",
+  spAdm:"sp_adm_v",spCo:"none",spEv:"none",spMTC:"none",sp1a:"none",spCpi:"none",
   spElect:[],spClinic:null,spField:3,ranking:null};
 
 function loadVersions(){
@@ -786,6 +804,10 @@ export default function App(){
   const [fEv,setFEv]=useState("ev_m");
   const [fCo,setFCo]=useState("co_sp");
   const [fTAW,setFTAW]=useState(true);
+  const [fAdm,setFAdm]=useState(false);
+  // Fall 1A + Crim Pro
+  const [f1a,setF1a]=useState("none");
+  const [fCp,setFCp]=useState("none");
   // Fall electives
   const [fElect,setFElect]=useState(new Set());
   const [fClinic,setFClinic]=useState(null);
@@ -797,6 +819,8 @@ export default function App(){
   const [spCo,setSpCo]=useState("none");
   const [spEv,setSpEv]=useState("none");
   const [spMTC,setSpMTC]=useState("none");
+  const [sp1a,setSp1a]=useState("none");
+  const [spCpi,setSpCpi]=useState("none");
   // Spring electives
   const [spElect,setSpElect]=useState(new Set());
   const [spClinic,setSpClinic]=useState(null);
@@ -808,21 +832,23 @@ export default function App(){
   const [ranking,setRanking]=useState(()=>generateSuggestedRanking(BLANK_PLAN));
   const [rankNoteOpen,setRankNoteOpen]=useState(new Set());
 
-  const planState=()=>planToSnap({fEv,fCo,fTAW,fElect,fClinic,fField,
-    wRepro,spAdm,spCo,spEv,spMTC,spElect,spClinic,spField,ranking});
+  const planState=()=>planToSnap({fEv,fCo,fTAW,fAdm,f1a,fCp,fElect,fClinic,fField,
+    wRepro,spAdm,spCo,spEv,spMTC,sp1a,spCpi,spElect,spClinic,spField,ranking});
   const loadPlan=snap=>{
     const p=snapToPlan(snap);
-    setFEv(p.fEv);setFCo(p.fCo);setFTAW(p.fTAW);
+    setFEv(p.fEv);setFCo(p.fCo);setFTAW(p.fTAW);setFAdm(p.fAdm);
+    setF1a(p.f1a||"none");setFCp(p.fCp||"none");
     setFElect(p.fElect);setFClinic(p.fClinic);setFField(p.fField);
     setWRepro(p.wRepro);
     setSpAdm(p.spAdm);setSpCo(p.spCo);setSpEv(p.spEv);
+    setSp1a(p.sp1a||"none");setSpCpi(p.spCpi||"none");
     setSpMTC(p.spMTC);setSpElect(p.spElect);setSpClinic(p.spClinic);setSpField(p.spField);
     if(p.ranking&&p.ranking.length>0) setRanking(p.ranking);
   };
   const saveVersion=i=>{
     // Regenerate ranking suggestion on save
-    const curPlan={fEv,fCo,fTAW,fElect:[...fElect],fClinic,fField,
-      wRepro,spAdm,spCo,spEv,spMTC,spElect:[...spElect],spClinic,spField};
+    const curPlan={fEv,fCo,fTAW,fAdm,f1a,fCp,fElect:[...fElect],fClinic,fField,
+      wRepro,spAdm,spCo,spEv,spMTC,sp1a,spCpi,spElect:[...spElect],spClinic,spField};
     const newRanking=generateSuggestedRanking(curPlan);
     setRanking(newRanking);
     const vs=[...versions];vs[i]=planToSnap({...curPlan,fElect,spElect,ranking:newRanking});setVersions(vs);saveVersions(vs);
@@ -844,11 +870,14 @@ export default function App(){
     if(C[fEv]) l.push(C[fEv]);
     if(C[fCo]) l.push(C[fCo]);
     if(fTAW) l.push(C.taw);
+    if(fAdm) l.push(C.f_adm);
+    if(f1a!=="none"&&C[f1a]) l.push(C[f1a]);
+    if(fCp!=="none"&&C[fCp]) l.push(C[fCp]);
     [...fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)l.push(c);});
     // Add clinic seminar to calendar
     if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)l.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:0,c:cl.c});}
     return l;
-  },[fEv,fCo,fTAW,fElect,fClinic]);
+  },[fEv,fCo,fTAW,fAdm,f1a,fCp,fElect,fClinic]);
 
   const fallNoTAW=fallTimed.filter(c=>c.key!=="taw");
   const fallConflicts=useMemo(()=>getConflicts(fallNoTAW),[fallNoTAW]);
@@ -867,10 +896,12 @@ export default function App(){
     if(spCo!=="none"&&C[spCo]) l.push(C[spCo]);
     if(spEv!=="none"&&C[spEv]) l.push(C[spEv]);
     if(spMTC!=="none"&&C[spMTC]) l.push(C[spMTC]);
+    if(sp1a!=="none"&&C[sp1a]) l.push(C[sp1a]);
+    if(spCpi!=="none"&&C[spCpi]) l.push(C[spCpi]);
     [...spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)l.push(c);});
     if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)l.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:0,c:cl.c});}
     return l;
-  },[spAdm,spCo,spEv,spMTC,spElect,spClinic]);
+  },[spAdm,spCo,spEv,spMTC,sp1a,spCpi,spElect,spClinic]);
 
   const spConflicts=useMemo(()=>getConflicts(spTimed),[spTimed]);
   const spElectCr=useMemo(()=>[...spElect].reduce((s,k)=>{const c=ALL_SE.find(x=>x.key===k);return s+(c&&!c.days?c.cr:0);},0),[spElect]);
@@ -885,6 +916,9 @@ export default function App(){
     if(C[p.fEv]) fall.push(C[p.fEv]);
     if(C[p.fCo]) fall.push(C[p.fCo]);
     if(p.fTAW) fall.push(C.taw);
+    if(p.fAdm) fall.push(C.f_adm);
+    if(p.f1a&&p.f1a!=="none"&&C[p.f1a]) fall.push(C[p.f1a]);
+    if(p.fCp&&p.fCp!=="none"&&C[p.fCp]) fall.push(C[p.fCp]);
     [...p.fElect].forEach(k=>{const c=ALL_FE.find(x=>x.key===k);if(c?.days)fall.push(c);});
     if(p.fClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.fClinic);const sem=cl?.semFall||cl?.semSpring;if(sem)fall.push({...sem,key:"f_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     const spring = [];
@@ -892,6 +926,8 @@ export default function App(){
     if(p.spCo!=="none"&&C[p.spCo]) spring.push(C[p.spCo]);
     if(p.spEv!=="none"&&C[p.spEv]) spring.push(C[p.spEv]);
     if(p.spMTC!=="none"&&C[p.spMTC]) spring.push(C[p.spMTC]);
+    if(p.sp1a&&p.sp1a!=="none"&&C[p.sp1a]) spring.push(C[p.sp1a]);
+    if(p.spCpi&&p.spCpi!=="none"&&C[p.spCpi]) spring.push(C[p.spCpi]);
     [...p.spElect].forEach(k=>{const c=ALL_SE.find(x=>x.key===k);if(c?.days)spring.push(c);});
     if(p.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===p.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)spring.push({...sem,key:"sp_clinic_sem",name:cl.name+" Seminar",prof:"",cr:cl.semCr,c:cl.c});}
     return [...fall, ...spring];
@@ -944,6 +980,7 @@ export default function App(){
     {id:"f_ctml",name:"Copyright & TM Litigation",prof:"Cendali"},
     {id:"sp_adm_v",name:"Admin Law",           prof:"Vermeule"},
     {id:"sp_adm_b",name:"Admin Law",           prof:"Block"},
+    {id:"f_adm", name:"Admin Law",             prof:"Freeman"},
     {id:"sp_col",name:"Conflict of Laws",      prof:"Sachs"},
     {id:"f_sex", name:"Sex Equality",          prof:"MacKinnon"},
     {id:"f_gi",  name:"Gender Identity & Sexual Orientation",prof:"Chen"},
@@ -953,6 +990,9 @@ export default function App(){
     {id:"f_taxD",name:"Taxation",              prof:"Desai"},
     {id:"f_bsl", name:"Business Strategy for Lawyers",prof:"Spier"},
     {id:"f_dpl", name:"Drug Product Liability", prof:"Grossi"},
+    {id:"f1a_fe",name:"1st Amendment",          prof:"Feldman"},
+    {id:"f1a_we",name:"1st Amendment",          prof:"Weinrib"},
+    {id:"sp_1a", name:"1st Amendment",          prof:"Parker"},
     {id:"f_ante",name:"Antitrust Law & Economics",prof:"Elhauge"},
     {id:"f_advn",name:"Advanced Negotiation",   prof:"Heen"},
     {id:"f_cilo",name:"China & Intl Legal Order",prof:"Wu"},
@@ -1092,12 +1132,28 @@ export default function App(){
                 <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
               </Sect>
 
+              <Sect title="Admin Law" must>
+                <Option type="checkbox" cur={fAdm} set={setFAdm} c={K.red} label="Freeman · 4cr · W, Th 1:30" evalId="f_adm"
+                  sub={fCo==="co_fr"?"⚠ conflicts with Fried Corporations WThF":""} warn={fCo==="co_fr"} noteKey="f_adm"/>
+              </Sect>
 
               <Sect title="Trial Advocacy Workshop" must>
                 <Option type="radio" value={true}  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
                   label="Take in Fall (M–F 2–9pm intensive)"
                   sub={`TAW overlap w/ other courses: ${fmtHr(fallTAWHrs)}hr/wk · max 4hr/wk`} warn={!fallTAWOk}/>
                 <Option type="radio" value={false} cur={fTAW} set={setFTAW} label="Move to Winter" evalId={null} noteKey={null}/>
+              </Sect>
+
+              <Sect title="1st Amendment">
+                <Option type="radio" value="none"    cur={f1a} set={setF1a} label="Skip" evalId={null} noteKey={null}/>
+                <Option type="radio" value="f_1afe"  cur={f1a} set={setF1a} c={K.indigo} label="Feldman · 4cr · Th, F 10:15" evalId="f1a_fe" sub="★5 · showman · philosophy + SCOTUS gossip" noteKey="f_1afe"/>
+                <Option type="radio" value="f_1awe"  cur={f1a} set={setF1a} c={K.indigo} label="Weinrib · 4cr · M, T 1:30"   evalId="f1a_we" sub="History-focused · on panel every other week" noteKey="f_1awe"/>
+              </Sect>
+
+              <Sect title="Criminal Procedure">
+                <Option type="radio" value="none"    cur={fCp} set={setFCp} label="Skip" evalId={null} noteKey={null}/>
+                <Option type="radio" value="f_cpa"   cur={fCp} set={setFCp} c={K.amber} label="Adjudication · Lanni · 4cr · Th, F 10:15" evalId={null} noteKey="f_cpa"/>
+                <Option type="radio" value="f_cpsu"  cur={fCp} set={setFCp} c={K.amber} label="Survey · Re · 4cr · T, W 10:15"           evalId={null} noteKey="f_cpsu"/>
               </Sect>
             </Sect>
 
@@ -1200,8 +1256,18 @@ export default function App(){
                 <Option type="radio" value="sp_bk" cur={spMTC} set={setSpMTC} c={K.violet} label="Bankruptcy (Roe) · 4cr · M, T, W 10:30"  evalId="sp_bk" noteKey="sp_bk"/>
                 <Option type="radio" value="sp_cp" cur={spMTC} set={setSpMTC} c={K.sky}    label="Copyright (Fisher) · 4cr · M, T, W 10:30" evalId="sp_cp" noteKey="sp_cp"/>
               </Sect>
-            </Sect>
 
+              <Sect title="1st Amendment">
+                <Option type="radio" value="none"   cur={sp1a} set={setSp1a} label="Skip" evalId={null} noteKey={null}/>
+                <Option type="radio" value="sp_1a"  cur={sp1a} set={setSp1a} c={K.indigo} label="Parker · 4cr · TBD" evalId="sp_1a" sub="Psychology of judicial decisions · no cold calls" noteKey="sp_1a"/>
+              </Sect>
+
+              <Sect title="Crim Pro: Investigations">
+                <Option type="radio" value="none"     cur={spCpi} set={setSpCpi} label="Skip" evalId={null} noteKey={null}/>
+                <Option type="radio" value="sp_cpi_n" cur={spCpi} set={setSpCpi} c={K.amber} label="Natapoff · 4cr · Th, F 10:15" evalId={null} sub="Policing + investigation focus" noteKey="sp_cpi_n"/>
+                <Option type="radio" value="sp_cpi_w" cur={spCpi} set={setSpCpi} c={K.amber} label="Whiting · 4cr · M, T 10:15"   evalId={null} sub="International/crim procedure" noteKey="sp_cpi_w"/>
+              </Sect>
+            </Sect>
             {/* ─── ELECTIVES ─── */}
             <Sect title="Electives">
               <ElectiveSect label="Courses" items={SP_ELECTIVES.courses} sel={spElect} toggle={toggleSp}/>
@@ -1225,7 +1291,8 @@ export default function App(){
       {tab==="summary"&&(()=>{
         const fClinicObj=CLINIC_OPTS.find(c=>c.id===fClinic);
         const spClinicObj=CLINIC_OPTS.find(c=>c.id===spClinic);
-        const fallItems=[C[fEv],C[fCo],fTAW?C.taw:null,
+        const fallItems=[C[fEv],C[fCo],fTAW?C.taw:null,fAdm?C.f_adm:null,
+          f1a!=="none"?C[f1a]:null,fCp!=="none"?C[fCp]:null,
           ...[...fElect].map(k=>ALL_FE.find(x=>x.key===k)),
           fClinicObj?{...fClinicObj,name:fClinicObj.name+" Clinic",cr:fClinicCr}:null].filter(Boolean);
         const winterItems=[
@@ -1236,6 +1303,7 @@ export default function App(){
           spCo!=="none"?C[spCo]:null,
           spEv!=="none"?C[spEv]:null,
           spMTC!=="none"?C[spMTC]:null,
+          sp1a!=="none"?C[sp1a]:null,spCpi!=="none"?C[spCpi]:null,
           ...[...spElect].map(k=>ALL_SE.find(x=>x.key===k)),
           spClinicObj?{...spClinicObj,name:spClinicObj.name+" Clinic",cr:spClinicCr}:null].filter(Boolean);
         const issues=[
@@ -1407,12 +1475,17 @@ export default function App(){
             {/* ── MULTI-SECTION RANKING ── */}
             {(()=>{
               // Compute live conflict info for each ranking item
-              const curPlan={fEv,fCo,fTAW,fElect:[...fElect],fClinic,fField,
-                wRepro,spAdm,spCo,spEv,spMTC,spElect:[...spElect],spClinic,spField};
+              const curPlan={fEv,fCo,fTAW,fAdm,f1a,fCp,fElect:[...fElect],fClinic,fField,
+                wRepro,spAdm,spCo,spEv,spMTC,sp1a,spCpi,spElect:[...spElect],spClinic,spField};
               const fixedR=[];
               ALL_FE.forEach(c=>{if(fElect.has(c.key)&&c.days)fixedR.push(c);});
               ALL_SE.forEach(c=>{if(spElect.has(c.key)&&c.days)fixedR.push(c);});
               if(spMTC!=="none"&&C[spMTC])fixedR.push(C[spMTC]);
+              if(fAdm&&C.f_adm)fixedR.push(C.f_adm);
+              if(f1a!=="none"&&C[f1a])fixedR.push(C[f1a]);
+              if(fCp!=="none"&&C[fCp])fixedR.push(C[fCp]);
+              if(sp1a!=="none"&&C[sp1a])fixedR.push(C[sp1a]);
+              if(spCpi!=="none"&&C[spCpi])fixedR.push(C[spCpi]);
               if(fClinic){const cl=CLINIC_OPTS.find(x=>x.id===fClinic);if(cl?.semFall)fixedR.push(cl.semFall);}
               if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixedR.push(sem);}
 
