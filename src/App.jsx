@@ -235,11 +235,11 @@ function generateSuggestedRanking(plan){
   if(plan.spClinic){const cl=CLINIC_OPTS.find(x=>x.id===plan.spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixed.push(sem);}
 
   const selectedIds=new Set();
-  if(plan.fEv) selectedIds.add(plan.fEv);
+  if(plan.fEv&&plan.fEv!=="none") selectedIds.add(plan.fEv);
   if(plan.spEv&&plan.spEv!=="none") selectedIds.add(plan.spEv);
-  if(plan.fCo) selectedIds.add(plan.fCo);
+  if(plan.fCo&&plan.fCo!=="none") selectedIds.add(plan.fCo);
   if(plan.spCo&&plan.spCo!=="none") selectedIds.add(plan.spCo);
-  if(plan.spAdm) selectedIds.add(plan.spAdm);
+  if(plan.spAdm&&plan.spAdm!=="none") selectedIds.add(plan.spAdm);
   const tawSel=plan.fTAW==="fall"?"taw_f":"taw_w";
 
   const scored=RANKING_POOL.map(item=>{
@@ -707,7 +707,7 @@ function ClinicSelector({clinicId,setClinicId,fieldCr,setFieldCr,allowedTerms}){
 // ── PLAN VERSIONS ─────────────────────────────────────────────────────────────
 const BLANK_PLAN={fEv:"ev_m",fCo:"co_sp",fTAW:"fall",fAdm:false,f1a:"none",fCp:"none",
   fElect:[],fClinic:null,fField:3,wRepro:false,
-  spAdm:"sp_adm_v",spCo:"none",spEv:"none",spMTC:"none",sp1a:"none",spCpi:"none",
+  spAdm:"none",spCo:"none",spEv:"none",spMTC:"none",sp1a:"none",spCpi:"none",
   spElect:[],spClinic:null,spField:3,ranking:null};
 
 function loadVersions(){
@@ -816,7 +816,7 @@ export default function App(){
   // Winter
   const [wRepro,setWRepro]=useState(false);
   // Spring multi-section
-  const [spAdm,setSpAdm]=useState("sp_adm_v");
+  const [spAdm,setSpAdm]=useState("none");
   const [spCo,setSpCo]=useState("none");
   const [spEv,setSpEv]=useState("none");
   const [spMTC,setSpMTC]=useState("none");
@@ -1121,18 +1121,16 @@ export default function App(){
             {/* ─── MULTI-SECTIONS ─── */}
             <Sect title="Multi-Sections">
               <Sect title="Evidence">
-                <Option type="radio" value="none"  cur={fEv} set={setFEv} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="ev_m"  cur={fEv} set={setFEv} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
-                <Option type="radio" value="ev_w"  cur={fEv} set={setFEv} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
-                <Option type="radio" value="ev_s"  cur={fEv} set={setFEv} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Great · brutal exam · no cold call" noteKey="ev_s"/>
-                <Option type="radio" value="ev_br" cur={fEv} set={setFEv} c={K.blue}   label="Brewer · 4cr · T, W 3:45"   evalId={null}  sub="Jurisprudence-focused approach" noteKey="ev_br"/>
+                <Option type="checkbox" cur={fEv==="ev_m"} set={v=>setFEv(v?"ev_m":"none")} c={K.blue}   label="Medwed · 3cr · Th, F 10:30"  evalId="ev_m"  sub="Engaging·rules + policy·cold call recap" noteKey="ev_m"/>
+                <Option type="checkbox" cur={fEv==="ev_w"} set={v=>setFEv(v?"ev_w":"none")} c={K.blue}   label="Whiting · 4cr · M, T 10:15"  evalId="ev_w"  sub="Crim-focused·organized·hard exam" noteKey="ev_w"/>
+                <Option type="checkbox" cur={fEv==="ev_s"} set={v=>setFEv(v?"ev_s":"none")} c={K.blue}   label="Schulman · 4cr · M, T 8:00"  evalId="ev_s"  sub="Great · brutal exam · no cold call" noteKey="ev_s"/>
+                <Option type="checkbox" cur={fEv==="ev_br"} set={v=>setFEv(v?"ev_br":"none")} c={K.blue}   label="Brewer · 4cr · T, W 3:45"   evalId={null}  sub="Jurisprudence-focused approach" noteKey="ev_br"/>
               </Sect>
 
               <Sect title="Corporations">
-                <Option type="radio" value="none"  cur={fCo} set={setFCo} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="co_sp" cur={fCo} set={setFCo} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="Rapid fire · strange exam · harsh grader" noteKey="co_sp"/>
-                <Option type="radio" value="co_fr" cur={fCo} set={setFCo} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="No attendance req · organized · no LP · MC only" noteKey="co_fr"/>
-                <Option type="radio" value="co_pg" cur={fCo} set={setFCo} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
+                <Option type="checkbox" cur={fCo==="co_sp"} set={v=>setFCo(v?"co_sp":"none")} c={K.green}  label="Spamann · 4cr · W, Th, F 8:30"  evalId="co_sp" sub="Rapid fire · strange exam · harsh grader" noteKey="co_sp"/>
+                <Option type="checkbox" cur={fCo==="co_fr"} set={v=>setFCo(v?"co_fr":"none")} c={K.green}  label="Fried · 4cr · W, Th, F 1:30"    evalId="co_fr" sub="No attendance req · organized · no LP · MC only" noteKey="co_fr"/>
+                <Option type="checkbox" cur={fCo==="co_pg"} set={v=>setFCo(v?"co_pg":"none")} c={K.green}  label="Pargendler · 4cr · M, T 3:45"   evalId={null}  sub="Comparative corporate governance focus" noteKey="co_pg"/>
               </Sect>
 
               <Sect title="Admin Law">
@@ -1141,22 +1139,19 @@ export default function App(){
               </Sect>
 
               <Sect title="Trial Advocacy Workshop">
-                <Option type="radio" value="fall"  cur={fTAW} set={setFTAW} c={K.gray} evalId="taw" noteKey="taw"
+                <Option type="checkbox" cur={fTAW==="fall"} set={v=>setFTAW(v?"fall":"none")} c={K.gray} evalId="taw" noteKey="taw"
                   label="Take in Fall (M–F 2–9pm intensive)"
                   sub={`TAW overlap w/ other courses: ${fmtHr(fallTAWHrs)}hr/wk · max 4hr/wk`} warn={!fallTAWOk}/>
-                <Option type="radio" value="winter" cur={fTAW} set={setFTAW} label="Move to Winter" evalId={null} noteKey={null}/>
-                <Option type="radio" value="none" cur={fTAW} set={setFTAW} label="Skip TAW" evalId={null} noteKey={null}/>
+                <Option type="checkbox" cur={fTAW==="winter"} set={v=>setFTAW(v?"winter":"none")} label="Move to Winter" evalId={null} noteKey={null}/>
               </Sect>
 
               <Sect title="1st Amendment">
-                <Option type="radio" value="none"    cur={f1a} set={setF1a} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="f_1afe"  cur={f1a} set={setF1a} c={K.indigo} label="Feldman · 4cr · Th, F 10:15" evalId="f1a_fe" sub="★5 · showman · philosophy + SCOTUS gossip" noteKey="f_1afe"/>
-                <Option type="radio" value="f_1awe"  cur={f1a} set={setF1a} c={K.indigo} label="Weinrib · 4cr · M, T 1:30"   evalId="f1a_we" sub="History-focused · on panel every other week" noteKey="f_1awe"/>
+                <Option type="checkbox" cur={f1a==="f_1afe"} set={v=>setF1a(v?"f_1afe":"none")} c={K.indigo} label="Feldman · 4cr · Th, F 10:15" evalId="f1a_fe" sub="★5 · showman · philosophy + SCOTUS gossip" noteKey="f_1afe"/>
+                <Option type="checkbox" cur={f1a==="f_1awe"} set={v=>setF1a(v?"f_1awe":"none")} c={K.indigo} label="Weinrib · 4cr · M, T 1:30"   evalId="f1a_we" sub="History-focused · on panel every other week" noteKey="f_1awe"/>
               </Sect>
 
               <Sect title="Criminal Procedure">
-                <Option type="radio" value="none"    cur={fCp} set={setFCp} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="f_cpsu"  cur={fCp} set={setFCp} c={K.amber} label="Survey · Re · 4cr · T, W 10:15" evalId={null} noteKey="f_cpsu"/>
+                <Option type="checkbox" cur={fCp==="f_cpsu"} set={v=>setFCp(v?"f_cpsu":"none")} c={K.amber} label="Survey · Re · 4cr · T, W 10:15" evalId={null} noteKey="f_cpsu"/>
               </Sect>
             </Sect>
 
@@ -1236,39 +1231,34 @@ export default function App(){
             {/* ─── MULTI-SECTIONS ─── */}
             <Sect title="Multi-Sections">
               <Sect title="Admin Law">
-                <Option type="radio" value="sp_adm_v" cur={spAdm} set={setSpAdm} c={K.red} label="Vermeule · 4cr · W, Th 1:30"   evalId="sp_adm_v" sub="In-class exam" noteKey="sp_adm_v"/>
-                <Option type="radio" value="sp_adm_b" cur={spAdm} set={setSpAdm} c={K.red} label="Block · 3cr · T, W 3:45–5:15"  evalId="sp_adm_b" sub="Take-home exam" noteKey="sp_adm_b"/>
+                <Option type="checkbox" cur={spAdm==="sp_adm_v"} set={v=>setSpAdm(v?"sp_adm_v":"none")} c={K.red} label="Vermeule · 4cr · W, Th 1:30"   evalId="sp_adm_v" sub="In-class exam" noteKey="sp_adm_v"/>
+                <Option type="checkbox" cur={spAdm==="sp_adm_b"} set={v=>setSpAdm(v?"sp_adm_b":"none")} c={K.red} label="Block · 3cr · T, W 3:45–5:15"  evalId="sp_adm_b" sub="Take-home exam" noteKey="sp_adm_b"/>
               </Sect>
 
               <Sect title="Corporations">
-                <Option type="radio" value="none"    cur={spCo} set={setSpCo} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_co_c" cur={spCo} set={setSpCo} c={K.green} label="Coates · 4cr · M, T, W 10:15"  evalId={null} noteKey="sp_co_c"/>
-                <Option type="radio" value="sp_co_t" cur={spCo} set={setSpCo} c={K.green} label="Tallarita · 4cr · Th, F 10:15" evalId={null} noteKey="sp_co_t"/>
+                <Option type="checkbox" cur={spCo==="sp_co_c"} set={v=>setSpCo(v?"sp_co_c":"none")} c={K.green} label="Coates · 4cr · M, T, W 10:15"  evalId={null} noteKey="sp_co_c"/>
+                <Option type="checkbox" cur={spCo==="sp_co_t"} set={v=>setSpCo(v?"sp_co_t":"none")} c={K.green} label="Tallarita · 4cr · Th, F 10:15" evalId={null} noteKey="sp_co_t"/>
               </Sect>
 
               <Sect title="Evidence">
-                <Option type="radio" value="none"    cur={spEv} set={setSpEv} label="Skip (took in Fall)" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_ev_l" cur={spEv} set={setSpEv} c={K.blue}  label="Lvovsky · 4cr · M, T, W 10:30" evalId="sp_ev_l" sub="Rapid fire · tough cold call · brutal curve" noteKey="sp_ev_l"/>
-                <Option type="radio" value="sp_ev_c" cur={spEv} set={setSpEv} c={K.blue}  label="Clary · 3cr · W, Th 1:30"      evalId="sp_ev_c" sub="Kinda ok · soft cold call · can miss class · dry but accessible" noteKey="sp_ev_c"/>
+                <Option type="checkbox" cur={spEv==="sp_ev_l"} set={v=>setSpEv(v?"sp_ev_l":"none")} c={K.blue}  label="Lvovsky · 4cr · M, T, W 10:30" evalId="sp_ev_l" sub="Rapid fire · tough cold call · brutal curve" noteKey="sp_ev_l"/>
+                <Option type="checkbox" cur={spEv==="sp_ev_c"} set={v=>setSpEv(v?"sp_ev_c":"none")} c={K.blue}  label="Clary · 3cr · W, Th 1:30"      evalId="sp_ev_c" sub="Kinda ok · soft cold call · can miss class · dry but accessible" noteKey="sp_ev_c"/>
               </Sect>
 
 
               <Sect title="Bankruptcy / Copyright (share M,T,W 10:30 slot)">
                 <div style={{fontSize:13,color:"#6b1e2e",background:"#f5e8e8",borderRadius:3,padding:"2px 6px",marginBottom:4,fontFamily:"system-ui,sans-serif"}}>Roe (Bankruptcy) and Fisher (Copyright) share the same slot</div>
-                <Option type="radio" value="none"  cur={spMTC} set={setSpMTC} label="Skip both" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_bk" cur={spMTC} set={setSpMTC} c={K.violet} label="Bankruptcy (Roe) · 4cr · M, T, W 10:30"  evalId="sp_bk" noteKey="sp_bk"/>
-                <Option type="radio" value="sp_cp" cur={spMTC} set={setSpMTC} c={K.sky}    label="Copyright (Fisher) · 4cr · M, T, W 10:30" evalId="sp_cp" noteKey="sp_cp"/>
+                <Option type="checkbox" cur={spMTC==="sp_bk"} set={v=>setSpMTC(v?"sp_bk":"none")} c={K.violet} label="Bankruptcy (Roe) · 4cr · M, T, W 10:30"  evalId="sp_bk" noteKey="sp_bk"/>
+                <Option type="checkbox" cur={spMTC==="sp_cp"} set={v=>setSpMTC(v?"sp_cp":"none")} c={K.sky}    label="Copyright (Fisher) · 4cr · M, T, W 10:30" evalId="sp_cp" noteKey="sp_cp"/>
               </Sect>
 
               <Sect title="1st Amendment">
-                <Option type="radio" value="none"   cur={sp1a} set={setSp1a} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_1a"  cur={sp1a} set={setSp1a} c={K.indigo} label="Parker · 4cr · TBD" evalId="sp_1a" sub="Psychology of judicial decisions · no cold calls" noteKey="sp_1a"/>
+                <Option type="checkbox" cur={sp1a==="sp_1a"} set={v=>setSp1a(v?"sp_1a":"none")} c={K.indigo} label="Parker · 4cr · TBD" evalId="sp_1a" sub="Psychology of judicial decisions · no cold calls" noteKey="sp_1a"/>
               </Sect>
 
               <Sect title="Crim Pro: Investigations">
-                <Option type="radio" value="none"     cur={spCpi} set={setSpCpi} label="Skip" evalId={null} noteKey={null}/>
-                <Option type="radio" value="sp_cpi_n" cur={spCpi} set={setSpCpi} c={K.amber} label="Natapoff · 4cr · Th, F 10:15" evalId={null} sub="Policing + investigation focus" noteKey="sp_cpi_n"/>
-                <Option type="radio" value="sp_cpi_w" cur={spCpi} set={setSpCpi} c={K.amber} label="Whiting · 4cr · M, T 10:15"   evalId={null} sub="International/crim procedure" noteKey="sp_cpi_w"/>
+                <Option type="checkbox" cur={spCpi==="sp_cpi_n"} set={v=>setSpCpi(v?"sp_cpi_n":"none")} c={K.amber} label="Natapoff · 4cr · Th, F 10:15" evalId={null} sub="Policing + investigation focus" noteKey="sp_cpi_n"/>
+                <Option type="checkbox" cur={spCpi==="sp_cpi_w"} set={v=>setSpCpi(v?"sp_cpi_w":"none")} c={K.amber} label="Whiting · 4cr · M, T 10:15"   evalId={null} sub="International/crim procedure" noteKey="sp_cpi_w"/>
               </Sect>
             </Sect>
             {/* ─── ELECTIVES ─── */}
@@ -1493,9 +1483,9 @@ export default function App(){
               if(spClinic){const cl=CLINIC_OPTS.find(x=>x.id===spClinic);const sem=cl?.semSpring||cl?.semFall;if(sem)fixedR.push(sem);}
 
               const selectedIdsR=new Set();
-              selectedIdsR.add(fEv); if(spEv!=="none")selectedIdsR.add(spEv);
-              selectedIdsR.add(fCo); if(spCo!=="none")selectedIdsR.add(spCo);
-              selectedIdsR.add(spAdm);
+              if(fEv!=="none")selectedIdsR.add(fEv); if(spEv!=="none")selectedIdsR.add(spEv);
+              if(fCo!=="none")selectedIdsR.add(fCo); if(spCo!=="none")selectedIdsR.add(spCo);
+              if(spAdm!=="none")selectedIdsR.add(spAdm);
               const tawSelR=fTAW==="fall"?"taw_f":"taw_w";
 
               const infoMap={};
