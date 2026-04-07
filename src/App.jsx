@@ -370,6 +370,7 @@ const FALL_ELECTIVES={
     {key:"f_bn",   name:"Business Negotiations",     prof:"Coakley",        cr:3,days:["Wed"],             s:"18:00",e:"21:15",c:K.lime,  evalId:null},
     {key:"f_imm",  name:"Immigration Law",           prof:"Neuman",         cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.amber, evalId:null},
     {key:"f_te",   name:"Trust and Estates",           prof:"Sitkoff",      cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"sp_te"},
+    {key:"f_fc",   name:"Federal Courts",              prof:"Goldsmith",    cr:5,days:["Wed","Thu","Fri"], s:"13:30",e:"15:10",c:K.teal,  evalId:"sugg_fedCourts"},
   ],
   seminars:[
     {key:"f_sexA", name:"Adv Problems in Sex Equality",prof:"MacKinnon",  cr:2,days:["Mon","Tue"],       s:"13:30",e:"15:30",c:K.pink,  evalId:null},
@@ -416,7 +417,8 @@ const SP_ELECTIVES={
     {key:"sp_gvls", name:"Gender Violence Law",      prof:"Rosenfeld",  cr:3,days:["Wed","Thu"],       s:"13:30",e:"15:00",c:K.pink,  evalId:null},
     {key:"sp_rfi",  name:"Regulation of Financial Institutions",prof:"Tarullo",cr:4,days:["Mon","Tue"],s:"13:30",e:"15:30",c:K.violet,evalId:null},
     {key:"sp_ag",   name:"Role of State Attorney General",prof:"Brann", cr:2,days:["Mon"],             s:"13:30",e:"15:30",c:K.indigo,evalId:"sugg_stateAG"},
-    {key:"sp_fcg",  name:"Federal Courts",          prof:"Goldsmith",  cr:4,c:K.teal,                                                evalId:"sugg_fedCourts"},
+    {key:"sp_fcr",  name:"Federal Courts",          prof:"Re",         cr:4,days:["Mon","Tue","Wed"], s:"10:30",e:"11:50",c:K.teal,  evalId:null},
+    {key:"sp_fcs",  name:"Federal Courts",          prof:"Sachs",      cr:4,days:["Wed","Thu","Fri"], s:"13:40",e:"15:00",c:K.teal,  evalId:null},
     {key:"sp_rem",  name:"Remedies",                prof:"Gersen",     cr:3,days:["Tue","Wed"],       s:"15:45",e:"17:15",c:K.emerald,evalId:"sp_rem"},
     {key:"sp_te",   name:"Trust and Estates",        prof:"Sitkoff",   cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"sp_te"},
     {key:"sp_clwl", name:"Comp Law: Why Law? China", prof:"Alford",    cr:4,days:["Mon","Wed"],       s:"15:45",e:"17:45",c:K.red,   evalId:null},
