@@ -369,6 +369,7 @@ const FALL_ELECTIVES={
     {key:"f_bsl",  name:"Business Strategy",         prof:"Spier",          cr:3,days:["Mon","Tue"],       s:"8:30", e:"10:00",c:K.teal,  evalId:"f_bsl"},
     {key:"f_bn",   name:"Business Negotiations",     prof:"Coakley",        cr:3,days:["Wed"],             s:"18:00",e:"21:15",c:K.lime,  evalId:null},
     {key:"f_imm",  name:"Immigration Law",           prof:"Neuman",         cr:3,days:["Mon","Tue"],       s:"15:45",e:"17:15",c:K.amber, evalId:null},
+    {key:"f_clsj", name:"Comm, Law & Social Justice", prof:"Jenkins",        cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.rose,  evalId:null},
     {key:"f_te",   name:"Trust and Estates",           prof:"Sitkoff",      cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"sp_te"},
     {key:"f_fc",   name:"Federal Courts",              prof:"Goldsmith",    cr:5,days:["Wed","Thu","Fri"], s:"13:30",e:"15:10",c:K.teal,  evalId:"sugg_fedCourts"},
   ],
@@ -382,6 +383,8 @@ const FALL_ELECTIVES={
     {key:"f_aa",   name:"Asian Americans & Law",      prof:"Lee",         cr:2,days:["Tue"],             s:"15:45",e:"17:45",c:K.amber, evalId:null},
     {key:"f_pfmb", name:"Past & Future of Music Biz", prof:"Ferrell",     cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.lime,  evalId:null},
     {key:"f_sct",  name:"The U.S. Supreme Court",     prof:"Sunstein/Breyer",cr:2,days:["Tue"],          s:"13:30",e:"15:30",c:K.violet,evalId:null},
+    {key:"f_hc",   name:"Hard Cases",                 prof:"Minow",       cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.violet,evalId:null},
+    {key:"f_ts",   name:"Trade Secret Law",           prof:"Gershenson",  cr:2,days:["Thu"],             s:"15:45",e:"17:45",c:K.sky,   evalId:null},
   ],
   readings:[
     {key:"f_rg_atjl",name:"Advanced Topics in Jewish Law",  prof:"Feldman",    cr:1,days:["Thu"],s:"18:00",e:"20:00",c:K.gray},
