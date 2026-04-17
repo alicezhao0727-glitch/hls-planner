@@ -372,6 +372,7 @@ const FALL_ELECTIVES={
     {key:"f_clsj", name:"Comm, Law & Social Justice", prof:"Jenkins",        cr:4,days:["Thu","Fri"],       s:"10:15",e:"12:15",c:K.rose,  evalId:null},
     {key:"f_te",   name:"Trust and Estates",           prof:"Sitkoff",      cr:4,days:["Mon","Tue"],       s:"10:15",e:"12:15",c:K.violet,evalId:"sp_te"},
     {key:"f_fc",   name:"Federal Courts",              prof:"Goldsmith",    cr:5,days:["Wed","Thu","Fri"], s:"13:30",e:"15:10",c:K.teal,  evalId:"sugg_fedCourts"},
+    {key:"f_acl",  name:"Advanced Constitutional Law", prof:"Feldman",      cr:4,days:["Thu","Fri"],       s:"13:30",e:"15:30",c:K.violet,evalId:null},
   ],
   seminars:[
     {key:"f_sexA", name:"Adv Problems in Sex Equality",prof:"MacKinnon",  cr:2,days:["Mon","Tue"],       s:"13:30",e:"15:30",c:K.pink,  evalId:null},
@@ -385,6 +386,8 @@ const FALL_ELECTIVES={
     {key:"f_sct",  name:"The U.S. Supreme Court",     prof:"Sunstein/Breyer",cr:2,days:["Tue"],          s:"13:30",e:"15:30",c:K.violet,evalId:null},
     {key:"f_hc",   name:"Hard Cases",                 prof:"Minow",       cr:2,days:["Mon"],             s:"18:00",e:"20:00",c:K.violet,evalId:null},
     {key:"f_ts",   name:"Trade Secret Law",           prof:"Gershenson",  cr:2,days:["Thu"],             s:"15:45",e:"17:45",c:K.sky,   evalId:null},
+    {key:"f_cicl", name:"Contemporary Issues in Con Law",prof:"Liu",       cr:2,                                                      c:K.violet,evalId:null, note:"Meets over two weeks · dates TBD (5–8:15pm)"},
+    {key:"f_jrl",  name:"Jurisprudence of Race & Law", prof:"Mack",        cr:2,days:["Tue"],             s:"18:00",e:"20:00",c:K.amber, evalId:null},
   ],
   readings:[
     {key:"f_rg_atjl",name:"Advanced Topics in Jewish Law",  prof:"Feldman",    cr:1,days:["Thu"],s:"18:00",e:"20:00",c:K.gray},
@@ -399,6 +402,7 @@ const FALL_ELECTIVES={
     {key:"f_rg_mj",  name:"Misdemeanor Justice",            prof:"Natapoff",   cr:1,days:["Thu"],s:"18:00",e:"20:00",c:K.amber},
     {key:"f_rg_nsc", name:"The New Supreme Court",          prof:"Eggleston",  cr:1,days:["Mon"],s:"15:45",e:"17:45",c:K.violet},
     {key:"f_rg_ens", name:"Evolving National Security State",prof:"Eichensehr",cr:1,days:["Wed"],s:"15:45",e:"17:45",c:K.teal},
+    {key:"f_rg_pd",  name:"Political Dialogue in Polarized Times",prof:"McGaraghan/Franklin",cr:1,days:["Mon"],s:"13:30",e:"15:30",c:K.indigo},
   ],
 };
 
